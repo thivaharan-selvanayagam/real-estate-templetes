@@ -68,46 +68,50 @@ export default function Navbar() {
     setOpenMobileMenus(prev => ({ ...prev, [label]: !prev[label] }));
   };
 
-  // Determine header wrapper styles dynamically based on scroll position
+  // 🔑 DYNAMIC: Determine header wrapper styles based on scroll and brand config themes
   const getHeaderStyles = () => {
     if (scrolled) {
-      return "bg-navy/80 backdrop-blur-md text-white rounded-[32px] md:rounded-[48px] shadow-xl border-b border-white/5 py-1 lg:py-2 mt-2 max-w-[calc(100%-2rem)] mx-auto left-4 right-4";
+      return `${BRAND_CONFIG.theme.primaryBg}/80 backdrop-blur-md text-white rounded-[32px] md:rounded-[48px] shadow-xl border-b border-white/5 py-1 lg:py-2 mt-2 max-w-[calc(100%-2rem)] mx-auto left-4 right-4`;
     }
     if (isHome) {
       return "bg-transparent text-white py-4 lg:py-6 left-0 right-0";
     }
-    return "bg-white text-navy border-b border-gray-100 py-4 lg:py-6 left-0 right-0";
+    return `bg-white ${BRAND_CONFIG.theme.primaryText} border-b border-gray-100 py-4 lg:py-6 left-0 right-0`;
   };
 
   const isDarkBackground = scrolled || (isHome && !scrolled);
-  const logoColorClass = isDarkBackground ? "text-white" : "text-navy";
+  const logoColorClass = isDarkBackground ? "text-white" : BRAND_CONFIG.theme.primaryText;
   const navLinkColorClass = isDarkBackground ? "text-white/90" : "text-gray-800";
+  
+  // Custom tracking lookup to safely combine hover and accent styling configurations
+  const textHoverAccent = `hover:${BRAND_CONFIG.theme.accentText}`;
+  const textActiveAccent = BRAND_CONFIG.theme.accentText;
 
   return (
     <header className={`fixed top-0 z-50 transition-all duration-300 ${getHeaderStyles()}`}>
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 lg:h-20 transition-all duration-300">
           
-           {/* Logo Layer Linked to Whitelabel Brain */}
-			<Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-			{BRAND_CONFIG.meta.logoSvgPath ? (
-				/* 🔑 OPTION A: Renders Custom Logo Graphic if path is provided */
-				<div className="relative h-8 w-32 md:h-10 md:w-40 transition-opacity duration-300 group-hover:opacity-80">
-				<img 
-					src={BRAND_CONFIG.meta.logoSvgPath} 
-					alt={`${BRAND_CONFIG.meta.siteName} Logo`}
-					className={`h-full w-auto object-contain ${
-					isDarkBackground ? "invert brightness-0" : ""
-					}`} 
-				/>
-				</div>
-			) : (
-				/* 🔑 OPTION B: Elegant Text Fallback if no file is uploaded */
-				<span className={`text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
-				{BRAND_CONFIG.meta.siteName.replace(".", "")}<span className="text-gold">.</span>
-				</span>
-			)}
-			</Link>
+          {/* Logo Layer Linked to Whitelabel Brain */}
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+            {BRAND_CONFIG.meta.logoSvgPath ? (
+              /* 🔑 OPTION A: Renders Custom Logo Graphic if path is provided */
+              <div className="relative h-8 w-32 md:h-10 md:w-40 transition-opacity duration-300 group-hover:opacity-80">
+                <img 
+                  src={BRAND_CONFIG.meta.logoSvgPath} 
+                  alt={`${BRAND_CONFIG.meta.siteName} Logo`}
+                  className={`h-full w-auto object-contain ${
+                    isDarkBackground ? "invert brightness-0" : ""
+                  }`} 
+                />
+              </div>
+            ) : (
+              /* 🔑 OPTION B: Elegant Text Fallback if no file is uploaded */
+              <span className={`text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
+                {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
+              </span>
+            )}
+          </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
@@ -115,7 +119,7 @@ export default function Navbar() {
               item.subItems ? (
                 // Dropdown Menu Item
                 <div key={item.label} className="relative group">
-                  <button className={`flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 hover:text-gold ${navLinkColorClass}`}>
+                  <button className={`flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass}`}>
                     {item.label}
                     <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180" />
                   </button>
@@ -127,7 +131,7 @@ export default function Navbar() {
                         <Link 
                           key={sub.label} 
                           href={sub.href} 
-                          className="text-navy hover:bg-neutral-50 hover:text-gold px-4 py-3 rounded-xl text-sm font-semibold transition-colors"
+                          className={`hover:bg-neutral-50 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${BRAND_CONFIG.theme.primaryText} ${textHoverAccent}`}
                         >
                           {sub.label}
                         </Link>
@@ -140,7 +144,7 @@ export default function Navbar() {
                 <Link 
                   key={item.label} 
                   href={item.href!}
-                  className={`text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 hover:text-gold ${navLinkColorClass} ${pathname === item.href ? "text-gold" : ""}`}
+                  className={`text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass} ${pathname === item.href ? textActiveAccent : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -151,10 +155,10 @@ export default function Navbar() {
           {/* Search Bar Form */}
           <form 
             onSubmit={handleSearch}
-            className={`hidden xl:flex items-center border rounded-full px-4 py-2 text-xs max-w-[240px] w-full gap-2 transition-all duration-300 focus-within:ring-1 focus-within:ring-gold ${
+            className={`hidden xl:flex items-center border rounded-full px-4 py-2 text-xs max-w-[240px] w-full gap-2 transition-all duration-300 focus-within:ring-1 focus-within:ring-offset-0 focus-within:border-transparent ${
               isDarkBackground 
-                ? "bg-white/10 border-white/10 text-white hover:bg-white/15" 
-                : "bg-gray-100 border-gray-200 text-gray-800 hover:bg-gray-200/60"
+                ? "bg-white/10 border-white/10 text-white hover:bg-white/15 focus-within:ring-white" 
+                : "bg-gray-100 border-gray-200 text-gray-800 hover:bg-gray-200/60 focus-within:ring-gray-400"
             }`}
           >
             <button type="submit" aria-label="Search" className="shrink-0 flex items-center justify-center">
@@ -177,8 +181,8 @@ export default function Navbar() {
               href="/contact" 
               className={`text-xs font-bold tracking-widest uppercase px-6 py-3 rounded-full transition-all duration-300 border ${
                 isDarkBackground 
-                  ? "border-white/20 text-white hover:bg-white hover:text-navy" 
-                  : "bg-navy border-navy text-white hover:bg-navy-light"
+                  ? "border-white/20 text-white hover:bg-white hover:text-gray-900" 
+                  : `text-white ${BRAND_CONFIG.theme.primaryBg} ${BRAND_CONFIG.theme.primaryBorder} hover:opacity-90`
               }`}
             >
               Contact
@@ -195,7 +199,7 @@ export default function Navbar() {
       {/* Mobile Dropdown Menu Container */}
       {mobileOpen && (
         <div className={`lg:hidden rounded-b-[32px] px-6 py-6 border-t animate-fade-in shadow-2xl transition-colors duration-300 max-h-[85vh] overflow-y-auto ${
-          isDarkBackground ? "bg-navy-light/95 backdrop-blur-md border-white/5 text-white" : "bg-white border-gray-100 text-gray-800"
+          isDarkBackground ? "bg-slate-900/95 backdrop-blur-md border-white/5 text-white" : "bg-white border-gray-100 text-gray-800"
         }`}>
           <nav className="flex flex-col gap-2">
             
@@ -232,7 +236,7 @@ export default function Navbar() {
                           <Link 
                             key={sub.label} 
                             href={sub.href} 
-                            className={`text-sm font-medium ${isDarkBackground ? "text-white/70 hover:text-white" : "text-gray-500 hover:text-navy"}`}
+                            className={`text-sm font-medium ${textHoverAccent} ${isDarkBackground ? "text-white/70 hover:text-white" : "text-gray-500"}`}
                             onClick={() => setMobileOpen(false)}
                           >
                             {sub.label}
@@ -253,7 +257,7 @@ export default function Navbar() {
               </div>
             ))}
 
-            <Link href="/contact" className="bg-gold text-white text-xs font-bold uppercase tracking-wider text-center py-4 rounded-full mt-6 shadow-md" onClick={() => setMobileOpen(false)}>
+            <Link href="/contact" className={`text-white text-xs font-bold uppercase tracking-wider text-center py-4 rounded-full mt-6 shadow-md ${BRAND_CONFIG.theme.accentBg}`} onClick={() => setMobileOpen(false)}>
               Contact Us
             </Link>
           </nav>

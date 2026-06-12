@@ -26,5 +26,19 @@ export const BRAND_CONFIG = {
     description: "Discover exceptional properties across the most sought-after markets. Buy, rent, or sell with the world's most innovative real estate team.",
     coverImage: "/images/about_rajivan.webp",
     domain: "https://real-estate-templetes.vercel.app/",
+  },
+
+  // 🔑 NEW: Dynamic Whitelabel Color System
+  theme: {
+    // Primary buttons, backgrounds, and header colors
+    primaryBg: "bg-navy",          // Try swapping to "bg-emerald-900" or "bg-slate-900" for a new client!
+    primaryText: "text-navy",      // Match theme typography
+    primaryBorder: "border-navy",
+
+    // Accent styles (Buttons, tracking highlights, micro labels)
+    accentText: "text-gold",       // Try swapping to "text-amber-500" or "text-teal-600"
+    accentBg: "bg-gold",
+    accentBorder: "border-gold",
+    accentHover: "hover:bg-gold",
   }
 };
