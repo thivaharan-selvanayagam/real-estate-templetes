@@ -21,6 +21,7 @@ export const BRAND_CONFIG = {
   // SEO & Website Meta
   meta: {
     siteName: "Rajivan Varatharajah",
+    logoSvgPath: "/images/logo.svg",
     title: "Rajivan Varatharajah | Luxury Homes & Properties",
     description: "Discover exceptional properties across the most sought-after markets. Buy, rent, or sell with the world's most innovative real estate team.",
     coverImage: "/images/about_rajivan.webp",
