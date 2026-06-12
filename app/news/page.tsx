@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
-export const metadata = { title: "Real Estate News | PREMIER. Real Estate" };
+export const metadata = { title: `Real Estate News | ${BRAND_CONFIG.meta.siteName}` };
 
 // Shared news data
 export const newsArticles = [
@@ -161,20 +162,28 @@ export const newsArticles = [
 ];
 
 export default function NewsPage() {
+  // 🔑 THEME MAPPINGS: Safe class token extraction
+  const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
+  const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
+  const cleanAccentText = BRAND_CONFIG.theme.accentText;
+
+  const groupHoverAccentText = `group-hover:${cleanAccentText}`;
+
   return (
     <div className="bg-[#F8F7F4] min-h-screen">
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[400px] flex flex-col items-center justify-center bg-navy overflow-hidden pt-20">
+      {/* 1. DYNAMIC HERO SECTION */}
+      <section className={`relative h-[400px] flex flex-col items-center justify-center ${cleanPrimaryBg} overflow-hidden pt-20`}>
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1600&auto=format&fit=crop" 
-            alt="Real Estate News"
+            alt="Real Estate News Desk Cover"
             className="w-full h-full object-cover opacity-30 grayscale mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy/90 via-navy/80 to-navy" />
+          <div className={`absolute inset-0 bg-gradient-to-b from-${cleanPrimaryBg.replace('bg-', '')}/90 via-${cleanPrimaryBg.replace('bg-', '')}/80 to-${cleanPrimaryBg.replace('bg-', '')}`} />
         </div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
+          {/* Breadcrumbs */}
           <div className="flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase mb-4 text-white/70 animate-fade-up">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span className="text-white/40">/</span>
@@ -185,7 +194,7 @@ export default function NewsPage() {
             Real Estate News
           </h1>
           <p className="max-w-xl mx-auto text-white/80 text-sm md:text-base leading-relaxed tracking-wide font-medium animate-fade-up delay-200">
-            Stay informed with the latest updates, market trends, and breaking news in the Canadian real estate sector.
+            Stay informed with the latest updates, market trends, and breaking news within our regional sector.
           </p>
         </div>
       </section>
@@ -208,7 +217,7 @@ export default function NewsPage() {
                     alt={article.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-4 left-4 bg-navy text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded shadow-sm">
+                  <div className={`absolute top-4 left-4 ${cleanPrimaryBg} text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded shadow-sm`}>
                     {article.source}
                   </div>
                 </div>
@@ -216,17 +225,21 @@ export default function NewsPage() {
                 {/* Content Container */}
                 <div className="p-8 flex flex-col flex-grow">
                   <div className="flex items-center gap-4 text-xs font-semibold text-gray-400 mb-4">
-                    <span className="flex items-center gap-1.5"><Calendar size={14} className="text-gold"/> {article.date}</span>
-                    <span className="flex items-center gap-1.5"><Clock size={14} className="text-gold"/> {article.time}</span>
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={14} className={cleanAccentText}/> {article.date}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={14} className={cleanAccentText}/> {article.time}
+                    </span>
                   </div>
                   
-                  <h3 className="font-display text-xl font-bold text-navy mb-6 flex-grow leading-snug group-hover:text-gold transition-colors">
+                  <h3 className={`font-display text-xl font-bold ${cleanPrimaryText} mb-6 flex-grow leading-snug ${groupHoverAccentText} transition-colors`}>
                     {article.title}
                   </h3>
                   
                   {/* Footer Link */}
-                  <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-navy transition-colors mt-auto pt-6 border-t border-gray-100">
-                    Read Full Story <ArrowRight size={14} className="transition-transform group-hover:translate-x-1 text-gold" />
+                  <div className={`flex items-center gap-2 text-xs font-bold tracking-widest uppercase ${cleanPrimaryText} transition-colors mt-auto pt-6 border-t border-gray-100`}>
+                    Read Full Story <ArrowRight size={14} className={`transition-transform group-hover:translate-x-1 ${cleanAccentText}`} />
                   </div>
                 </div>
               </Link>

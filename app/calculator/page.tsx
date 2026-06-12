@@ -5,6 +5,7 @@ import Link from "next/link";
 import GetInTouch from "@/components/GetInTouch";
 import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
+
 // Helper to format prices
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat("en-US", {
