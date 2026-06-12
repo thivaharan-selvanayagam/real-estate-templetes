@@ -1,17 +1,19 @@
 import MyListingsClient from "@/components/MyListingsClient";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
 export const metadata = {
-  title: "My Listings | PREMIER. Real Estate",
+  title: `My Listings | ${BRAND_CONFIG.meta.siteName}`, // 🔑 DYNAMIC: Pulls your client's business name
   description: "Browse our exclusive properties.",
 };
 
-const BROKERAGE_NAME = "Royal Lepage Real Estate Associates"; 
+// 🔑 DYNAMIC: Pulls the exact registered MLS brokerage name dynamically
+const BROKERAGE_NAME = BRAND_CONFIG.brokerage.name; 
 
 async function getAllListings(page: number) {
-  // 🔑 CHANGED: Swapped 'office=' for 'brokerage=' 
+  // Using 'brokerage=' parameter exactly as you had configured it
   const fetchUrl = `${process.env.REPLIERS_BASE_URL}/listings?listings=true&status=A&resultsPerPage=12&pageNum=${page}&brokerage=${encodeURIComponent(BROKERAGE_NAME)}`;
   
-  // DEBUG: This will print the exact URL in your terminal so you can verify it
+  // DEBUG: This remains active to help you see exactly what parameters are running on your server
   console.log("Attempting to fetch:", fetchUrl);
 
   const res = await fetch(fetchUrl, {
@@ -28,7 +30,7 @@ async function getAllListings(page: number) {
 
   const data = await res.json();
   
-  // DEBUG: This will print how many listings the API actually found
+  // DEBUG: Helps you instantly see if the API query is working for this client
   console.log(`Success! Found ${data.count || 0} active listings for ${BROKERAGE_NAME}.`);
   
   return data;

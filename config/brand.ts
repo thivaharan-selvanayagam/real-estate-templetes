@@ -20,10 +20,10 @@ export const BRAND_CONFIG = {
 
   // SEO & Website Meta
   meta: {
-    siteName: "PREMIER. Real Estate",
+    siteName: "Rajivan Varatharajah",
     title: "Rajivan Varatharajah | Luxury Homes & Properties",
     description: "Discover exceptional properties across the most sought-after markets. Buy, rent, or sell with the world's most innovative real estate team.",
     coverImage: "/images/about_rajivan.webp",
-    domain: "https://yourwebsite.com",
+    domain: "https://real-estate-templetes.vercel.app/",
   }
 };
