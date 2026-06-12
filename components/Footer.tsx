@@ -2,6 +2,10 @@ import Link from "next/link";
 import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
 export default function Footer() {
+  // Custom helper variables to dynamically stitch hover and selection states
+  const textHoverPrimary = `hover:${BRAND_CONFIG.theme.primaryText}`;
+  const textHoverAccent = `hover:${BRAND_CONFIG.theme.accentText}`;
+
   return (
     <footer className="bg-white border-t border-gray-100">
       
@@ -26,9 +30,9 @@ export default function Footer() {
                   />
                 </div>
               ) : (
-                /* 🔑 OPTION B: Elegant Text Fallback if no file is uploaded */
-                <span className="text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 text-navy">
-                  {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className="text-gold">.</span>
+                /* 🔑 OPTION B: Elegant Text Fallback using the dynamic text theme color rules */
+                <span className={`text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${BRAND_CONFIG.theme.primaryText}`}>
+                  {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
                 </span>
               )}
             </Link>
@@ -40,9 +44,10 @@ export default function Footer() {
           </div>
           
           {/* Social Icons Strip Row */}
+          {/* 🔑 DYNAMIC: Hover changes dynamically to match client's primary style color */}
           <div className="flex items-center justify-center gap-5">
             {["f", "in", "li", "𝕏", "▶"].map((icon, i) => (
-              <Link key={i} href="#" className="text-gray-400 hover:text-navy transition-colors text-sm font-bold p-1">
+              <Link key={i} href="#" className={`text-gray-400 ${textHoverPrimary} transition-colors text-sm font-bold p-1`}>
                 {icon}
               </Link>
             ))}
@@ -50,15 +55,16 @@ export default function Footer() {
         </div>
 
         {/* 4. Legal Disclaimers Section Area */}
+        {/* 🔑 DYNAMIC: Hover changes dynamically to match client's primary style color */}
         <div className="mt-8 pt-6 border-t border-gray-50 text-center md:text-left">
           <div className="flex flex-wrap justify-center md:justify-start gap-x-5 gap-y-3 text-[10px] font-semibold text-gray-400">
             {["Terms of Use", "Privacy Policy", "DMCA Notice", "Fair Housing Statement", "NY Standard Operating Procedures", "NY Fair Housing Notice"].map((t) => (
-              <Link key={t} href="#" className="hover:text-navy transition-colors">
+              <Link key={t} href="#" className={`transition-colors ${textHoverPrimary}`}>
                 {t}
               </Link>
             ))}
           </div>
-          {/* 🔑 DYNAMIC: Legal disclosures now update company names via configuration layer variables */}
+          {/* 🔑 DYNAMIC: Legal disclosures update company names via configuration layer variables */}
           <p className="text-[10px] text-gray-400/80 mt-5 leading-relaxed font-normal max-w-6xl mx-auto md:mx-0">
             {BRAND_CONFIG.meta.siteName} and various trademarks, logos, designs, and slogans are registered and unregistered trademarks of {BRAND_CONFIG.meta.siteName}, Inc. We are a licensed real estate broker representing properties listed under {BRAND_CONFIG.brokerage.name}. All listing information is deemed reliable but is not guaranteed. All measurements and square footages are approximate. We support the Fair Housing Act and Equal Opportunity Act.
           </p>
