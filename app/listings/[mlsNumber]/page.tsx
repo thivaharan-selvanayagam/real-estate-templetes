@@ -5,8 +5,9 @@ import { ArrowLeft, Share2, Map as MapIcon, Send, Phone, Link2, Mail } from "luc
 import { getListing, getFeaturedListings, formatPrice, formatAddress, formatFullAddress } from "@/lib/repliers";
 import GetInTouch from "@/components/GetInTouch";
 import ListingImageGallery from "@/components/ListingImageGallery";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
-export const metadata = { title: "Property Details | PREMIER. Real Estate" };
+export const metadata = { title: `Property Details | ${BRAND_CONFIG.meta.siteName}` };
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ mlsNumber: string }> }) {
   const { mlsNumber } = await params;
@@ -226,17 +227,19 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
               {/* Agent Profile */}
               <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
                 <div className="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-gold relative">
+                  {/* 🔑 DYNAMIC: Pulls headshot dynamically from config file */}
                   <Image 
-                    src="/images/rajivan-headshot.webp" 
-                    alt="Rajivan Varatharajah" 
+                    src={BRAND_CONFIG.agent.headshot} 
+                    alt={BRAND_CONFIG.agent.name} 
                     fill 
                     className="object-cover" 
                   />
                 </div>
                 <div>
-                  <h3 className="font-display font-bold text-navy text-lg">Rajivan Varatharajah</h3>
-                  <p className="text-xs text-gray-500 font-medium">Real Estate Professional</p>
-                  <p className="text-[10px] uppercase tracking-widest text-gold mt-1">Royal Lepage Associates</p>
+                  {/* 🔑 DYNAMIC: Agent Profile Fields */}
+                  <h3 className="font-display font-bold text-navy text-lg">{BRAND_CONFIG.agent.name}</h3>
+                  <p className="text-xs text-gray-500 font-medium">{BRAND_CONFIG.agent.title}</p>
+                  <p className="text-[10px] uppercase tracking-widest text-gold mt-1">{BRAND_CONFIG.brokerage.shortName}</p>
                 </div>
               </div>
 
@@ -255,8 +258,9 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
 
               {/* Direct Contact Options */}
               <div className="mt-4 pt-4 border-t border-gray-100">
-                <a href="tel:6472985523" className="w-full flex items-center justify-center gap-2 border border-navy text-navy py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-navy hover:text-white transition-colors">
-                  <Phone size={16} /> (647) 298-5523
+                {/* 🔑 DYNAMIC: Direct telephone link */}
+                <a href={`tel:${BRAND_CONFIG.agent.phoneRaw}`} className="w-full flex items-center justify-center gap-2 border border-navy text-navy py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-navy hover:text-white transition-colors">
+                  <Phone size={16} /> {BRAND_CONFIG.agent.phone}
                 </a>
               </div>
             </div>
@@ -268,7 +272,8 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
                 <button className="flex items-center justify-center gap-2 border border-gray-200 bg-gray-50 text-gray-600 hover:text-navy hover:border-navy py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">
                   <Link2 size={14} /> Copy Link
                 </button>
-                <a href={`mailto:?subject=Check out this property: ${fullAddress}&body=Here is a property you might be interested in: https://yourwebsite.com/listings/${mlsNumber}`} className="flex items-center justify-center gap-2 border border-gray-200 bg-gray-50 text-gray-600 hover:text-navy hover:border-navy py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">
+                {/* 🔑 DYNAMIC: Configured email sharing client details */}
+                <a href={`mailto:?subject=Check out this property: ${fullAddress}&body=Here is a property you might be interested in: ${BRAND_CONFIG.meta.domain}/listings/${mlsNumber}`} className="flex items-center justify-center gap-2 border border-gray-200 bg-gray-50 text-gray-600 hover:text-navy hover:border-navy py-3 rounded-lg text-xs font-bold uppercase tracking-widest transition-colors">
                   <Mail size={14} /> Email
                 </a>
               </div>
