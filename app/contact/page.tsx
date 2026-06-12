@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MapPin, Phone, Mail, Building2, Send } from "lucide-react";
 import Link from "next/link";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
@@ -40,8 +41,9 @@ export default function ContactPage() {
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight uppercase mb-4 animate-fade-up delay-100">
               Get In Touch
             </h1>
+            {/* 🔑 DYNAMIC: Generalized introduction note to pull target first names dynamically */}
             <p className="text-white/70 text-sm md:text-base leading-relaxed animate-fade-up delay-200">
-              Have questions about property metrics, structural evaluations, or local listings? Connect with Rajivan for unparalleled real estate counsel.
+              Have questions about property metrics, structural evaluations, or local listings? Connect with {BRAND_CONFIG.agent.name.split(" ")[0]} for unparalleled real estate counsel.
             </p>
           </div>
         </div>
@@ -59,46 +61,52 @@ export default function ContactPage() {
             <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z' fill='%23ffffff'/%3E%3C/svg%3E")` }} />
             
             <div className="relative z-10">
+              {/* 🔑 DYNAMIC: Brand Sub-label */}
               <span className="text-gold text-[10px] font-bold tracking-[0.3em] uppercase block mb-4">
-                Premier Real Estate
+                {BRAND_CONFIG.meta.siteName}
               </span>
+              {/* 🔑 DYNAMIC: Full Agent Name Header */}
               <h2 className="font-display text-3xl font-bold tracking-wide mb-6 uppercase leading-snug">
-                Rajivan Varatharajah
+                {BRAND_CONFIG.agent.name}
               </h2>
               <p className="text-white/60 text-sm leading-relaxed mb-12">
-                Providing sophisticated advisory services and elite tactical representation across Toronto and surrounding municipalities.
+                Providing sophisticated advisory services and elite tactical representation across local markets and surrounding municipalities.
               </p>
 
               {/* Direct Info Channels */}
               <div className="flex flex-col gap-8">
-                <a href="tel:6472985523" className="flex items-center gap-5 group w-fit">
+                {/* 🔑 DYNAMIC: Automated Phone links and labels */}
+                <a href={`tel:${BRAND_CONFIG.agent.phoneRaw}`} className="flex items-center gap-5 group w-fit">
                   <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-navy transition-all shrink-0">
                     <Phone size={18} strokeWidth={2} />
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-white/40 tracking-widest block mb-0.5">Call / Text</span>
-                    <span className="text-sm font-semibold tracking-wider transition-colors group-hover:text-gold">(647) 298-5523</span>
+                    <span className="text-sm font-semibold tracking-wider transition-colors group-hover:text-gold">{BRAND_CONFIG.agent.phone}</span>
                   </div>
                 </a>
 
-                <a href="mailto:realtor.rajivan@gmail.com" className="flex items-center gap-5 group w-fit">
+                {/* 🔑 DYNAMIC: Automated Mail links */}
+                <a href={`mailto:${BRAND_CONFIG.agent.email}`} className="flex items-center gap-5 group w-fit">
                   <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-navy transition-all shrink-0">
                     <Mail size={18} strokeWidth={2} />
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-white/40 tracking-widest block mb-0.5">Email</span>
-                    <span className="text-sm font-semibold tracking-wider transition-colors group-hover:text-gold">realtor.rajivan@gmail.com</span>
+                    <span className="text-sm font-semibold tracking-wider transition-colors group-hover:text-gold">{BRAND_CONFIG.agent.email}</span>
                   </div>
                 </a>
 
+                {/* 🔑 DYNAMIC: Map Address Strings */}
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gold shrink-0">
                     <MapPin size={18} strokeWidth={2} />
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold text-white/40 tracking-widest block mb-0.5">Office</span>
-                    <span className="text-sm text-white/90 font-medium leading-relaxed max-w-[200px] block">
-                      158 Main Street Markham N,<br/>Markham, ON L3P 1Y3
+                    <span className="text-sm text-white/90 font-medium leading-relaxed max-w-[240px] block">
+                      {BRAND_CONFIG.brokerage.address.split(",")[0]},<br/>
+                      {BRAND_CONFIG.brokerage.address.split(",").slice(1).join(",").trim()}
                     </span>
                   </div>
                 </div>
@@ -106,11 +114,12 @@ export default function ContactPage() {
             </div>
 
             {/* Footer Brokerage Validation Stamp */}
+            {/* 🔑 DYNAMIC: Brokerage context updates contextually */}
             <div className="mt-16 pt-8 border-t border-white/10 relative z-10 flex items-center gap-4">
               <Building2 className="text-gold" size={24} strokeWidth={1.5} />
               <div>
                 <span className="text-[9px] uppercase font-bold tracking-widest text-white/40 block mb-0.5">Brokerage Affiliation</span>
-                <span className="text-xs font-bold tracking-widest text-white/90">Royal Lepage Associates Realty</span>
+                <span className="text-xs font-bold tracking-widest text-white/90">{BRAND_CONFIG.brokerage.name}</span>
               </div>
             </div>
           </div>
@@ -123,8 +132,9 @@ export default function ContactPage() {
                   <Send size={28} />
                 </div>
                 <h3 className="font-display text-2xl font-bold text-navy uppercase tracking-wide mb-3">Message Sent</h3>
+                {/* 🔑 DYNAMIC: Thank you confirmation box parameters */}
                 <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                  Thank you for reaching out. Rajivan will personally review your request and connect with you shortly.
+                  Thank you for reaching out. {BRAND_CONFIG.agent.name.split(" ")[0]} will personally review your request and connect with you shortly.
                 </p>
                 <button 
                   onClick={() => { setSubmitted(false); setForm({ name: "", email: "", phone: "", message: "" }); }}
@@ -158,7 +168,7 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
                     <div className="relative">
                       <input 
-                        type="email" required placeholder=" " 
+                        type="type" required placeholder=" " 
                         value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
                         className="peer w-full bg-transparent border-b-2 border-gray-200 py-3 text-sm text-navy outline-none focus:border-navy transition-colors"
                       />
