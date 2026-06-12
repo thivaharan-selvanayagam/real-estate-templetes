@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Calculator } from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
-export const metadata = { title: "Buyer's Guide | PREMIER. Real Estate" };
+export const metadata = { title: `Buyer's Guide | ${BRAND_CONFIG.meta.siteName}` };
 
 const buyerSteps = [
   { 
@@ -22,7 +23,7 @@ const buyerSteps = [
   },
   { 
     title: 'Choose a Real Estate Agent', 
-    text: `Can you shop for, look at, and ultimately make an offer on a home without a real estate agent? Technically yes, but why would you when it costs you nothing for an agent like me to take much of the stress off your shoulders? Not only will I help identify properties you might be interested in, arrange showings, and ultimately handle the offer process, but I also have a knowledge of the market that you don’t possess. Finding the perfect home can be a daunting task, this is where my expertise and wealth of knowledge come into play. Let me show you around some homes that meet your dream home criteria so you can find the one that's right for you.`,
+    text: `Can you shop for, look at, and ultimately make an offer on a home without a real estate agent? Technically yes, but why would you when it costs you nothing for an agent to take much of the stress off your shoulders? Not only will I help identify properties you might be interested in, arrange showings, and ultimately handle the offer process, but I also have a knowledge of the market that you don’t possess. Finding the perfect home can be a daunting task, this is where my expertise and wealth of knowledge come into play. Let me show you around some homes that meet your dream home criteria so you can find the one that's right for you.`,
     img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1000&q=80'
   },
   { 
@@ -58,17 +59,24 @@ const buyerSteps = [
 ];
 
 export default function BuyersGuidePage() {
+  const firstName = BRAND_CONFIG.agent.name.split(" ")[0];
+
+  // Helper styles to build structured theme tokens inside templates safely
+  const hoverAccentText = `hover:${BRAND_CONFIG.theme.accentText}`;
+  const hoverPrimaryText = `hover:${BRAND_CONFIG.theme.primaryText}`;
+  const hoverPrimaryBg = `hover:${BRAND_CONFIG.theme.primaryBg}`;
+
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[60vh] lg:h-[70vh] flex flex-col items-center justify-center bg-navy overflow-hidden pt-20">
+      {/* 1. DYNAMIC HERO SECTION */}
+      <section className={`relative h-[60vh] lg:h-[70vh] flex flex-col items-center justify-center ${BRAND_CONFIG.theme.primaryBg} overflow-hidden pt-20`}>
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1400&q=80" 
             alt="Buyer's Guide Blueprint"
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy" />
+          <div className={`absolute inset-0 bg-gradient-to-b from-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/80 via-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/60 to-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}`} />
         </div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
@@ -82,12 +90,12 @@ export default function BuyersGuidePage() {
       <section className="py-20 bg-white">
         <div className="max-w-[760px] mx-auto px-6 text-center">
           <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Your Roadmap</p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-navy tracking-tight">
+          <h2 className={`font-display text-3xl md:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
             Steps to Buying Your Home
           </h2>
-          <div className="w-10 h-[1px] bg-gold mx-auto my-6"></div>
+          <div className={`w-10 h-[1px] ${BRAND_CONFIG.theme.accentBg} mx-auto my-6`}></div>
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-            Buying property is one of the most significant financial milestones of your life. Rajivan Varatharajah provides a tailored, step-by-step framework to navigate the competitive market with absolute confidence.
+            Buying property is one of the most significant financial milestones of your life. Our team provides a tailored, step-by-step framework to navigate the competitive market with absolute confidence.
           </p>
         </div>
       </section>
@@ -95,7 +103,7 @@ export default function BuyersGuidePage() {
       {/* 3. EDITORIAL MATRIX (Alternating Z-Pattern Layout) */}
       <section className="w-full">
         {buyerSteps.map((step, index) => {
-          const isEven = index % 2 !== 0; // Alternating logic (0-indexed)
+          const isEven = index % 2 !== 0;
 
           return (
             <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 ${isEven ? 'bg-gray-50' : 'bg-white'}`}>
@@ -113,13 +121,13 @@ export default function BuyersGuidePage() {
               {/* Text Panel Container */}
               <div className={`flex flex-col justify-center px-8 py-16 lg:px-20 xl:px-24 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold">
+                  <span className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText}`}>
                     Phase {String(index + 1).padStart(2, '0')}
                   </span>
-                  <div className="w-6 h-[1px] bg-gold hidden md:block"></div>
+                  <div className={`w-6 h-[1px] ${BRAND_CONFIG.theme.accentBg} hidden md:block`}></div>
                 </div>
                 
-                <h3 className="font-display text-2xl lg:text-3xl xl:text-4xl font-bold text-navy mb-5 uppercase tracking-wide leading-snug">
+                <h3 className={`font-display text-2xl lg:text-3xl xl:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-5 uppercase tracking-wide leading-snug`}>
                   {step.title}
                 </h3>
                 
@@ -136,14 +144,14 @@ export default function BuyersGuidePage() {
       {/* 4. ACTIONS FOOTER */}
       <section className="py-24 bg-gray-50 border-t border-gray-100 text-center">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-navy tracking-wide uppercase mb-10">
+          <h2 className={`font-display text-3xl md:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} tracking-wide uppercase mb-10`}>
             Ready to Begin Your Search?
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/all-homes" className="btn flex items-center justify-center gap-2 bg-navy text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-gold transition-colors">
+            <Link href="/all-homes" className={`btn flex items-center justify-center gap-2 ${BRAND_CONFIG.theme.primaryBg} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase ${hoverAccentText} transition-all`}>
               Browse Live Listings <ArrowRight size={16} />
             </Link>
-            <Link href="/contact" className="btn flex items-center justify-center gap-2 border border-navy text-navy px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-navy hover:text-white transition-colors">
+            <Link href="/contact" className={`btn flex items-center justify-center gap-2 border ${BRAND_CONFIG.theme.primaryBorder} ${BRAND_CONFIG.theme.primaryText} px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase ${hoverPrimaryBg} hover:text-white transition-all`}>
               Schedule Consultation
             </Link>
           </div>
@@ -151,37 +159,37 @@ export default function BuyersGuidePage() {
       </section>
 
       {/* 5. CALCULATOR CTA SECTION */}
-      <section className="py-20 bg-navy text-center border-t border-white/5">
+      <section className={`py-20 ${BRAND_CONFIG.theme.primaryBg} text-center border-t border-white/5`}>
         <div className="max-w-3xl mx-auto px-6">
-          <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold mb-4">Financial Analytics</p>
+          <p className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText} mb-4`}>Financial Analytics</p>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-white tracking-tight mb-10">
             Estimate Your Real Estate Carrying Costs
           </h2>
-          <Link href="/calculator" className="inline-flex items-center gap-3 bg-white text-navy px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-neutral-100 transition-colors shadow-xl">
+          <Link href="/calculator" className={`inline-flex items-center gap-3 bg-white ${BRAND_CONFIG.theme.primaryText} px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-neutral-100 transition-colors shadow-xl`}>
             <Calculator size={16} /> Launch Calculator Matrix
           </Link>
         </div>
       </section>
 
-      {/* 6. WORK WITH RAJIVAN HERO */}
+      {/* 6. DYNAMIC BRAND ADVOCATE CALLOUT HERO */}
       <section className="relative h-[500px] flex items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=1400&q=80" 
-            alt="Work with Rajivan"
+            alt={`Work with ${BRAND_CONFIG.agent.name}`}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-navy/70" />
+          <div className={`absolute inset-0 ${BRAND_CONFIG.theme.primaryBg}/70`} />
         </div>
         <div className="relative z-10 px-6 max-w-2xl mx-auto">
-          <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold mb-4">Start Today</p>
+          <p className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText} mb-4`}>Start Today</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-6">
-            Work With Rajivan
+            Work With {firstName}
           </h2>
           <p className="text-white/90 text-sm md:text-base leading-relaxed mb-10">
-            With a passion for real estate and years of experience in sales and negotiation, Rajivan ensures every client gets top-tier service. Call him today to see how he can help you navigate the real estate market with confidence.
+            With a passion for real estate and structural refinement alongside deep proficiency in execution and contract validation, {firstName} ensures every client achieves premium advisory service. Connect with us today to observe how our model guides you across standard market barriers with absolute clarity.
           </p>
-          <Link href="/contact" className="bg-gold text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-navy transition-colors inline-block shadow-xl">
+          <Link href="/contact" className={`${BRAND_CONFIG.theme.accentBg} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white ${hoverPrimaryText} transition-colors inline-block shadow-xl`}>
             Let's Connect
           </Link>
         </div>

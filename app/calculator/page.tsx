@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import GetInTouch from "@/components/GetInTouch";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
 // Helper to format prices
 const formatPrice = (price: number) => {
@@ -46,7 +47,6 @@ export default function CalculatorPage() {
   const handleHomePriceChange = (val: string) => {
     const num = Number(val);
     setHomePrice(num);
-    // Maintain the same percentage when home price changes
     setDownPayment(num * (downPaymentPercent / 100));
   };
 
@@ -59,17 +59,27 @@ export default function CalculatorPage() {
     setDownPayment(homePrice * (pct / 100));
   };
 
+  // 🔑 THEME MAPPINGS: Strip decorators to assemble focus utility rules safely
+  const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
+  const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
+  const cleanAccentText = BRAND_CONFIG.theme.accentText;
+  const cleanAccentBg = BRAND_CONFIG.theme.accentBg;
+
+  const focusBorderAccent = `focus-within:border-${cleanAccentText.replace('text-', '')}`;
+  const focusSelectBorderAccent = `focus:border-${cleanAccentText.replace('text-', '')}`;
+  const rangeAccentColor = `accent-${cleanAccentText.replace('text-', '')}`;
+
   return (
-    <div className="bg-navy min-h-screen text-white">
+    <div className={`${cleanPrimaryBg} min-h-screen text-white`}>
       {/* 1. HERO SECTION */}
       <section className="relative h-[400px] lg:h-[450px] flex flex-col items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1600&auto=format&fit=crop" 
-            alt="Person using a calculator"
+            alt="Financial analytics overview"
             className="w-full h-full object-cover opacity-30 grayscale mix-blend-overlay"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy/90 via-navy/80 to-navy" />
+          <div className={`absolute inset-0 bg-gradient-to-b from-${cleanPrimaryBg.replace('bg-', '')}/70 via-${cleanPrimaryBg.replace('bg-', '')}/80 to-${cleanPrimaryBg.replace('bg-', '')}`} />
         </div>
         
         <div className="relative z-10 text-center px-6 w-full mt-10">
@@ -85,7 +95,7 @@ export default function CalculatorPage() {
           
           {/* Header */}
           <div className="text-center mb-16">
-            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold mb-4 block">
+            <span className={`text-[10px] font-bold tracking-[0.2em] uppercase ${cleanAccentText} mb-4 block`}>
               Plan Your Purchase
             </span>
             <h2 className="font-display text-3xl md:text-4xl font-normal text-white tracking-widest uppercase">
@@ -95,13 +105,13 @@ export default function CalculatorPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             
-            {/* LEFT COLUMN: FORM (Spans 7 cols on large screens) */}
+            {/* LEFT COLUMN: FORM */}
             <div className="lg:col-span-7 flex flex-col gap-6">
               
               {/* Home Price */}
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">Home Price</label>
-                <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors">
+                <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors`}>
                   <span className="px-4 text-white/50 border-r border-white/10">$</span>
                   <input 
                     type="number" 
@@ -116,7 +126,7 @@ export default function CalculatorPage() {
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">Down Payment</label>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors flex-1">
+                  <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors flex-1`}>
                     <span className="px-4 text-white/50 border-r border-white/10">$</span>
                     <input 
                       type="number" 
@@ -125,7 +135,7 @@ export default function CalculatorPage() {
                       className="w-full bg-transparent text-white px-4 py-3 outline-none"
                     />
                   </div>
-                  <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors w-full sm:w-28 shrink-0">
+                  <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors w-full sm:w-28 shrink-0`}>
                     <input 
                       type="number" 
                       value={downPaymentPercent.toFixed(1)}
@@ -144,12 +154,12 @@ export default function CalculatorPage() {
                   <select 
                     value={loanTerm}
                     onChange={(e) => setLoanTerm(Number(e.target.value))}
-                    className="w-full bg-[#1A2332] border border-white/10 rounded text-white px-4 py-3 outline-none appearance-none focus:border-gold transition-colors"
+                    className={`w-full bg-white/5 border border-white/10 rounded text-white px-4 py-3 outline-none appearance-none ${focusSelectBorderAccent} transition-colors`}
                   >
-                    <option value={30}>30 Years</option>
-                    <option value={20}>20 Years</option>
-                    <option value={15}>15 Years</option>
-                    <option value={10}>10 Years</option>
+                    <option value={30} className="bg-slate-900">30 Years</option>
+                    <option value={20} className="bg-slate-900">20 Years</option>
+                    <option value={15} className="bg-slate-900">15 Years</option>
+                    <option value={10} className="bg-slate-900">10 Years</option>
                   </select>
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
                     <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -162,7 +172,7 @@ export default function CalculatorPage() {
               {/* Interest Rate */}
               <div className="flex flex-col gap-4">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">Interest Rate</label>
-                <div className="flex flex-col gap-4 bg-[#1A2332] border border-white/10 rounded p-4 focus-within:border-gold transition-colors">
+                <div className={`flex flex-col gap-4 bg-white/5 border border-white/10 rounded p-4 ${focusBorderAccent} transition-colors`}>
                   <div className="flex items-center justify-between">
                     <input 
                       type="number" 
@@ -180,7 +190,7 @@ export default function CalculatorPage() {
                     step="0.1"
                     value={interestRate}
                     onChange={(e) => setInterestRate(Number(e.target.value))}
-                    className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-gold"
+                    className={`w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer ${rangeAccentColor}`}
                   />
                 </div>
               </div>
@@ -188,7 +198,7 @@ export default function CalculatorPage() {
               {/* Property Tax */}
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">Property Tax (Annual)</label>
-                <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors">
+                <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors`}>
                   <span className="px-4 text-white/50 border-r border-white/10">$</span>
                   <input 
                     type="number" 
@@ -202,7 +212,7 @@ export default function CalculatorPage() {
               {/* Home Insurance */}
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">Home Insurance (Annual)</label>
-                <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors">
+                <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors`}>
                   <span className="px-4 text-white/50 border-r border-white/10">$</span>
                   <input 
                     type="number" 
@@ -216,7 +226,7 @@ export default function CalculatorPage() {
               {/* HOA Fees */}
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold tracking-widest uppercase text-white/70">HOA Fees (Monthly)</label>
-                <div className="flex items-center bg-[#1A2332] border border-white/10 rounded overflow-hidden focus-within:border-gold transition-colors">
+                <div className={`flex items-center bg-white/5 border border-white/10 rounded overflow-hidden ${focusBorderAccent} transition-colors`}>
                   <span className="px-4 text-white/50 border-r border-white/10">$</span>
                   <input 
                     type="number" 
@@ -229,12 +239,12 @@ export default function CalculatorPage() {
 
             </div>
 
-            {/* RIGHT COLUMN: RESULTS CARD (Spans 5 cols on large screens) */}
+            {/* RIGHT COLUMN: RESULTS CARD */}
             <div className="lg:col-span-5 sticky top-24">
-              <div className="bg-[#161D2B] border border-white/10 p-8 rounded-lg shadow-2xl">
+              <div className="bg-white/5 border border-white/10 p-8 rounded-lg shadow-2xl">
                 
                 <h3 className="text-sm text-white/90 font-medium mb-2">Estimated Monthly Payment</h3>
-                <div className="font-display text-5xl md:text-6xl text-gold mb-1">
+                <div className={`font-display text-5xl md:text-6xl ${cleanAccentText} mb-1`}>
                   {formatPrice(totalMonthlyPayment)}
                 </div>
                 <p className="text-[10px] tracking-widest uppercase text-white/50 mb-8">Per Month</p>
@@ -264,9 +274,9 @@ export default function CalculatorPage() {
 
                 <Link 
                   href="/contact" 
-                  className="block w-full bg-[#E6D5B8] text-navy text-center py-4 rounded text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors"
+                  className={`block w-full ${cleanAccentBg} text-white text-center py-4 rounded text-xs font-bold tracking-widest uppercase hover:bg-white ${cleanPrimaryText} transition-all shadow-md`}
                 >
-                  Talk To Rajivan
+                  Talk To Our Team
                 </Link>
 
               </div>

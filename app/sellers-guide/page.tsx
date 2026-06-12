@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, Home, Calculator, BarChart3 } from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
-export const metadata = { title: "Seller's Guide | PREMIER. Real Estate" };
+export const metadata = { title: `Seller's Guide | ${BRAND_CONFIG.meta.siteName}` };
 
 const sellerSteps = [
   { 
@@ -18,7 +19,7 @@ const sellerSteps = [
   { 
     title: 'Start Preparations', 
     text: `First impressions are everything. Preparing your home for sale involves decluttering, depersonalizing, deep cleaning, and making necessary repairs. We may also recommend professional staging to highlight your home's best features and help potential buyers envision themselves living in the space.`,
-    img: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?w=1200&q=80'
+    img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80'
   },
   { 
     title: 'Develop A Marketing Strategy', 
@@ -48,17 +49,25 @@ const sellerSteps = [
 ];
 
 export default function SellersGuidePage() {
+  const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
+  const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
+  const cleanAccentBg = BRAND_CONFIG.theme.accentBg;
+  const cleanAccentText = BRAND_CONFIG.theme.accentText;
+
+  const hoverPrimaryText = `hover:${cleanPrimaryText}`;
+
   return (
     <div className="bg-[#F8F7F4] min-h-screen">
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[50vh] lg:h-[60vh] flex flex-col items-center justify-center bg-navy overflow-hidden pt-20">
+      {/* 1. DYNAMIC THEMED HERO SECTION */}
+      <section className={`relative h-[50vh] lg:h-[60vh] flex flex-col items-center justify-center ${cleanPrimaryBg} overflow-hidden pt-20`}>
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1600&q=80" 
             alt="Seller's Guide"
             className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-navy/40" />
+          <div className={`absolute inset-0 bg-gradient-to-b from-${cleanPrimaryBg.replace('bg-', '')}/70 to-${cleanPrimaryBg.replace('bg-', '')}`} />
+          
         </div>
         <div className="relative z-10 text-center px-6">
           <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-widest uppercase animate-fade-up shadow-sm">
@@ -67,8 +76,9 @@ export default function SellersGuidePage() {
         </div>
       </section>
 
+
       {/* 2. INTRO BANNER */}
-      <section className="bg-navy py-16 text-center px-6">
+      <section className={`${cleanPrimaryBg} py-16 text-center px-6`}>
         <div className="max-w-4xl mx-auto">
           <h2 className="font-display text-xl md:text-2xl font-bold text-white tracking-widest uppercase mb-6">
             A Step-By-Step First-Time Seller's Guide
@@ -84,11 +94,11 @@ export default function SellersGuidePage() {
       <section className="w-full flex flex-col">
         {sellerSteps.map((step, index) => {
           const isEven = index % 2 === 0; 
-          // isEven (0, 2, 4) -> Cream Background, Image Left, Text Right
-          // !isEven (1, 3, 5) -> Navy Background, Text Left, Image Right
+          // isEven (0, 2, 4) -> Light Cream Background, Image Left, Text Right
+          // !isEven (1, 3, 5) -> Themed Primary Background, Text Left, Image Right
 
           return (
-            <div key={index} className={`grid grid-cols-1 md:grid-cols-2 min-h-[500px] lg:min-h-[600px] ${isEven ? 'bg-[#F8F7F4]' : 'bg-navy'}`}>
+            <div key={index} className={`grid grid-cols-1 md:grid-cols-2 min-h-[500px] lg:min-h-[600px] ${isEven ? 'bg-[#F8F7F4]' : cleanPrimaryBg}`}>
               
               {/* IMAGE HALF */}
               <div className={`relative w-full h-[400px] md:h-full order-1 ${isEven ? 'md:order-1' : 'md:order-2'}`}>
@@ -102,10 +112,10 @@ export default function SellersGuidePage() {
 
               {/* TEXT HALF */}
               <div className={`flex flex-col justify-center px-8 py-16 md:px-16 lg:px-24 xl:px-32 order-2 ${isEven ? 'md:order-2' : 'md:order-1'}`}>
-                <span className={`text-[11px] font-bold tracking-[0.2em] uppercase mb-4 ${isEven ? 'text-gold' : 'text-gold'}`}>
+                <span className={`text-[11px] font-bold tracking-[0.2em] uppercase mb-4 ${cleanAccentText}`}>
                   Step {index + 1}
                 </span>
-                <h3 className={`font-display text-2xl lg:text-3xl font-bold uppercase tracking-wide leading-snug mb-6 ${isEven ? 'text-navy' : 'text-white'}`}>
+                <h3 className={`font-display text-2xl lg:text-3xl font-bold uppercase tracking-wide leading-snug mb-6 ${isEven ? cleanPrimaryText : 'text-white'}`}>
                   {step.title}
                 </h3>
                 <p className={`text-sm lg:text-[15px] leading-loose font-medium ${isEven ? 'text-gray-600' : 'text-white/80'}`}>
@@ -119,14 +129,14 @@ export default function SellersGuidePage() {
       </section>
 
       {/* 4. CONGRATULATIONS BANNER */}
-      <section className="bg-navy py-20 text-center px-6 border-t border-white/10">
+      <section className={`${cleanPrimaryBg} py-20 text-center px-6 border-t border-white/10`}>
         <div className="max-w-3xl mx-auto">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-white tracking-widest uppercase mb-6">
             Congratulations!
           </h2>
           <p className="text-white/80 text-sm leading-relaxed">
             You have successfully navigated the home selling process. Whether you are moving across town or across the country, 
-            Rajivan Varatharajah is here to assist you with your next real estate endeavor.
+            {BRAND_CONFIG.agent.name} is here to assist you with your next real estate endeavor.
           </p>
         </div>
       </section>
@@ -139,7 +149,7 @@ export default function SellersGuidePage() {
             alt="Neighborhood aerial"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-navy/80" />
+          <div className={`absolute inset-0 ${cleanPrimaryBg}/80`} />
         </div>
         <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-white tracking-widest uppercase mb-6">
@@ -166,7 +176,7 @@ export default function SellersGuidePage() {
                 alt="Search Homes" 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
+              <div className={`absolute inset-0 bg-gradient-to-t from-${cleanPrimaryBg.replace('bg-', '')}/90 via-${cleanPrimaryBg.replace('bg-', '')}/20 to-transparent`} />
               <div className="relative z-10 p-8 w-full text-center">
                 <h3 className="text-white font-display text-xl tracking-widest uppercase">Search Homes</h3>
               </div>
@@ -179,7 +189,7 @@ export default function SellersGuidePage() {
                 alt="Home Valuation" 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
+              <div className={`absolute inset-0 bg-gradient-to-t from-${cleanPrimaryBg.replace('bg-', '')}/90 via-${cleanPrimaryBg.replace('bg-', '')}/20 to-transparent`} />
               <div className="relative z-10 p-8 w-full text-center">
                 <h3 className="text-white font-display text-xl tracking-widest uppercase">Home Valuation</h3>
               </div>
@@ -192,7 +202,7 @@ export default function SellersGuidePage() {
                 alt="Market Stats" 
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
+              <div className={`absolute inset-0 bg-gradient-to-t from-${cleanPrimaryBg.replace('bg-', '')}/90 via-${cleanPrimaryBg.replace('bg-', '')}/20 to-transparent`} />
               <div className="relative z-10 p-8 w-full text-center">
                 <h3 className="text-white font-display text-xl tracking-widest uppercase">Market Stats</h3>
               </div>
@@ -210,7 +220,7 @@ export default function SellersGuidePage() {
             alt="Work with us"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-navy/80" />
+          <div className={`absolute inset-0 ${cleanPrimaryBg}/80`} />
         </div>
         <div className="relative z-10 px-6 max-w-2xl mx-auto">
           <h2 className="font-display text-3xl md:text-5xl font-bold text-white tracking-widest uppercase mb-6">
@@ -219,7 +229,7 @@ export default function SellersGuidePage() {
           <p className="text-white/80 text-sm leading-relaxed mb-10 max-w-lg mx-auto">
             Experience unparalleled service, expert negotiation, and a commitment to achieving your real estate goals.
           </p>
-          <Link href="/contact" className="inline-block bg-[#E6D5B8] text-navy px-10 py-4 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-white transition-colors">
+          <Link href="/contact" className={`inline-block ${cleanAccentBg} text-white px-10 py-4 rounded-sm text-xs font-bold tracking-widest uppercase hover:bg-white ${hoverPrimaryText} transition-colors shadow-lg`}>
             Get In Touch
           </Link>
         </div>

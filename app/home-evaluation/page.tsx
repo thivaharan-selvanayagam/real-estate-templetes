@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import GetInTouch from "@/components/GetInTouch";
+import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
 
 export default function HomeEvaluationPage() {
   // Form State
@@ -22,7 +23,7 @@ export default function HomeEvaluationPage() {
     if (address.trim().length > 5) {
       setStep(2);
     } else {
-      alert("Please enter a valid Canadian address.");
+      alert("Please enter a valid address execution string.");
     }
   };
 
@@ -36,6 +37,15 @@ export default function HomeEvaluationPage() {
     setStep(3);
   };
 
+  // 🔑 TAILWIND HOOKS: Dynamic parsing of brand configuration design tokens
+  const cleanPrimaryTextClass = BRAND_CONFIG.theme.primaryText;
+  const cleanPrimaryBgClass = BRAND_CONFIG.theme.primaryBg;
+  const cleanAccentBgClass = BRAND_CONFIG.theme.accentBg;
+  const cleanAccentTextClass = BRAND_CONFIG.theme.accentText;
+
+  const inputFocusRingClass = `focus:ring-${BRAND_CONFIG.theme.accentText.replace('text-', '')}`;
+  const inputFocusBorderClass = `focus:border-${BRAND_CONFIG.theme.primaryText.replace('text-', '')}`;
+
   return (
     <div className="bg-[#F8F7F4] min-h-screen text-navy">
       {/* 1. HERO SECTION WITH 3-STEP FORM */}
@@ -46,19 +56,19 @@ export default function HomeEvaluationPage() {
             alt="Luxury Home Exterior"
             className="w-full h-full object-cover"
           />
-          {/* Subtle gradient overlay to make text pop while keeping the image visible */}
-          <div className="absolute inset-0 bg-navy/60" />
+          {/* Dynamic opacity overlay matched to primary theme configuration tokens */}
+          <div className={`absolute inset-0 ${cleanPrimaryBgClass}/60`} />
         </div>
         
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 flex flex-col items-center mt-8">
+        <div className="relative z-10 text-navy w-full max-w-4xl mx-auto px-6 flex flex-col items-center mt-8">
           
           {/* Step Indicator */}
           <div className="flex items-center gap-4 mb-12">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step >= 1 ? 'bg-white text-navy border-white' : 'border-white/50 text-white/50'}`}>1</div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step >= 1 ? `bg-white ${cleanPrimaryTextClass} border-white` : 'border-white/50 text-white/50'}`}>1</div>
             <div className={`w-16 h-px ${step >= 2 ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step >= 2 ? 'bg-white text-navy border-white' : 'border-white/50 text-white/50'}`}>2</div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step >= 2 ? `bg-white ${cleanPrimaryTextClass} border-white` : 'border-white/50 text-white/50'}`}>2</div>
             <div className={`w-16 h-px ${step >= 3 ? 'bg-white' : 'bg-white/30'}`} />
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step === 3 ? 'bg-white text-navy border-white' : 'border-white/50 text-white/50'}`}>3</div>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${step === 3 ? `bg-white ${cleanPrimaryTextClass} border-white` : 'border-white/50 text-white/50'}`}>3</div>
           </div>
 
           <h1 className="font-display text-3xl md:text-5xl font-bold text-white tracking-widest uppercase mb-12 text-center">
@@ -77,12 +87,12 @@ export default function HomeEvaluationPage() {
                     type="text" 
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter a valid address in Canada..." 
-                    className="w-full bg-white/90 border-none outline-none text-navy placeholder:text-gray-500 px-6 py-4 rounded-full focus:ring-2 focus:ring-gold"
+                    placeholder="Enter property street address details..." 
+                    className={`w-full bg-white/90 border-none outline-none text-navy placeholder:text-gray-500 px-6 py-4 rounded-full focus:ring-2 ${inputFocusRingClass}`}
                     required
                   />
                 </div>
-                <button type="submit" className="bg-gold text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-navy transition-colors self-center mt-4">
+                <button type="submit" className={`${cleanAccentBgClass} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white ${cleanPrimaryTextClass} transition-colors self-center mt-4 shadow-md`}>
                   Continue
                 </button>
               </form>
@@ -95,21 +105,21 @@ export default function HomeEvaluationPage() {
                   <input 
                     type="text" placeholder="Full Name" required
                     value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 focus:ring-gold"
+                    className={`w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 ${inputFocusRingClass}`}
                   />
                   <input 
                     type="email" placeholder="Email Address" required
                     value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 focus:ring-gold"
+                    className={`w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 ${inputFocusRingClass}`}
                   />
                   <input 
                     type="tel" placeholder="Phone Number" required
                     value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                    className="w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 focus:ring-gold"
+                    className={`w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 ${inputFocusRingClass}`}
                   />
                   <select 
                     value={formData.timeframe} onChange={(e) => setFormData({...formData, timeframe: e.target.value})}
-                    className="w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 focus:ring-gold appearance-none"
+                    className={`w-full bg-white/90 outline-none text-navy px-5 py-3 rounded-xl focus:ring-2 ${inputFocusRingClass} appearance-none`}
                   >
                     <option value="" disabled>Select Timeframe (Optional)</option>
                     <option value="now">I want to sell now</option>
@@ -124,10 +134,10 @@ export default function HomeEvaluationPage() {
                   <input 
                     type="checkbox" id="consent" required
                     checked={formData.consent} onChange={(e) => setFormData({...formData, consent: e.target.checked})}
-                    className="mt-1 w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold"
+                    className={`mt-1 w-4 h-4 rounded border-gray-300 ${cleanAccentTextClass} focus:${cleanAccentTextClass}`}
                   />
                   <label htmlFor="consent" className="text-[10px] leading-relaxed text-white/80">
-                    I agree to be contacted by Rajivan via call, email, and text for real estate services. To opt out, you can reply 'stop' at any time or reply 'help' for assistance. You can also click the unsubscribe link in the emails. Message and data rates may apply. Message frequency may vary.
+                    I agree to be contacted by {BRAND_CONFIG.agent.name} via call, email, and text for real estate services. To opt out, you can reply 'stop' at any time or reply 'help' for assistance. You can also click the unsubscribe link in the emails. Message and data rates may apply. Message frequency may vary.
                   </label>
                 </div>
 
@@ -135,7 +145,7 @@ export default function HomeEvaluationPage() {
                   <button type="button" onClick={() => setStep(1)} className="text-white/80 text-xs uppercase tracking-widest hover:text-white font-bold">
                     &larr; Back
                   </button>
-                  <button type="submit" className="bg-gold text-white px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white hover:text-navy transition-colors">
+                  <button type="submit" className={`${cleanAccentBgClass} text-white px-8 py-3 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white ${cleanPrimaryTextClass} transition-colors shadow-md`}>
                     Get Estimate
                   </button>
                 </div>
@@ -145,16 +155,16 @@ export default function HomeEvaluationPage() {
             {/* STEP 3 */}
             {step === 3 && (
               <div className="text-center text-white py-8 animate-fade-in">
-                <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className={`w-16 h-16 ${cleanAccentBgClass} rounded-full flex items-center justify-center mx-auto mb-6 shadow-md`}>
                   <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
                 <h3 className="font-display text-3xl font-bold mb-4">Thank You!</h3>
                 <p className="text-white/90 leading-relaxed max-w-md mx-auto">
-                  Your request has been received. Rajivan is currently preparing a detailed and customized home valuation for <strong className="text-gold">{address}</strong>. We will be in touch shortly.
+                  Your request has been received. Our team is currently preparing a detailed and customized home valuation report for <strong className={cleanAccentTextClass}>{address}</strong>. We will be in touch shortly.
                 </p>
-                <button onClick={() => { setStep(1); setAddress(""); }} className="mt-8 text-xs font-bold uppercase tracking-widest text-gold hover:text-white transition-colors">
+                <button onClick={() => { setStep(1); setAddress(""); }} className={`mt-8 text-xs font-bold uppercase tracking-widest ${cleanAccentTextClass} hover:text-white transition-colors`}>
                   Submit Another Property
                 </button>
               </div>
@@ -168,7 +178,7 @@ export default function HomeEvaluationPage() {
       <section className="py-24 max-w-[1200px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="font-display text-3xl md:text-4xl font-normal text-navy mb-6 uppercase tracking-wide">
+            <h2 className={`font-display text-3xl md:text-4xl font-normal ${cleanPrimaryTextClass} mb-6 uppercase tracking-wide`}>
               What's Your Property Worth?
             </h2>
             <p className="text-gray-600 text-sm leading-loose mb-6">
@@ -192,22 +202,22 @@ export default function HomeEvaluationPage() {
       <section className="pb-24 max-w-[1200px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          <div className="border border-navy/20 p-8 lg:p-10 text-center bg-transparent">
-            <h3 className="font-display text-lg font-normal text-navy mb-6 uppercase tracking-widest leading-relaxed">What Is a Home Valuation?</h3>
+          <div className={`border border-${cleanPrimaryTextClass.replace('text-', '')}/20 p-8 lg:p-10 text-center bg-transparent`}>
+            <h3 className={`font-display text-lg font-normal ${cleanPrimaryTextClass} mb-6 uppercase tracking-widest leading-relaxed`}>What Is a Home Valuation?</h3>
             <p className="text-gray-600 text-sm leading-loose">
               A home valuation determines the current market value of a residential property. It is crucial for real estate transactions, preventing excessive borrowing and financial losses. When getting a mortgage, the home acts as collateral. If the borrower defaults, the lender may sell the property to recover funds. A thorough home valuation safeguards the lender's ability to recover costs if the mortgage is not fully repaid.
             </p>
           </div>
 
-          <div className="border border-navy/20 p-8 lg:p-10 text-center bg-transparent">
-            <h3 className="font-display text-lg font-normal text-navy mb-6 uppercase tracking-widest leading-relaxed">How Is the Valuation Calculated?</h3>
+          <div className={`border border-${cleanPrimaryTextClass.replace('text-', '')}/20 p-8 lg:p-10 text-center bg-transparent`}>
+            <h3 className={`font-display text-lg font-normal ${cleanPrimaryTextClass} mb-6 uppercase tracking-widest leading-relaxed`}>How Is the Valuation Calculated?</h3>
             <p className="text-gray-600 text-sm leading-loose">
               The value of your home is calculated using a combination of factors including its location, age, size, condition, any improvements or renovations made, and recent sale prices of comparable homes in the neighborhood. It also factors in current market trends and local market conditions. The valuation tool is dynamic and can be influenced by data such as inventory trends, interest rates, and current buyer sentiment.
             </p>
           </div>
 
-          <div className="border border-navy/20 p-8 lg:p-10 text-center bg-transparent">
-            <h3 className="font-display text-lg font-normal text-navy mb-6 uppercase tracking-widest leading-relaxed">How Accurate Is the Online Valuation?</h3>
+          <div className={`border border-${cleanPrimaryTextClass.replace('text-', '')}/20 p-8 lg:p-10 text-center bg-transparent`}>
+            <h3 className={`font-display text-lg font-normal ${cleanPrimaryTextClass} mb-6 uppercase tracking-widest leading-relaxed`}>How Accurate Is the Online Valuation?</h3>
             <p className="text-gray-600 text-sm leading-loose">
               Online home valuations provide a good starting point and offer a general estimate of your property's worth. However, they may not factor in recent renovations, unique features, historical value, architectural significance, and subjective market perception that could impact your home's actual market value. For the most accurate assessment, consider scheduling an in-person appraisal.
             </p>
@@ -217,7 +227,7 @@ export default function HomeEvaluationPage() {
       </section>
 
       {/* 4. CTA BANNER */}
-      <section className="bg-navy py-16">
+      <section className={`${cleanPrimaryBgClass} py-16`}>
         <div className="max-w-[1200px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <h2 className="font-display text-2xl lg:text-3xl text-white uppercase tracking-widest">
             Start Your Property Search
@@ -230,7 +240,7 @@ export default function HomeEvaluationPage() {
 
       {/* 5. TIMELINE: HOW IS A VALUATION PERFORMED */}
       <section className="py-24 max-w-[1000px] mx-auto px-6 lg:px-12 text-center">
-        <h2 className="font-display text-3xl md:text-4xl font-normal text-navy uppercase tracking-widest mb-4">
+        <h2 className={`font-display text-3xl md:text-4xl font-normal ${cleanPrimaryTextClass} uppercase tracking-widest mb-4`}>
           How Is a Valuation Performed?
         </h2>
         <p className="text-sm tracking-widest text-gray-500 uppercase mb-20">Two Accurate Ways to Perform Home Valuations</p>
@@ -250,7 +260,7 @@ export default function HomeEvaluationPage() {
             
             <div className="w-full md:w-1/2 md:pl-16 text-left">
               <span className="md:hidden bg-[#B97A42] text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest inline-block mb-4">Market Analysis</span>
-              <h3 className="font-bold text-navy uppercase tracking-widest text-sm mb-4">Comparative Market Analysis</h3>
+              <h3 className={`font-bold ${cleanPrimaryTextClass} uppercase tracking-widest text-sm mb-4`}>Comparative Market Analysis</h3>
               <p className="text-gray-600 text-xs leading-loose text-justify md:text-left">
                 A Comparative Market Analysis (CMA) is a tool used by real estate agents to value a home. It evaluates similar homes that have recently sold in the same area. Agents find comparable sales and use them to conduct a sales comparison. In most cases, an agent will find three homes that have recently sold and are as similar to and located as close to the home being valued as possible. Each one is then analyzed to pinpoint differences between it and the home being valued. Once those differences are priced out, the price of each comp is adjusted to see what it would cost if it was identical to the home being valued were it to be sold in the current market.
               </p>
@@ -261,7 +271,7 @@ export default function HomeEvaluationPage() {
           <div className="flex flex-col md:flex-row items-center justify-between w-full relative">
             <div className="w-full md:w-1/2 md:pr-16 text-left md:text-right mb-6 md:mb-0">
               <span className="md:hidden bg-[#B97A42] text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest inline-block mb-4">Appraisals</span>
-              <h3 className="font-bold text-navy uppercase tracking-widest text-sm mb-4">Based on a Professional's Opinion</h3>
+              <h3 className={`font-bold ${cleanPrimaryTextClass} uppercase tracking-widest text-sm mb-4`}>Based on a Professional's Opinion</h3>
               <p className="text-gray-600 text-xs leading-loose text-justify md:text-right">
                 An appraisal is an unbiased valuation of a home based on a professional's opinion. They are usually what mortgage companies use for home purchases and refinances. A lender usually orders a home appraisal and the cost of the appraisal, sometimes up to $500, is paid by the homeowner. An appraiser does a complete visual inspection of the interior and exterior of the home as well as taking into consideration recent sales of similar properties and market trends. The appraiser then compiles a detailed report on the home, including an exterior building sketch, a street map showing the home and any comparable sales, photos of the home and street, an explanation of how the square footage was calculated, and any other relevant information.
               </p>
@@ -280,7 +290,7 @@ export default function HomeEvaluationPage() {
 
       {/* 6. TIMELINE: WHY IS A VALUATION IMPORTANT */}
       <section className="py-24 max-w-[1000px] mx-auto px-6 lg:px-12 text-center border-t border-gray-200">
-        <h2 className="font-display text-3xl md:text-4xl font-normal text-navy uppercase tracking-widest mb-4">
+        <h2 className={`font-display text-3xl md:text-4xl font-normal ${cleanPrimaryTextClass} uppercase tracking-widest mb-4`}>
           Why Is a Valuation Important?
         </h2>
         <p className="text-sm tracking-widest text-gray-500 uppercase mb-20">Situations When a Home Valuation May Be Necessary</p>
