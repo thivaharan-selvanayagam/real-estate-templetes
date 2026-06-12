@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Premium Navy Gradient -->
+    <linearGradient id="navyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#112240" />
+      <stop offset="100%" stop-color="#0A192F" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded Square Background -->
+  <rect width="512" height="512" rx="128" fill="url(#navyGrad)"/>
+  
+  <!-- Bold White 'P' -->
+  <path d="M180 140 h120 c60 0, 90 30, 90 85 c0 55, -30 85, -90 85 h-60 v100 h-60 v-270 z m60 50 v70 h50 c25 0, 40 -10, 40 -35 c0 -25, -15 -35, -40 -35 h-50 z" fill="#ffffff"/>
+  
+  <!-- Signature Gold Dot -->
+  <circle cx="420" cy="380" r="36" fill="#D4AF37"/>
+</svg>

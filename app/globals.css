@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #0A0F2E;
+  --navy-light: #111640;
+  --gold: #C9A84C;
+  --off-white: #F5F4F0;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display { font-family: 'Playfair Display', serif; }
+
+.btn-primary {
+  @apply bg-navy text-white px-6 py-3 text-xs font-bold tracking-widest uppercase hover:bg-navy-light transition-all duration-200 inline-flex items-center gap-2;
+}
+.btn-outline {
+  @apply border border-navy text-navy px-6 py-3 text-xs font-bold tracking-widest uppercase hover:bg-navy hover:text-white transition-all duration-200 inline-flex items-center gap-2;
+}
+.btn-gold {
+  @apply bg-gold text-white px-6 py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-all duration-200 inline-flex items-center gap-2;
+}
+
+.property-card { @apply bg-white overflow-hidden cursor-pointer; }
+
+.section { @apply py-16 md:py-24; }
+
+.get-in-touch-section {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.get-in-touch-section::before {
+  content: 'S';
+  position: absolute;
+  left: -2rem;
+  bottom: -4rem;
+  font-size: 28rem;
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.form-input-light {
+  @apply w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-navy transition-colors bg-white;
+}
+
+.badge { @apply text-xs font-bold tracking-widest uppercase px-3 py-1; }
+.badge-sale { @apply bg-navy text-white; }
+.badge-lease { @apply bg-gold text-white; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--navy); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-fade-up { animation: fadeUp 0.7s ease forwards; opacity: 0; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
