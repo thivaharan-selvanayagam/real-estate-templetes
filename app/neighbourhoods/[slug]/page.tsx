@@ -15,7 +15,10 @@ const neighborhoodsData = [
   { slug: "hamilton", name: "Hamilton", description: "A vibrant, historic city blending a booming arts culture with stunning Niagara Escarpment nature.", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1600&auto=format&fit=crop" },
   { slug: "brampton", name: "Brampton", description: "One of Canada's fastest-growing, family-centric cities featuring diverse neighborhoods and great recreation.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" },
   { slug: "pickering", name: "Pickering", description: "A beautiful coastal community offering scenic waterfront trails and quick, easy transit access to Toronto.", image: "https://images.unsplash.com/photo-1600607687126-8a3414349a51?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "barrie", name: "Barrie", description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1600&auto=format&fit=crop" }
+  { slug: "barrie", name: "Barrie", description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1600&auto=format&fit=crop" },
+  { slug: "stoufville", name: "Stoufville", description: "One of Canada's fastest-growing, family-centric cities featuring diverse neighborhoods and great recreation.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" },
+  { slug: "ajax", name: "Ajax", description: "A beautiful coastal community offering scenic waterfront trails and quick, easy transit access to Toronto.", image: "https://images.unsplash.com/photo-1600607687126-8a3414349a51?q=80&w=1600&auto=format&fit=crop" },
+  { slug: "whitby", name: "Whitby", description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1600&auto=format&fit=crop" }
 ];
 
 // Helper to format prices

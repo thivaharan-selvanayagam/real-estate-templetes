@@ -71,6 +71,24 @@ const neighborhoods = [
     slug: "barrie",
     description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.",
     image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop",
+  },
+   {
+    name: "Stoufville",
+    slug: "stoufville",
+    description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.",
+    image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop",
+  },
+   {
+    name: "Ajax",
+    slug: "ajax",
+    description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.",
+    image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop",
+  },
+   {
+    name: "Whitby",
+    slug: "whitby",
+    description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.",
+    image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800&auto=format&fit=crop",
   }
 ];
 
