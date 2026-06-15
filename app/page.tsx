@@ -17,6 +17,9 @@ import HeroVariant4 from "@/components/home/HeroVariant4";
 import AgentValueSection from "@/components/home/AgentValueSection";
 import FeaturedListingsSlider from "@/components/home/FeaturedListingsSlider";
 import NeighborhoodGrid from "@/components/home/NeighborhoodGrid";
+import GuidesSection from "@/components/home/GuidesSection";
+import ScrollingTestimonials from "@/components/home/ScrollingTestimonials";
+import VideoCTASection from "@/components/home/VideoCTASection";
 
 export default async function HomePage() {
   let featured = { listings: [] as any[], numResults: 0 };
@@ -45,6 +48,10 @@ export default async function HomePage() {
 
       {/* 3. Featured Sub-Market Property Layout */}
       <FeaturedProperties listings={featured.listings} />
+      <GuidesSection />
+      <ScrollingTestimonials />
+      <VideoCTASection />
+      
 
       {/* 4. Multimedia Client Story Module */}
       {/* <VideoTestimonials /> */}

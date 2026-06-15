@@ -82,3 +82,31 @@ body {
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
+
+
+@layer utilities {
+  @keyframes scroll-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes scroll-right {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  .animate-ticker-left {
+    display: flex;
+    width: max-content;
+    animation: scroll-left 40s linear infinite;
+  }
+  .animate-ticker-right {
+    display: flex;
+    width: max-content;
+    animation: scroll-right 40s linear infinite;
+  }
+  
+  .animate-ticker-left:hover,
+  .animate-ticker-right:hover {
+    animation-play-state: paused;
+  }
+}
