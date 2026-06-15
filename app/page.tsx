@@ -41,28 +41,28 @@ export default async function HomePage() {
       <NeighborhoodGrid />
 
       {/* 2. Neighborhood Map Geographies Directory */}
-      <OurNeighborhoods />
+      {/* <OurNeighborhoods /> */}
 
       {/* 3. Featured Sub-Market Property Layout */}
       <FeaturedProperties listings={featured.listings} />
 
       {/* 4. Multimedia Client Story Module */}
-      <VideoTestimonials />
+      {/* <VideoTestimonials /> */}
 
       {/* 5. Contrast Grid Showcase Collection */}
-      <PremiumCollection listings={featured.listings} />
+      {/* <PremiumCollection listings={featured.listings} /> */}
 
       {/* 6. High-Density Asset Development Slider */}
-      <NewDevelopments />
+      {/* <NewDevelopments /> */}
 
       {/* 7. Corporate Brand Optimization Block */}
-      <BrandInnovationSection />
+      {/* <BrandInnovationSection /> */}
 
       {/* 8. Geolocation Network Web Engine */}
-      <GlobalReferralNetwork />
+      {/* <GlobalReferralNetwork /> */}
 
       {/* 9. Internal Recruitment Callout Vector */}
-      <BecomeAnAgent />
+      {/* <BecomeAnAgent /> */}
 
       {/* 10. Global Footer Contact Submission Block */}
       <GetInTouch dark={true} />
