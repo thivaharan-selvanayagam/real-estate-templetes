@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-// 🔑 FIXED: Removed all brittle social brand imports and replaced with core UI utility vectors
 import { MessageSquare, UserCheck, Camera } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 
-// Structured mock data sets directly mirroring the personas inside image_918985.jpg
 const row1Testimonials = [
   {
     name: "Marcus Rodriguez",
@@ -71,7 +69,8 @@ const row2Testimonials = [
 export default function ScrollingTestimonials() {
   const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
 
-  const renderCard = (card: any, idx: number) => (
+  // 🔑 FIXED: Changed 'idx: number' to 'idx: string | number' to accept custom composite string keys safely
+  const renderCard = (card: any, idx: string | number) => (
     <div 
       key={idx}
       className="w-[380px] sm:w-[420px] bg-[#F1F3F7] rounded-[28px] p-6 text-left flex flex-col justify-between shrink-0 mx-3 border border-gray-100 shadow-sm"
@@ -122,6 +121,7 @@ export default function ScrollingTestimonials() {
         <div className="absolute top-0 bottom-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute top-0 bottom-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
+        {/* ROW 1 */}
         <div className="w-full overflow-hidden flex select-none">
           <div className="animate-ticker-left">
             {row1Testimonials.map((card, i) => renderCard(card, i))}
@@ -129,6 +129,7 @@ export default function ScrollingTestimonials() {
           </div>
         </div>
 
+        {/* ROW 2 */}
         <div className="w-full overflow-hidden flex select-none">
           <div className="animate-ticker-right">
             {row2Testimonials.map((card, i) => renderCard(card, i))}
