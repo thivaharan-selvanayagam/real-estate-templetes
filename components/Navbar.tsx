@@ -35,16 +35,14 @@ export default function Navbar() {
   const logoColorClass = isDarkBackground ? "text-white" : BRAND_CONFIG.theme.primaryText;
   const navLinkColorClass = isDarkBackground ? "text-white/90" : "text-gray-800";
 
-  // Package all state and style parameters up as shared props
+  // Pack your global UI state beautifully
   const sharedProps = {
     scrolled,
     isHome,
     logoColorClass,
     navLinkColorClass,
-    navItems,
   };
 
-  // 🔑 THE SWITCHBOARD: Evaluates the configuration token selection instantly
   switch (BRAND_CONFIG.theme.navbarVariant) {
     case "v1":
       return <NavbarV1 {...sharedProps} />;

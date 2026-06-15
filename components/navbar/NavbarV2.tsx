@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Search, ChevronDown } from "lucide-react";
-import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
+import { BRAND_CONFIG } from "@/config/brand";
 
-// 🔑 FIXED: Made hierarchical links dynamic using template literals from your config engine
+// Dynamically generated link hierarchy mapping
 const navItems = [
   { label: "Home", href: "/" },
-  { label: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]}`, href: "/about" }, // Automatically adapts to first name
+  { label: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]}`, href: "/about" },
   { 
     label: "Buyer", 
     subItems: [
@@ -35,26 +35,14 @@ const navItems = [
   },
 ];
 
-export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+// 🔑 FIXED: Adjusted function signature to accept and destructure parameters sent from your main controller
+export default function NavbarV2({ scrolled, isHome, logoColorClass, navLinkColorClass }: any) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  
-  // State to track which mobile dropdowns are open
   const [openMobileMenus, setOpenMobileMenus] = useState<{ [key: string]: boolean }>({});
-  
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
   
+  const router = useRouter();
   const pathname = usePathname();
-  const isHome = pathname === "/";
-
-  useEffect(() => {
-    const handler = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener("scroll", handler);
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +56,6 @@ export default function Navbar() {
     setOpenMobileMenus(prev => ({ ...prev, [label]: !prev[label] }));
   };
 
-  // 🔑 FIXED: Uses explicit background layout tokens from theme configs to prevent transparency issues
   const getHeaderStyles = () => {
     if (scrolled) {
       return `${BRAND_CONFIG.theme.headerStickyBg} backdrop-blur-md text-white rounded-[32px] md:rounded-[48px] shadow-xl border-b border-white/5 py-1 lg:py-2 mt-2 max-w-[calc(100%-2rem)] mx-auto left-4 right-4`;
@@ -80,10 +67,6 @@ export default function Navbar() {
   };
 
   const isDarkBackground = scrolled || (isHome && !scrolled);
-  const logoColorClass = isDarkBackground ? "text-white" : BRAND_CONFIG.theme.primaryText;
-  const navLinkColorClass = isDarkBackground ? "text-white/90" : "text-gray-800";
-  
-  // Custom tracking lookup to safely combine hover and accent styling configurations
   const textHoverAccent = `hover:${BRAND_CONFIG.theme.accentText}`;
   const textActiveAccent = BRAND_CONFIG.theme.accentText;
 
@@ -92,21 +75,17 @@ export default function Navbar() {
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 lg:h-20 transition-all duration-300">
           
-          {/* Logo Layer Linked to Whitelabel Brain */}
+          {/* Logo Section */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
             {BRAND_CONFIG.meta.logoSvgPath ? (
-              /* 🔑 OPTION A: Renders Custom Logo Graphic if path is provided */
-              <div className="relative h-8 w-32 md:h-10 md:w-40 transition-opacity duration-300 group-hover:opacity-80">
+              <div className="relative h-8 w-32 md:h-10 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
                 <img 
                   src={BRAND_CONFIG.meta.logoSvgPath} 
                   alt={`${BRAND_CONFIG.meta.siteName} Logo`}
-                  className={`h-full w-auto object-contain ${
-                    isDarkBackground ? "invert brightness-0" : ""
-                  }`} 
+                  className={`h-full w-auto object-contain ${isDarkBackground ? "invert brightness-0" : ""}`} 
                 />
               </div>
             ) : (
-              /* 🔑 OPTION B: Elegant Text Fallback if no file is uploaded */
               <span className={`text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
                 {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
               </span>
@@ -117,21 +96,19 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navItems.map((item) => (
               item.subItems ? (
-                // Dropdown Menu Item
                 <div key={item.label} className="relative group">
                   <button className={`flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass}`}>
                     {item.label}
                     <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180" />
                   </button>
                   
-                  {/* Invisible padding area to keep hover state active while moving mouse down */}
                   <div className="absolute left-0 top-full pt-6 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
                     <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 min-w-[200px] flex flex-col gap-1">
                       {item.subItems.map((sub) => (
                         <Link 
                           key={sub.label} 
                           href={sub.href} 
-                          className={`hover:bg-neutral-50 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${BRAND_CONFIG.theme.primaryText} ${textHoverAccent}`}
+                          className={`hover:bg-neutral-50 px-4 py-3 rounded-xl text-sm font-semibold transition-colors text-left ${BRAND_CONFIG.theme.primaryText} ${textHoverAccent}`}
                         >
                           {sub.label}
                         </Link>
@@ -140,7 +117,6 @@ export default function Navbar() {
                   </div>
                 </div>
               ) : (
-                // Standard Menu Item
                 <Link 
                   key={item.label} 
                   href={item.href!}
@@ -152,7 +128,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Search Bar Form */}
+          {/* Search Engine Form */}
           <form 
             onSubmit={handleSearch}
             className={`hidden xl:flex items-center border rounded-full px-4 py-2 text-xs max-w-[240px] w-full gap-2 transition-all duration-300 focus-within:ring-1 focus-within:ring-offset-0 focus-within:border-transparent ${
@@ -168,14 +144,12 @@ export default function Navbar() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by Area, City, Postal Code..."
-              className={`bg-transparent outline-none w-full ${
-                isDarkBackground ? "placeholder:text-white/50 text-white" : "placeholder:text-gray-400 text-gray-800"
-              }`}
+              placeholder="Search by Area, City..."
+              className={`bg-transparent outline-none w-full ${isDarkBackground ? "placeholder:text-white/50 text-white" : "placeholder:text-gray-400 text-gray-800"}`}
             />
           </form>
 
-          {/* Contact Button */}
+          {/* Contact Trigger Button */}
           <div className="hidden lg:flex items-center">
             <Link 
               href="/contact" 
@@ -189,21 +163,20 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Display Hamburger Toggle */}
           <button className={`lg:hidden p-2 transition-colors duration-300 ${isDarkBackground ? "text-white" : "text-gray-800"}`} onClick={() => setMobileOpen(!mobileOpen)}>
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu Container */}
+      {/* Mobile Drawer Accordion Menu */}
       {mobileOpen && (
         <div className={`lg:hidden rounded-b-[32px] px-6 py-6 border-t animate-fade-in shadow-2xl transition-colors duration-300 max-h-[85vh] overflow-y-auto ${
           isDarkBackground ? `${BRAND_CONFIG.theme.headerStickyBg} backdrop-blur-md border-white/5 text-white` : "bg-white border-gray-100 text-gray-800"
         }`}>
           <nav className="flex flex-col gap-2">
             
-            {/* Mobile Search Bar */}
             <form onSubmit={(e) => { handleSearch(e); setMobileOpen(false); }} className={`flex items-center border rounded-full px-4 py-3 mb-4 text-sm gap-2 ${
               isDarkBackground ? "bg-white/10 border-white/10 text-white" : "bg-gray-50 border-gray-200 text-gray-800"
             }`}>
@@ -217,9 +190,8 @@ export default function Navbar() {
                />
             </form>
 
-            {/* Mobile Nav Links & Accordions */}
             {navItems.map((item) => (
-              <div key={item.label} className={`border-b ${isDarkBackground ? "border-white/5" : "border-gray-100"}`}>
+              <div key={item.label} className={`border-b ${isDarkBackground ? "border-white/5" : "border-gray-100"} text-left`}>
                 {item.subItems ? (
                   <>
                     <button 
@@ -229,7 +201,6 @@ export default function Navbar() {
                       {item.label}
                       <ChevronDown size={16} className={`transition-transform duration-300 ${openMobileMenus[item.label] ? "-rotate-180" : ""}`} />
                     </button>
-                    {/* Expandable Sub-items */}
                     <div className={`overflow-hidden transition-all duration-300 ${openMobileMenus[item.label] ? "max-h-64 opacity-100 pb-4" : "max-h-0 opacity-0"}`}>
                       <div className={`flex flex-col gap-3 pl-4 border-l-2 ${isDarkBackground ? "border-white/10" : "border-gray-100"} ml-2`}>
                         {item.subItems.map((sub) => (
