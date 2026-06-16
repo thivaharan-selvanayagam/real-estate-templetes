@@ -32,6 +32,7 @@ interface ListingsGridProps {
   currentMaxPrice: string;
   currentBeds: string;
   currentBaths: string;
+  initialCity?: string;
 }
 
 export default function ListingsGrid({ 
