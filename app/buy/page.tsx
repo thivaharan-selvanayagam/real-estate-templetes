@@ -2,70 +2,104 @@ import { getListings } from "@/lib/repliers";
 import OurRegions from "@/components/OurNeighborhoods";
 import GetInTouch from "@/components/GetInTouch";
 import ListingsGrid from "@/components/ListingsGrid";
+import { BRAND_CONFIG } from "@/config/brand";
 
-export const metadata = { title: "Buy | Premier Real Estate" };
+export const metadata = { title: `Buy a Home | ${BRAND_CONFIG.meta.siteName}` };
 
 export default async function BuyPage({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  let data = { listings: [] as any[], numResults: 0 };
+  let combinedListings: any[] = [];
+  let totalResultsCount = 0;
   
   const resolvedParams = await searchParams;
+
+  // 1. 🔑 FIXED: Read all search parameters on the /buy page directly from the URL query matrix
   const searchString = typeof resolvedParams.search === "string" ? resolvedParams.search : undefined;
+  const propClass = typeof resolvedParams.class === "string" ? resolvedParams.class : "all"; 
+  const minPrice = typeof resolvedParams.minPrice === "string" ? resolvedParams.minPrice : "";
+  const maxPrice = typeof resolvedParams.maxPrice === "string" ? resolvedParams.maxPrice : "";
+  const beds = typeof resolvedParams.beds === "string" ? resolvedParams.beds : "Any";
+  const baths = typeof resolvedParams.baths === "string" ? resolvedParams.baths : "Any";
+  const cityString = typeof resolvedParams.initialCity === "string" ? resolvedParams.initialCity : "";
   
-  // 🔑 FIXED: Extract the strict city parameter from the URL
-  const cityString = typeof resolvedParams.city === "string" ? resolvedParams.city : undefined;
+  const urlPage = typeof resolvedParams.page === "string" ? parseInt(resolvedParams.page, 10) : 1;
+  const activePage = isNaN(urlPage) || urlPage < 1 ? 1 : urlPage;
 
   try { 
-    // 🔑 FIXED: Pass the city parameter to the server fetcher
-    data = await getListings({ 
-      type: "sale", 
-      pageSize: 9, 
-      search: searchString,
-      city: cityString 
-    }); 
+    // 2. Build the query parameters payload for Repliers (forcing type: "sale" for the buy page)
+    const baseQueryPayload: any = {
+      type: "sale", // Hardcoded "sale" for this specific /buy path route context
+      pageSize: 24,
+      pageNum: activePage,
+      search: searchString || undefined,
+      minPrice: minPrice || undefined,
+      maxPrice: maxPrice || undefined,
+      beds: beds === "Any" ? undefined : beds,
+      baths: baths === "Any" ? undefined : baths,
+      city: cityString || undefined
+    };
+
+    if (propClass === "all") {
+      const [residentialData, commercialData] = await Promise.all([
+        getListings({ ...baseQueryPayload, class: "Residential" }).catch(() => ({ listings: [], numResults: 0 })),
+        getListings({ ...baseQueryPayload, class: "Commercial", pageSize: 12 }).catch(() => ({ listings: [], numResults: 0 }))
+      ]);
+      
+      combinedListings = [...(residentialData?.listings || []), ...(commercialData?.listings || [])];
+      
+      const resData = residentialData as any;
+      const commData = commercialData as any;
+      const resCount = Number(resData?.numResults || resData?.count || resData?.metadata?.numResults || 0);
+      const commCount = Number(commData?.numResults || commData?.count || commData?.metadata?.numResults || 0);
+      
+      totalResultsCount = resCount + commCount;
+    } else {
+      const data = await getListings({ ...baseQueryPayload, class: propClass });
+      combinedListings = data?.listings || [];
+      
+      const genericData = data as any;
+      totalResultsCount = Number(genericData?.numResults || genericData?.count || genericData?.metadata?.numResults || combinedListings.length);
+    }
+
   } catch (e) {
-    console.error("Failed to load initial listings:", e);
+    console.error("Buy page aggregation database engine error:", e);
+  }
+
+  if (totalResultsCount <= 0 && combinedListings.length > 0) {
+    totalResultsCount = combinedListings.length; 
   }
   
   return (
     <>
-      {/* 🔑 FIXED: Increased padding, added flex-centering, and defined a minimum height for breathing room */}
-      <section className="relative pt-40 pb-28 lg:pt-48 lg:pb-32 bg-navy overflow-hidden flex flex-col items-center justify-center min-h-[45vh]">
-        
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5"
-          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/svg%3E")` }} />
-        
-        {/* Subtle Radial Gradient for depth */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none" />
-
+      <section className={`relative pt-36 pb-20 lg:pt-40 lg:pb-24 ${BRAND_CONFIG.theme.primaryBg} overflow-hidden flex flex-col items-center justify-center`}>
         <div className="max-w-[1440px] mx-auto px-6 lg:px-10 text-center relative z-10 w-full">
-          {/* Added fade animations to match the homepage aesthetics */}
-          <p className="text-white/60 text-xs font-bold tracking-[0.3em] uppercase mb-5 animate-fade-up">
-            Properties
-          </p>
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight animate-fade-up delay-100">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight">
             Buy a Home
           </h1>
-          <p className="text-white/70 mt-6 max-w-lg mx-auto text-sm md:text-base leading-relaxed animate-fade-up delay-200">
-            Find your perfect home from thousands of listings across the country's top markets.
+          <p className="text-white/70 mt-2 max-w-lg mx-auto text-xs md:text-sm font-medium">
+            Explore premium houses and commercial listings currently available for sale
           </p>
         </div>
       </section>
 
-      <section className="section bg-off-white">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
-          <ListingsGrid 
-            type="sale" 
-            initialListings={data.listings} 
-            initialTotal={data.numResults} 
-            initialSearch={searchString || ""} 
-            initialCity={cityString || ""} // 🔑 FIXED: Pass it into the Grid
-          />
-        </div>
+      <section className="bg-white min-h-[90vh] relative z-20 w-full">
+        {/* 3. 🔑 FIXED: All properties mapped perfectly to satisfy ListingsGridProps interface types */}
+        <ListingsGrid 
+          type="sale" 
+          propertyClass={propClass}
+          initialListings={combinedListings} 
+          initialTotal={totalResultsCount} 
+          initialSearch={searchString || ""} 
+          currentPage={activePage}
+          currentMinPrice={minPrice}
+          currentMaxPrice={maxPrice}
+          currentBeds={beds}
+          currentBaths={baths}
+          initialCity={cityString}
+        />
       </section>
 
       <OurRegions />
@@ -73,4 +107,5 @@ export default async function BuyPage({
     </>
   );
 }
+
 export const dynamic = "force-dynamic";
