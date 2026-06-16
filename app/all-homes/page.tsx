@@ -47,7 +47,6 @@ export default async function AllHomesPage({
       
       combinedListings = [...(residentialData?.listings || []), ...(commercialData?.listings || [])];
       
-      // 🔑 FIXED: Cast to 'any' to bypass strict static key checking on Vercel deployment builds
       const resData = residentialData as any;
       const commData = commercialData as any;
 
@@ -88,7 +87,8 @@ export default async function AllHomesPage({
         </div>
       </section>
 
-      <section className="bg-white min-h-[90vh] relative z-20">
+      {/* 🔑 FIXED: Target Section shell wrapper completely cleared of competing alignment classes */}
+      <section className="bg-white min-h-[90vh] relative z-20 w-full">
         <ListingsGrid 
           type={trxType} 
           propertyClass={propClass}
