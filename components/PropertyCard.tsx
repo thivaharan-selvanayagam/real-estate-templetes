@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Listing, formatPrice, formatAddress } from "@/lib/repliers";
+import { BRAND_CONFIG } from "@/config/brand"; 
 
 interface Props { listing: Listing; }
 
@@ -46,7 +47,7 @@ export default function PropertyCard({ listing }: Props) {
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-navy/20 to-navy/40 flex items-center justify-center">
-            <span className="text-white/40 font-display text-4xl font-bold">PREMIER</span>
+            <span className="text-white/40 font-display text-4xl font-bold">{BRAND_CONFIG.agent.name}</span>
           </div>
         )}
 

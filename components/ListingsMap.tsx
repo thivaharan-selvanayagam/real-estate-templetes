@@ -1,12 +1,21 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation"; // 🔑 IMPORTED NEXT ROUTER
+import { useEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 
-// Format price helper for the map markers
+function MapRecenterController({ activeCoordinates }: { activeCoordinates: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (map && activeCoordinates && activeCoordinates[0] && activeCoordinates[1]) {
+      map.panTo(activeCoordinates, { animate: true, duration: 0.4 });
+    }
+  }, [activeCoordinates, map]);
+  return null;
+}
+
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -16,16 +25,16 @@ const formatPrice = (price: number) => {
 };
 
 export default function ListingsMap({ 
-  listings, 
+  listings = [], 
   center, 
   activeListing, 
   setActiveListing, 
   hoveredListing 
 }: any) {
   
-  const router = useRouter(); // 🔑 INITIALIZED ROUTER
+  const router = useRouter();
+  const mapRef = useRef<any>(null);
 
-  // Fix for default leaflet icons not showing properly in Next.js
   useEffect(() => {
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
@@ -35,62 +44,109 @@ export default function ListingsMap({
     });
   }, []);
 
-  // Custom HTML Marker to perfectly match your design
+  const activeHoveredCoords = useMemo<[number, number] | null>(() => {
+    const activeTargetId = hoveredListing || activeListing;
+    if (!activeTargetId) return null;
+    const match = listings.find((l: any) => l.mlsNumber === activeTargetId);
+    const lat = Number(match?.map?.latitude);
+    const lng = Number(match?.map?.longitude);
+    if (lat && lng) return [lat, lng];
+    return null;
+  }, [hoveredListing, activeListing, listings]);
+
   const createCustomIcon = (price: number, isHovered: boolean, isActive: boolean) => {
     const formattedPrice = formatPrice(price);
-    const bgColor = isHovered || isActive ? "bg-gold" : "bg-navy";
-    const borderColor = isHovered || isActive ? "border-t-gold" : "border-t-navy";
-    const scale = isHovered || isActive ? "scale-110 z-50" : "z-10";
+    
+    const bgColor = isHovered || isActive ? "#D4AF37" : "#1E293B";
+    const textColor = isHovered || isActive ? "#1E293B" : "#FFFFFF";
+    const borderColor = isHovered || isActive ? "#D4AF37" : "#1E293B";
+    const scale = isHovered || isActive ? "scale(1.1) z-index: 9999;" : "scale(1);";
 
     return L.divIcon({
-      className: "bg-transparent border-none", // Remove default leaflet styles
+      className: "bg-transparent border-none",
       html: `
-        <div class="relative transition-all duration-300 ${scale}">
-          <div class="shadow-lg rounded-full px-3 py-1.5 text-[11px] tracking-wide font-bold border border-white/20 text-white whitespace-nowrap ${bgColor}">
+        <div style="transform: ${scale} transition: all 0.2s ease; position: relative;">
+          <div style="
+            background-color: ${bgColor}; 
+            color: ${textColor}; 
+            padding: 6px 12px; 
+            border-radius: 50px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+            border: 1.5px solid white; 
+            white-space: nowrap;
+          ">
             ${formattedPrice}
-            <div class="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent ${borderColor}"></div>
+            <div style="
+              position: absolute; 
+              bottom: -4px; 
+              left: 50%; 
+              transform: translateX(-50%); 
+              width: 0; 
+              height: 0; 
+              border-l: 5px solid transparent; 
+              border-r: 5px solid transparent; 
+              border-t: 5px solid ${borderColor};
+            "></div>
           </div>
         </div>
       `,
       iconSize: [60, 30],
-      iconAnchor: [30, 30], // Centers the marker point perfectly
+      iconAnchor: [30, 30], 
     });
   };
 
-  return (
-    <MapContainer 
-      center={[center.lat, center.lng]} 
-      zoom={11} 
-      className="w-full h-full"
-      zoomControl={false}
-    >
-      {/* We use CartoDB Voyager tiles for a clean, premium look */}
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-      />
-      
-      {listings.map((listing: any) => {
-        if (!listing.map?.latitude || !listing.map?.longitude) return null;
-        
-        const isHovered = hoveredListing === listing.mlsNumber;
-        const isActive = activeListing === listing.mlsNumber;
+  const mapCenterPoint: [number, number] = center?.lat && center?.lng 
+    ? [center.lat, center.lng] 
+    : [43.6532, -79.3832];
 
-        return (
-          <Marker
-            key={listing.mlsNumber}
-            position={[Number(listing.map.latitude), Number(listing.map.longitude)]}
-            icon={createCustomIcon(listing.listPrice, isHovered, isActive)}
-            eventHandlers={{
-              click: () => {
-                setActiveListing(listing.mlsNumber);
-                // 🔑 ADDED: Push user directly to the listing page on click!
-                router.push(`/listings/${listing.mlsNumber}`); 
-              },
-            }}
-          />
-        );
-      })}
-    </MapContainer>
+  if (!center || typeof window === "undefined") {
+    return <div className="w-full h-full bg-neutral-100 animate-pulse" />;
+  }
+
+  return (
+    <div className="w-full h-full relative" id="leaflet-map-root-frame">
+      <MapContainer 
+        center={mapCenterPoint} 
+        zoom={11} 
+        className="w-full h-full"
+        zoomControl={true}
+        ref={mapRef}
+        // 🔑 FIXED: Smoothly distributes marker placement across multiple animation frames 
+        // to completely eliminate appendChild race-conditions with the DOM
+        preferCanvas={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        />
+        
+        <MapRecenterController activeCoordinates={activeHoveredCoords} />
+        
+        {listings.map((listing: any) => {
+          if (!listing?.map?.latitude || !listing?.map?.longitude) return null;
+          
+          const isHovered = hoveredListing === listing.mlsNumber;
+          const isActive = activeListing === listing.mlsNumber;
+
+          return (
+            <Marker
+              key={listing.mlsNumber}
+              position={[Number(listing.map.latitude), Number(listing.map.longitude)]}
+              icon={createCustomIcon(listing.listPrice, isHovered, isActive)}
+              eventHandlers={{
+                click: () => {
+                  if (setActiveListing) {
+                    setActiveListing(listing.mlsNumber);
+                  }
+                  router.push(`/listings/${listing.mlsNumber}`); 
+                },
+              }}
+            />
+          );
+        })}
+      </MapContainer>
+    </div>
   );
 }

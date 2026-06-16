@@ -71,17 +71,15 @@ export default function AboutPage() {
               <div className="space-y-6 text-gray-600 text-sm md:text-base leading-relaxed font-medium">
                 <h3 className={`font-display text-3xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-6 tracking-tight`}>My Story</h3>
                 <p>
-                  With years of dedicated service in the real estate sector, my professional focus is centered on navigating every logistical and structural aspect of your housing journey. Whether working locally or managing extensive asset portfolios, I deliver insight that transforms transactions into lasting milestones.
+                  Experienced Realtor with an extraordinary journey in the world of real estate. My venture into this exciting realm began at a young age of 18, when I made my very first property investment. Since then, I have dedicated myself to refining my expertise in various aspects of the industry, specializing in pre-construction, resales, and catering to the unique needs of investors.
                 </p>
                 <p>
-                  While my career is incredibly fulfilling, my life outside of real estate brings me equal joy. I am deeply committed to my family and community, believing that a well-balanced lifestyle fuels the focus and persistence required to advocate effectively for my clients.
+                  Drawing from my background as an IT consultant, I have skillfully integrated technology into my real estate practices, ensuring a smooth and efficient process for my valued clients. Outside of my professional endeavors, I have nurtured a deep passion for travel and photography.
                 </p>
                 <p>
-                  Of course, my heart truly belongs to client service. My primary focus areas include marketing resale properties, helping newcomers find stable footing in our region, and expertly guiding first-time buyers through what can otherwise be a daunting transaction process.
+                  I would be thrilled to collaborate with you and turn your property aspirations into a reality, all while sharing my unwavering enthusiasm for globetrotting. Let's embark on this exciting journey together! 
                 </p>
-                <p>
-                  What sets me apart? It's my unwavering commitment to personalized service. I delve deep into your unique needs and structural goals. With a proven history of delivering top-tier results and a willingness to go the extra mile, I am your trusted partner from handshake to closing. Let's make your real estate dreams a reality!
-                </p>
+               
               </div>
 
               {/* The Difference / Values Grid */}

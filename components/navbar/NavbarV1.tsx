@@ -10,7 +10,7 @@ const navItems = [
   // --- LEFT WING MENUS ---
   { label: "Home", href: "/" },
   { label: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]}`, href: "/about" },
-  { label: "Neighbourhoods", href: "/neighbourhoods" },
+  // { label: "Neighbourhoods", href: "/neighbourhoods" },
   { 
     label: "Buyer", 
     subItems: [
@@ -28,8 +28,14 @@ const navItems = [
       { label: "Seller's Guide", href: "/sellers-guide" },
     ] 
   },
-  { label: "Calculator", href: "/calculator" },
-  { label: "Testimonials", href: "/testimonials" },
+  { 
+    label: "More", 
+    subItems: [
+      { label: "Calculator", href: "/calculator" },
+      { label: "Testimonials", href: "/testimonials" },
+      { label: "Neighbourhoods", href: "/neighbourhoods" },
+    ] 
+  },
 ];
 
 export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColorClass }: any) {
@@ -38,8 +44,8 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
   const pathname = usePathname();
 
   // 🔑 AUTOMATED BREAKPOINT: Slices exactly at index 4 (4 left, 4 right)
-  const leftLinks = navItems.slice(0, 4);
-  const rightLinks = navItems.slice(4, 8);
+  const leftLinks = navItems.slice(0, 3);
+  const rightLinks = navItems.slice(3, 7);
 
   const textHoverAccent = `hover:${BRAND_CONFIG.theme.accentText}`;
   const textActiveAccent = BRAND_CONFIG.theme.accentText;

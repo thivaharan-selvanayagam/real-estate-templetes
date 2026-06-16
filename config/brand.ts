@@ -3,13 +3,13 @@
 export const BRAND_CONFIG = {
   // Agent Details
   agent: {
-    name: "Rajivan Varatharajah",
+    name: "Kal Kanagarajah",
     title: "Real Estate Professional",
-    phone: "(647) 298-5523",
-    phoneRaw: "6472985523", // Used for tel: links
-    email: "realtor.rajivan@gmail.com",
-    headshot: "/images/rajivan-headshot.webp",
-    fullphoto:  "/images/about_rajivan.webp",
+    phone: "(905) 409-4771",
+    phoneRaw: "9054094771", // Used for tel: links
+    email: "kal.kanagarajah@outlook.com",
+    headshot: "/images/kal-headshot.webp",
+    fullphoto:  "/images/about_kal.webp",
   },
 
   // Brokerage & Company Details
@@ -21,11 +21,11 @@ export const BRAND_CONFIG = {
 
   // SEO & Website Meta
   meta: {
-    siteName: "Rajivan Varatharajah",
-    logoSvgPath: "/images/logo.svg",
-    title: "Rajivan Varatharajah | Luxury Homes & Properties",
+    siteName: "Kal Kanagarajah",
+    logoSvgPath: "/images/kal-logo.svg",
+    title: "Kal Kanagarajah | Luxury Homes & Properties",
     description: "Discover exceptional properties across the most sought-after markets. Buy, rent, or sell with the world's most innovative real estate team.",
-    coverImage: "/images/about_rajivan.webp",
+    coverImage: "/images/about_kal.webp",
     domain: "https://real-estate-templetes.vercel.app/",
   },
 
