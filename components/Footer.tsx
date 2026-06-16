@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-// 🔑 FIXED: Removed brittle social brand imports and replaced with core UI utility vectors
-import { FolderGit, UserCheck, MessageSquare } from "lucide-react";
+// 🔑 FIXED: Removed non-existent brand modules to eliminate the Turbopack build error
 import { BRAND_CONFIG } from "@/config/brand";
 
 export default function Footer() {
@@ -140,17 +139,37 @@ export default function Footer() {
             &copy; {currentYear} {BRAND_CONFIG.meta.siteName.split('.')[0] || "Your Company"}. All rights reserved.
           </p>
           
-          {/* Universal System Utility Icons */}
-          <div className="flex items-center gap-4 text-gray-500">
-            <a href="https://x.com" target="_blank" rel="noreferrer" className="hover:text-gray-900 transition-colors" aria-label="X Profile">
-              <MessageSquare size={16} />
+          {/* 🔑 FIXED: Inline raw vectors for Facebook and Instagram guarantee absolute compilation success */}
+          <div className="flex items-center gap-5 text-gray-400">
+            
+            {/* Instagram Vector Icon */}
+            <a 
+              href="https://instagram.com/bettercall.kal" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-pink-600 transition-colors duration-200" 
+              aria-label="Instagram Profile"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+              </svg>
             </a>
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-gray-900 transition-colors" aria-label="Github Dev Pipeline">
-              <FolderGit size={16} />
+
+            {/* Facebook Vector Icon */}
+            <a 
+              href="https://www.facebook.com/kal.kanagarajah/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-blue-600 transition-colors duration-200" 
+              aria-label="Facebook Profile"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-gray-900 transition-colors" aria-label="LinkedIn Network Node">
-              <UserCheck size={16} />
-            </a>
+
           </div>
         </div>
 
