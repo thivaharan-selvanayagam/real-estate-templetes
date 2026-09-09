@@ -144,7 +144,7 @@ export default function Footer() {
             
             {/* Instagram Vector Icon */}
             <a 
-              href="https://instagram.com/bettercall.kal" 
+              href="https://www.instagram.com/realthergroup/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-pink-600 transition-colors duration-200" 
@@ -159,7 +159,7 @@ export default function Footer() {
 
             {/* Facebook Vector Icon */}
             <a 
-              href="https://www.facebook.com/kal.kanagarajah/" 
+              href="https://www.facebook.com/SoldByReema/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="hover:text-blue-600 transition-colors duration-200" 
