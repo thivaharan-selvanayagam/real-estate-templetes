@@ -10,7 +10,6 @@ const navItems = [
   // --- LEFT WING MENUS ---
   { label: "Home", href: "/" },
   { label: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]}`, href: "/about" },
-  // { label: "Neighbourhoods", href: "/neighbourhoods" },
   { 
     label: "Buyer", 
     subItems: [
@@ -43,7 +42,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
   const [openMobileMenus, setOpenMobileMenus] = useState<{ [key: string]: boolean }>({});
   const pathname = usePathname();
 
-  // 🔑 AUTOMATED BREAKPOINT: Slices exactly at index 4 (4 left, 4 right)
+  // 🔑 AUTOMATED BREAKPOINT: Slices exactly at index 3 (3 left, 2 right)
   const leftLinks = navItems.slice(0, 3);
   const rightLinks = navItems.slice(3, 7);
 
@@ -51,7 +50,6 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
   const textActiveAccent = BRAND_CONFIG.theme.accentText;
   const isDarkBackground = scrolled || (isHome && !scrolled);
 
-  // 🔑 FIXED: Sticky header gets mt-5 (20px) top margin, rounded-full pill shape curves, and drops edge-anchors
   const stickyStyles = `${BRAND_CONFIG.theme.headerStickyBg} bg-opacity-90 backdrop-blur-md rounded-full shadow-md py-2 mt-3 max-w-[calc(100%-2rem)] mx-auto left-4 right-4 border border-white/10 text-white`;
   const defaultStyles = isHome 
     ? "bg-transparent text-white py-5 left-0 right-0" 
@@ -66,10 +64,10 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
       <div className="max-w-[1536px] mx-auto px-6 lg:px-8 xl:px-12">
         <div className="flex items-center justify-between h-16 lg:h-20 relative">
           
-          {/* DESKTOP SPLIT GRID (Symmetrical 4-Logo-4 Layout Framework) */}
+          {/* DESKTOP SPLIT GRID */}
           <div className="hidden lg:grid grid-cols-12 w-full items-center">
             
-            {/* LEFT WING: 4 Items */}
+            {/* LEFT WING */}
             <nav className="col-span-5 flex items-center gap-5 xl:gap-7 justify-end pr-4 xl:pr-8">
               {leftLinks.map((item) => (
                 item.subItems ? (
@@ -99,7 +97,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
             <div className="col-span-2 flex justify-center z-10">
               <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
                 {BRAND_CONFIG.meta.logoSvgPath ? (
-                  <div className="relative h-30 w-36 md:h-32 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
+                  <div className="relative h-20 w-36 md:h-24 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
                     <img 
                       src={BRAND_CONFIG.meta.logoSvgPath} 
                       alt={`${BRAND_CONFIG.meta.siteName} Logo`}
@@ -114,7 +112,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
               </Link>
             </div>
 
-            {/* RIGHT WING: 4 Items + Action Callout Button */}
+            {/* RIGHT WING */}
             <nav className="col-span-5 flex items-center pl-4 xl:pl-8 justify-between w-full">
               <div className="flex items-center gap-5 xl:gap-7">
                 {rightLinks.map((item) => (
@@ -158,10 +156,10 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
 
           {/* MOBILE RESPONSIVE WRAPPER BAR */}
           <div className="flex lg:hidden items-center justify-between w-full">
-            {/* 🔑 FIXED: Replaced standard string title with full SVG/Image configuration fallback matching desktop */}
             <Link href="/" className="flex items-center group">
               {BRAND_CONFIG.meta.logoSvgPath ? (
-                <div className="relative h-8 w-28 transition-opacity duration-300 group-hover:opacity-80">
+                /* Updated mobile logo wrapper size from h-8 w-28 to h-12 w-36 sm:h-14 sm:w-44 */
+                <div className="relative h-24 w-62 sm:h-14 sm:w-44 transition-opacity duration-300 group-hover:opacity-80">
                   <img 
                     src={BRAND_CONFIG.meta.logoSvgPath} 
                     alt={`${BRAND_CONFIG.meta.siteName} Mobile Logo`}
@@ -169,7 +167,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
                   />
                 </div>
               ) : (
-                <span className={`text-xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
+                <span className={`text-2xl sm:text-3xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
                   {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
                 </span>
               )}
