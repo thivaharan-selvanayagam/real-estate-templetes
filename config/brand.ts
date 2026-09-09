@@ -3,29 +3,29 @@
 export const BRAND_CONFIG = {
   // Agent Details
   agent: {
-    name: "Kal Kanagarajah",
-    title: "Real Estate Professional",
-    phone: "(905) 409-4771",
-    phoneRaw: "9054094771", // Used for tel: links
-    email: "kal.kanagarajah@outlook.com",
-    headshot: "/images/kal-headshot.webp",
-    fullphoto:  "/images/about_kal.webp",
+    name: "RealtHer Group",
+    title: "Real Estate Group",
+    phone: "(647) 409-1719",
+    phoneRaw: "6744091719", // Used for tel: links
+    email: "realthergroup@gmail.com",
+    headshot: "/images/pirasha.jpg",
+    fullphoto:  "/images/pirasha.jpg",
   },
 
   // Brokerage & Company Details
   brokerage: {
-    name: "Royal Lepage Real Estate Associates",
-    shortName: "Royal Lepage Associates",
-    address: "158 Main Street Markham N, Markham, ON L3P 1Y3",
+    name: "RE/MAX Metropolis Realty",
+    shortName: "RE/MAX Metropolis Realty",
+    address: "8321 Kennedy Rd #21-22, Markham, ON",
   },
 
   // SEO & Website Meta
   meta: {
-    siteName: "Kal Kanagarajah",
-    logoSvgPath: "/images/kal-logo.svg",
-    title: "Kal Kanagarajah | Luxury Homes & Properties",
+    siteName: "RealtHer Group",
+    logoSvgPath: "/images/logore.png",
+    title: "RealtHer Group | Luxury Homes & Properties",
     description: "Discover exceptional properties across the most sought-after markets. Buy, rent, or sell with the world's most innovative real estate team.",
-    coverImage: "/images/about_kal.webp",
+    coverImage: "/images/pirasha.jpg",
     domain: "https://real-estate-templetes.vercel.app/",
   },
 

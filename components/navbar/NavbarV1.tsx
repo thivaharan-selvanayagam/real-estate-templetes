@@ -99,7 +99,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
             <div className="col-span-2 flex justify-center z-10">
               <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
                 {BRAND_CONFIG.meta.logoSvgPath ? (
-                  <div className="relative h-10 w-36 md:h-12 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
+                  <div className="relative h-30 w-36 md:h-32 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
                     <img 
                       src={BRAND_CONFIG.meta.logoSvgPath} 
                       alt={`${BRAND_CONFIG.meta.siteName} Logo`}

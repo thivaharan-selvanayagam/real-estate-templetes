@@ -69,15 +69,21 @@ export default function AboutPage() {
               
               {/* Bio Section */}
               <div className="space-y-6 text-gray-600 text-sm md:text-base leading-relaxed font-medium">
-                <h3 className={`font-display text-3xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-6 tracking-tight`}>My Story</h3>
+                <h3 className={`font-display text-3xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-6 tracking-tight`}>Our Story</h3>
                 <p>
-                  Experienced Realtor with an extraordinary journey in the world of real estate. My venture into this exciting realm began at a young age of 18, when I made my very first property investment. Since then, I have dedicated myself to refining my expertise in various aspects of the industry, specializing in pre-construction, resales, and catering to the unique needs of investors.
+                  At The <b>RealtHer Group</b>, we believe finding the right property is about more than buying a house — it’s about finding a place to call home and making real estate decisions that support your future.
                 </p>
                 <p>
-                  Drawing from my background as an IT consultant, I have skillfully integrated technology into my real estate practices, ensuring a smooth and efficient process for my valued clients. Outside of my professional endeavors, I have nurtured a deep passion for travel and photography.
+                  Led by experienced real estate professionals <b>Pirasha Vygunthavasa</b> and <b>Reema Shahzad</b>, our team brings together years of industry knowledge, market expertise, and a genuine passion for helping people achieve their real estate goals. With Pirasha’s experience as an award-winning RE/MAX Real Estate Broker and a professional home matchmaker since 2004, combined with Reema’s expertise as a Real Estate Broker and investor, clients benefit from a well-rounded perspective on today’s market.
                 </p>
                 <p>
-                  I would be thrilled to collaborate with you and turn your property aspirations into a reality, all while sharing my unwavering enthusiasm for globetrotting. Let's embark on this exciting journey together! 
+                  The RealtHer Group specializes in <b>pre-construction and residential sales</b>, helping buyers, sellers, homeowners, and investors navigate the Greater Toronto Area real estate market with confidence
+                </p>
+                <p>
+                  Whether you’re searching for your dream home, selling a property, exploring pre-construction opportunities, or looking to build your real estate portfolio, we’re here to make the process seamless, strategic, and personalized.
+                </p>
+                <p>
+                  <b>Your goals are our priority. Your next move starts with The RealtHer Group.</b>
                 </p>
                
               </div>
