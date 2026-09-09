@@ -38,7 +38,8 @@ const neighborhoodData = [
   {
     name: "Whitby",
     desc: "Beautifully preserved historic luxury town centers integrated directly alongside rapidly developing modern residential sub-divisions.",
-    image: "/images/neighborhood/whitby.jpeg",
+    image: "/images/neighborhood/whitby.jp
+    g",
     gridClass: "col-span-12 md:col-span-5 aspect-[16/10] md:aspect-auto md:h-[340px]"
   }
 ];
