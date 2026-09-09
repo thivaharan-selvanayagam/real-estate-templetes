@@ -216,7 +216,7 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
             </Link>
           </nav>
         </div>
-      )}
+      )} 
     </header>
   );
 }
