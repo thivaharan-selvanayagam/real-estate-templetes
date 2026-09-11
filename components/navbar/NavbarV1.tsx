@@ -1,20 +1,20 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 
-// 🔑 DEFINED: Exactly 8 dynamic menu blocks (4 on Left / 4 on Right)
 const navItems = [
   // --- LEFT WING MENUS ---
   { label: "Home", href: "/" },
-  { label: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]}`, href: "/about" },
+  { label: "Meet RealtHer", href: "/about" },
   { 
     label: "Buyer", 
     subItems: [
       { label: "Home Search", href: "/all-homes" },
-      { label: "My Listings", href: "/my-listings" },
+      { label: "Our Listings", href: "/all-homes" },
       { label: "Buyer's Guide", href: "/buyers-guide" },
     ] 
   },
@@ -37,23 +37,23 @@ const navItems = [
   },
 ];
 
-export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColorClass }: any) {
+export default function NavbarV1({ scrolled, isHome }: any) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMobileMenus, setOpenMobileMenus] = useState<{ [key: string]: boolean }>({});
   const pathname = usePathname();
 
-  // 🔑 AUTOMATED BREAKPOINT: Slices exactly at index 3 (3 left, 2 right)
   const leftLinks = navItems.slice(0, 3);
-  const rightLinks = navItems.slice(3, 7);
+  const rightLinks = navItems.slice(3, 5);
 
-  const textHoverAccent = `hover:${BRAND_CONFIG.theme.accentText}`;
-  const textActiveAccent = BRAND_CONFIG.theme.accentText;
-  const isDarkBackground = scrolled || (isHome && !scrolled);
+  const textHoverAccent = "hover:text-[#4D71A3]";
+  const textActiveAccent = "text-[#4D71A3]";
 
-  const stickyStyles = `${BRAND_CONFIG.theme.headerStickyBg} bg-opacity-90 backdrop-blur-md rounded-full shadow-md py-2 mt-3 max-w-[calc(100%-2rem)] mx-auto left-4 right-4 border border-white/10 text-white`;
+  // Responsive geometry: Rounded-2xl on mobile prevents curved clipping; rounded-full on desktop
+  const stickyStyles = "bg-slate-950/95 backdrop-blur-md rounded-2xl lg:rounded-full shadow-2xl py-2.5 lg:py-3 mt-2 lg:mt-3 max-w-[calc(100%-1.25rem)] lg:max-w-[calc(100%-2rem)] mx-auto left-2.5 right-2.5 lg:left-4 lg:right-4 border border-white/15 text-white";
+  
   const defaultStyles = isHome 
-    ? "bg-transparent text-white py-5 left-0 right-0" 
-    : `bg-white ${BRAND_CONFIG.theme.primaryText} border-b border-gray-100 py-5 left-0 right-0`;
+    ? "bg-transparent text-white py-4 lg:py-5 left-0 right-0" 
+    : "bg-slate-950 text-white border-b border-white/10 py-3.5 lg:py-5 left-0 right-0";
 
   const toggleMobileSubMenu = (label: string) => {
     setOpenMobileMenus(prev => ({ ...prev, [label]: !prev[label] }));
@@ -61,24 +61,28 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
 
   return (
     <header className={`fixed top-0 z-50 transition-all duration-300 ${scrolled ? stickyStyles : defaultStyles}`}>
-      <div className="max-w-[1536px] mx-auto px-6 lg:px-8 xl:px-12">
-        <div className="flex items-center justify-between h-16 lg:h-20 relative">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="flex items-center justify-between h-14 lg:h-20 relative">
           
           {/* DESKTOP SPLIT GRID */}
           <div className="hidden lg:grid grid-cols-12 w-full items-center">
             
             {/* LEFT WING */}
-            <nav className="col-span-5 flex items-center gap-5 xl:gap-7 justify-end pr-4 xl:pr-8">
+            <nav className="col-span-5 flex items-center gap-5 xl:gap-8 justify-end pr-4 xl:pr-8">
               {leftLinks.map((item) => (
                 item.subItems ? (
                   <div key={item.label} className="relative group">
-                    <button className={`flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass}`}>
-                      {item.label} <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180" />
+                    <button className={`flex items-center gap-1.5 text-xs xl:text-sm font-semibold tracking-wider uppercase transition-colors duration-200 text-white/90 ${textHoverAccent}`}>
+                      {item.label} <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180 text-stone-400" />
                     </button>
-                    <div className="absolute left-0 top-full pt-6 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
-                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 min-w-[200px] flex flex-col gap-1">
+                    <div className="absolute left-0 top-full pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
+                      <div className="bg-slate-900 rounded-2xl shadow-2xl border border-white/15 p-2 min-w-[210px] flex flex-col gap-1 text-left">
                         {item.subItems.map((sub) => (
-                          <Link key={sub.label} href={sub.href} className={`hover:bg-neutral-50 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${BRAND_CONFIG.theme.primaryText} ${textHoverAccent}`}>
+                          <Link 
+                            key={sub.label} 
+                            href={sub.href} 
+                            className="hover:bg-slate-800 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors text-white/90 hover:text-white"
+                          >
                             {sub.label}
                           </Link>
                         ))}
@@ -86,27 +90,31 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
                     </div>
                   </div>
                 ) : (
-                  <Link key={item.label} href={item.href!} className={`text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass} ${pathname === item.href ? textActiveAccent : ""}`}>
+                  <Link 
+                    key={item.label} 
+                    href={item.href!} 
+                    className={`text-xs xl:text-sm font-semibold tracking-wider uppercase transition-colors duration-200 text-white/90 ${textHoverAccent} ${pathname === item.href ? textActiveAccent : ""}`}
+                  >
                     {item.label}
                   </Link>
                 )
               ))}
             </nav>
 
-            {/* LOGO: Center Node */}
+            {/* DESKTOP LOGO: PROMINENT & CENTERED */}
             <div className="col-span-2 flex justify-center z-10">
-              <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+              <Link href="/" className="flex items-center justify-center group">
                 {BRAND_CONFIG.meta.logoSvgPath ? (
-                  <div className="relative h-20 w-36 md:h-24 md:w-44 transition-opacity duration-300 group-hover:opacity-80">
+                  <div className="relative h-14 lg:h-16 w-auto max-w-[260px] flex items-center justify-center transition-opacity duration-300 group-hover:opacity-85">
                     <img 
                       src={BRAND_CONFIG.meta.logoSvgPath} 
                       alt={`${BRAND_CONFIG.meta.siteName} Logo`}
-                      className={`h-full w-auto object-contain mx-auto ${isDarkBackground ? "invert brightness-0" : ""}`} 
+                      className="h-full w-auto max-h-full object-contain brightness-0 invert" 
                     />
                   </div>
                 ) : (
-                  <span className={`text-xl md:text-2xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
-                    {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
+                  <span className="text-2xl lg:text-3xl font-bold tracking-widest font-display text-white transition-colors duration-300">
+                    REALTHER<span className="text-[#4D71A3]">.</span>
                   </span>
                 )}
               </Link>
@@ -114,17 +122,21 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
 
             {/* RIGHT WING */}
             <nav className="col-span-5 flex items-center pl-4 xl:pl-8 justify-between w-full">
-              <div className="flex items-center gap-5 xl:gap-7">
+              <div className="flex items-center gap-5 xl:gap-8">
                 {rightLinks.map((item) => (
                   item.subItems ? (
                     <div key={item.label} className="relative group">
-                      <button className={`flex items-center gap-1 text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass}`}>
-                        {item.label} <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180" />
+                      <button className={`flex items-center gap-1.5 text-xs xl:text-sm font-semibold tracking-wider uppercase transition-colors duration-200 text-white/90 ${textHoverAccent}`}>
+                        {item.label} <ChevronDown size={14} className="transition-transform duration-300 group-hover:-rotate-180 text-stone-400" />
                       </button>
-                      <div className="absolute left-0 top-full pt-6 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
-                        <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 min-w-[200px] flex flex-col gap-1">
+                      <div className="absolute left-0 top-full pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300">
+                        <div className="bg-slate-900 rounded-2xl shadow-2xl border border-white/15 p-2 min-w-[210px] flex flex-col gap-1 text-left">
                           {item.subItems.map((sub) => (
-                            <Link key={sub.label} href={sub.href} className={`hover:bg-neutral-50 px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${BRAND_CONFIG.theme.primaryText} ${textHoverAccent}`}>
+                            <Link 
+                              key={sub.label} 
+                              href={sub.href} 
+                              className="hover:bg-slate-800 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors text-white/90 hover:text-white"
+                            >
                               {sub.label}
                             </Link>
                           ))}
@@ -132,21 +144,21 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
                       </div>
                     </div>
                   ) : (
-                    <Link key={item.label} href={item.href!} className={`text-xs xl:text-sm font-semibold tracking-wide transition-colors duration-200 ${textHoverAccent} ${navLinkColorClass} ${pathname === item.href ? textActiveAccent : ""}`}>
+                    <Link 
+                      key={item.label} 
+                      href={item.href!} 
+                      className={`text-xs xl:text-sm font-semibold tracking-wider uppercase transition-colors duration-200 text-white/90 ${textHoverAccent} ${pathname === item.href ? textActiveAccent : ""}`}
+                    >
                       {item.label}
                     </Link>
                   )
                 ))}
               </div>
 
-              {/* Action Pill Action Element */}
+              {/* Action Button */}
               <Link 
                 href="/contact" 
-                className={`text-xs font-bold tracking-widest uppercase px-5 py-3 rounded-full transition-all duration-300 border shadow-sm whitespace-nowrap ${
-                  isDarkBackground 
-                    ? "border-white/20 text-white hover:bg-white hover:text-gray-900" 
-                    : `text-white ${BRAND_CONFIG.theme.primaryBg} ${BRAND_CONFIG.theme.primaryBorder} hover:opacity-90`
-                }`}
+                className="text-xs font-semibold tracking-wider uppercase px-6 py-3 rounded-full transition-all duration-300 border border-white/30 text-white bg-white/10 hover:bg-white hover:text-slate-950 shadow-sm whitespace-nowrap font-sans"
               >
                 Let's Connect
               </Link>
@@ -154,48 +166,61 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
 
           </div>
 
-          {/* MOBILE RESPONSIVE WRAPPER BAR */}
-          <div className="flex lg:hidden items-center justify-between w-full">
-            <Link href="/" className="flex items-center group">
+          {/* MOBILE RESPONSIVE HEADER (FIXED ALIGNMENT) */}
+          <div className="flex lg:hidden items-center justify-between w-full px-2">
+            <Link href="/" className="flex items-center group shrink-0">
               {BRAND_CONFIG.meta.logoSvgPath ? (
-                /* Updated mobile logo wrapper size from h-8 w-28 to h-12 w-36 sm:h-14 sm:w-44 */
-                <div className="relative h-24 w-62 sm:h-14 sm:w-44 transition-opacity duration-300 group-hover:opacity-80">
+                /* Auto-scaled mobile logo bounds: fits inside floating bar cleanly without clipping */
+                <div className="relative h-10 sm:h-16 w-auto max-w-[180px] sm:max-w-[220px] flex items-center transition-opacity duration-300 group-hover:opacity-85">
                   <img 
                     src={BRAND_CONFIG.meta.logoSvgPath} 
                     alt={`${BRAND_CONFIG.meta.siteName} Mobile Logo`}
-                    className={`h-full w-auto object-contain ${isDarkBackground ? "invert brightness-0" : ""}`} 
+                    className="h-full w-auto max-h-full object-contain brightness-0 invert" 
                   />
                 </div>
               ) : (
-                <span className={`text-2xl sm:text-3xl font-bold tracking-[0.15em] font-display transition-colors duration-300 ${logoColorClass}`}>
-                  {BRAND_CONFIG.meta.siteName.replace(".", "")}<span className={BRAND_CONFIG.theme.accentText}>.</span>
+                <span className="text-xl sm:text-2xl font-bold tracking-widest font-display text-white">
+                  REALTHER<span className="text-[#4D71A3]">.</span>
                 </span>
               )}
             </Link>
             
-            <button className={`p-2 ${isDarkBackground ? "text-white" : "text-gray-800"}`} onClick={() => setMobileOpen(!mobileOpen)}>
-              {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            <button 
+              className="p-2 text-white hover:text-[#4D71A3] transition-colors shrink-0 flex items-center justify-center" 
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
 
         </div>
       </div>
 
-      {/* MOBILE ACCORDION DRAWER OVERLAY */}
+      {/* MOBILE DRAWER OVERLAY */}
       {mobileOpen && (
-        <div className={`lg:hidden px-6 py-6 border-t shadow-2xl overflow-y-auto max-h-[85vh] ${isDarkBackground ? `${BRAND_CONFIG.theme.headerStickyBg} text-white border-white/5` : "bg-white border-gray-100 text-gray-800"}`}>
-          <nav className="flex flex-col gap-2">
+        <div className="lg:hidden px-6 py-8 border-t border-white/10 shadow-2xl bg-slate-950 text-white overflow-y-auto max-h-[85vh] mt-2 rounded-b-2xl">
+          <nav className="flex flex-col gap-3">
             {navItems.map((item) => (
-              <div key={item.label} className={`border-b ${isDarkBackground ? "border-white/5" : "border-gray-100"}`}>
+              <div key={item.label} className="border-b border-white/10 pb-2">
                 {item.subItems ? (
                   <>
-                    <button onClick={() => toggleMobileSubMenu(item.label)} className="flex items-center justify-between w-full font-bold text-sm py-4">
-                      {item.label} <ChevronDown size={16} className={`transition-transform ${openMobileMenus[item.label] ? "-rotate-180" : ""}`} />
+                    <button 
+                      onClick={() => toggleMobileSubMenu(item.label)} 
+                      className="flex items-center justify-between w-full font-semibold text-xs uppercase tracking-wider py-3 text-white/90"
+                    >
+                      {item.label} 
+                      <ChevronDown size={16} className={`transition-transform duration-300 ${openMobileMenus[item.label] ? "-rotate-180" : ""}`} />
                     </button>
-                    <div className={`overflow-hidden transition-all duration-300 ${openMobileMenus[item.label] ? "max-h-64 opacity-100 pb-4" : "max-h-0 opacity-0"}`}>
-                      <div className="flex flex-col gap-3 pl-4 border-l-2 ml-2">
+                    <div className={`overflow-hidden transition-all duration-300 ${openMobileMenus[item.label] ? "max-h-64 opacity-100 pb-3" : "max-h-0 opacity-0"}`}>
+                      <div className="flex flex-col gap-2.5 pl-4 border-l border-white/20 ml-2 mt-1">
                         {item.subItems.map((sub) => (
-                          <Link key={sub.label} href={sub.href} className={`text-sm font-medium ${textHoverAccent}`} onClick={() => setMobileOpen(false)}>
+                          <Link 
+                            key={sub.label} 
+                            href={sub.href} 
+                            className="text-xs font-normal tracking-wide text-stone-300 hover:text-white text-left" 
+                            onClick={() => setMobileOpen(false)}
+                          >
                             {sub.label}
                           </Link>
                         ))}
@@ -203,13 +228,21 @@ export default function NavbarV1({ scrolled, isHome, logoColorClass, navLinkColo
                     </div>
                   </>
                 ) : (
-                  <Link href={item.href!} className="block font-bold text-sm py-4" onClick={() => setMobileOpen(false)}>
+                  <Link 
+                    href={item.href!} 
+                    className="block font-semibold text-xs uppercase tracking-wider py-3 text-white/90 hover:text-white text-left" 
+                    onClick={() => setMobileOpen(false)}
+                  >
                     {item.label}
                   </Link>
                 )}
               </div>
             ))}
-            <Link href="/contact" className={`text-white text-xs font-bold uppercase tracking-wider text-center py-4 rounded-full mt-6 ${BRAND_CONFIG.theme.accentBg}`} onClick={() => setMobileOpen(false)}>
+            <Link 
+              href="/contact" 
+              className="text-slate-950 bg-[#F9F6F0] hover:bg-white text-xs font-semibold uppercase tracking-wider text-center py-4 rounded-full mt-6 transition-all font-sans" 
+              onClick={() => setMobileOpen(false)}
+            >
               Let's Connect
             </Link>
           </nav>

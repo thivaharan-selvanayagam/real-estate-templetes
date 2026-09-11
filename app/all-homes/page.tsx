@@ -4,7 +4,9 @@ import GetInTouch from "@/components/GetInTouch";
 import ListingsGrid from "@/components/ListingsGrid";
 import { BRAND_CONFIG } from "@/config/brand";
 
-export const metadata = { title: `All Homes | ${BRAND_CONFIG.meta.siteName}` };
+export const metadata = { 
+  title: `GTA Homes & Properties | ${BRAND_CONFIG.meta.siteName}` 
+};
 
 export default async function AllHomesPage({
   searchParams,
@@ -76,19 +78,34 @@ export default async function AllHomesPage({
   
   return (
     <>
-      <section className={`relative pt-36 pb-20 lg:pt-40 lg:pb-24 ${BRAND_CONFIG.theme.primaryBg} overflow-hidden flex flex-col items-center justify-center`}>
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-10 text-center relative z-10 w-full">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Property Portfolio
+      {/* GTA-FOCUSED HERO SECTION */}
+      <section className="relative pt-36 pb-20 lg:pt-44 lg:pb-24 bg-slate-950 overflow-hidden flex flex-col items-center justify-center border-b border-white/10">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000"
+            alt="Greater Toronto Area Real Estate"
+            className="w-full h-full object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/60 to-slate-950" />
+        </div>
+
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 text-center relative z-10 w-full">
+          <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-md">
+            Greater Toronto Area Real Estate
+          </div>
+          
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.15]">
+            GTA Homes & Properties
           </h1>
-          <p className="text-white/70 mt-2 max-w-lg mx-auto text-xs md:text-sm font-medium">
-            Browse verified property directories in real-time
+          
+          <p className="text-[#F9F6F0]/85 mt-4 max-w-2xl mx-auto text-sm md:text-base font-light leading-relaxed">
+            Explore active residential, pre-construction, and investment listings across Toronto, Durham Region, York Region, and surrounding GTA communities.
           </p>
         </div>
       </section>
 
-      {/* 🔑 FIXED: Target Section shell wrapper completely cleared of competing alignment classes */}
-      <section className="bg-white min-h-[90vh] relative z-20 w-full">
+      {/* LISTINGS CONTAINER */}
+      <section className="bg-[#FDFBF7] min-h-[90vh] relative z-20 w-full py-8">
         <ListingsGrid 
           type={trxType} 
           propertyClass={propClass}

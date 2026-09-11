@@ -1,42 +1,39 @@
 import Link from "next/link";
-import { ArrowDown, ShieldCheck, Map, Handshake, Heart } from "lucide-react";
+import { ArrowDown, ShieldCheck, MapPin, Handshake, TrendingUp, Building2, Key } from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
-import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
+import { BRAND_CONFIG } from "@/config/brand";
 
 export const metadata = { 
-  title: `Meet ${BRAND_CONFIG.agent.name.split(" ")[0]} | ${BRAND_CONFIG.meta.siteName}` 
+  title: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasa` 
 };
 
 export default function AboutPage() {
-  // Setup standard fallback strings for clients with alternative or more general backgrounds
-  const firstName = BRAND_CONFIG.agent.name.split(" ")[0];
-  
-  // Dynamic design token wrappers based on config color styles
-  const hoverAccentText = `hover:${BRAND_CONFIG.theme.accentText}`;
-  const hoverPrimaryBg = `hover:${BRAND_CONFIG.theme.primaryBg}`;
-  const hoverPrimaryText = `hover:${BRAND_CONFIG.theme.primaryText}`;
-
   return (
     <>
-      {/* 1. DYNAMIC THEMED HERO SECTION */}
-      <section className={`relative h-[60vh] lg:h-[70vh] flex flex-col items-center justify-center ${BRAND_CONFIG.theme.primaryBg} overflow-hidden pt-20`}>
+      {/* 1. HERO SECTION */}
+      <section className="relative h-[65vh] lg:h-[75vh] flex flex-col items-center justify-center bg-slate-950 overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img 
-            src={BRAND_CONFIG.meta.coverImage}
-            alt={`${BRAND_CONFIG.agent.name} Professional Background`}
-            className="w-full h-full object-cover opacity-30"
+            src={BRAND_CONFIG.meta.coverImage || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000"}
+            alt="RealtHer Group GTA Real Estate Background"
+            className="w-full h-full object-cover opacity-35"
           />
-          {/* Dynamic alpha gradient layer matching your client theme settings */}
-          <div className={`absolute inset-0 bg-gradient-to-b from-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/80 via-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/60 to-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}`} />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/60 to-slate-950" />
         </div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight animate-fade-up">
-            Meet {firstName}
+          <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-md">
+            Greater Toronto Area Real Estate Brokers
+          </div>
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight animate-fade-up uppercase leading-[1.1]">
+            Meet RealtHer Group
           </h1>
-          <div className="mt-12 animate-fade-up delay-200">
+          <p className="mt-4 text-[#F9F6F0]/90 text-base md:text-xl font-light max-w-2xl mx-auto">
+            Strategic guidance. Local GTA expertise. A smarter move.
+          </p>
+          <div className="mt-10 animate-fade-up delay-200">
             <Link 
-              className={`inline-flex items-center justify-center w-12 h-12 rounded-full border border-white/20 text-white hover:bg-white ${hoverPrimaryText} transition-colors`} 
+              className="inline-flex items-center justify-center w-12 h-12 rounded-full border border-white/30 text-white hover:bg-white hover:text-slate-900 transition-all duration-300 shadow-lg" 
               href="#story"
             >
               <ArrowDown size={20} />
@@ -45,169 +42,241 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 2. MAIN STORY & VALUES (Two-Column Editorial Layout) */}
-      <section id="story" className="py-20 lg:py-32 bg-white">
+      {/* 2. OUR STORY (Official Copy Block) */}
+      <section id="story" className="py-20 lg:py-32 bg-[#FDFBF7]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
             
-            {/* Left Column: Sticky Portrait & Hook */}
-            <div className="w-full lg:w-[40%] lg:sticky lg:top-32 flex flex-col gap-8">
-              <h2 className={`font-display text-3xl lg:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} leading-snug tracking-tight max-w-sm`}>
-                Your trusted realtor and seasoned market advocate.
+            {/* Left Sticky Header */}
+            <div className="lg:col-span-5 lg:sticky lg:top-32 flex flex-col items-start text-left">
+              <div className="bg-stone-200/60 text-stone-900 text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-sm border border-stone-300/40">
+                Our Foundation
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 leading-[1.15] tracking-tight mb-6">
+                Real Estate, Done Differently.
               </h2>
-              <div className="w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl bg-neutral-100">
+              <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal mb-8">
+                At The RealtHer Group, we believe finding the right property is about more than buying a house — it’s about finding a place to call home and making real estate decisions that support your future.
+              </p>
+              
+              <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-stone-200/80">
                 <img 
-                  src={BRAND_CONFIG.agent.headshot} 
-                  alt={BRAND_CONFIG.agent.name} 
-                  className="w-full h-full object-cover object-top"
+                  src={BRAND_CONFIG.agent.fullphoto || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"} 
+                  alt="Reema Shahzad and Pirasha Vygunthavasa" 
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
 
-            {/* Right Column: Scrolling Content */}
-            <div className="w-full lg:w-[60%] flex flex-col gap-20">
+            {/* Right Content Story Body */}
+            <div className="lg:col-span-7 flex flex-col gap-10 text-stone-700 text-sm md:text-base leading-relaxed font-normal">
               
-              {/* Bio Section */}
-              <div className="space-y-6 text-gray-600 text-sm md:text-base leading-relaxed font-medium">
-                <h3 className={`font-display text-3xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-6 tracking-tight`}>Our Story</h3>
+              <div className="bg-white p-8 sm:p-10 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
+                <h3 className="font-display text-2xl font-bold text-slate-900 tracking-tight">
+                  Two Experienced Brokers. One Vision.
+                </h3>
+                
                 <p>
-                  At The <b>RealtHer Group</b>, we believe finding the right property is about more than buying a house — it’s about finding a place to call home and making real estate decisions that support your future.
+                  Led by experienced real estate professionals <strong>Pirasha Vygunthavasa</strong> and <strong>Reema Shahzad</strong>, our team brings together years of industry knowledge, market expertise, and a genuine passion for helping people achieve their real estate goals.
                 </p>
+                
                 <p>
-                  Led by experienced real estate professionals <b>Pirasha Vygunthavasa</b> and <b>Reema Shahzad</b>, our team brings together years of industry knowledge, market expertise, and a genuine passion for helping people achieve their real estate goals. With Pirasha’s experience as an award-winning RE/MAX Real Estate Broker and a professional home matchmaker since 2004, combined with Reema’s expertise as a Real Estate Broker and investor, clients benefit from a well-rounded perspective on today’s market.
+                  With Pirasha’s experience as an award-winning RE/MAX Real Estate Broker and a professional home matchmaker since 2004, combined with Reema’s expertise as a Real Estate Broker and investor, clients benefit from a well-rounded perspective on today’s market.
                 </p>
+
                 <p>
-                  The RealtHer Group specializes in <b>pre-construction and residential sales</b>, helping buyers, sellers, homeowners, and investors navigate the Greater Toronto Area real estate market with confidence
+                  The RealtHer Group specializes in <strong>pre-construction and residential sales</strong>, helping buyers, sellers, homeowners, and investors navigate the Greater Toronto Area real estate market with confidence.
                 </p>
+
                 <p>
                   Whether you’re searching for your dream home, selling a property, exploring pre-construction opportunities, or looking to build your real estate portfolio, we’re here to make the process seamless, strategic, and personalized.
                 </p>
-                <p>
-                  <b>Your goals are our priority. Your next move starts with The RealtHer Group.</b>
+
+                <p className="pt-2 text-slate-900 font-semibold text-base sm:text-lg border-t border-stone-100">
+                  Your goals are our priority. Your next move starts with The RealtHer Group.
                 </p>
-               
               </div>
 
-              {/* The Difference / Values Grid */}
+              {/* SIX CORE HIGHLIGHT PILLARS */}
               <div>
-                <h3 className={`font-display text-3xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-10 tracking-tight`}>The Difference</h3>
-                <div className="grid sm:grid-cols-2 gap-x-10 gap-y-12">
-                  
-                  {/* Value 1 */}
-                  <div>
-                    <ShieldCheck size={24} strokeWidth={1.5} className={`${BRAND_CONFIG.theme.accentText} mb-4`} />
-                    <h4 className={`font-bold ${BRAND_CONFIG.theme.primaryText} text-lg mb-2`}>Bespoke Strategy</h4>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      Combining extensive transactional background with custom technological workflows to offer a complete, end-to-end perspective on your investment.
+                <h3 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-8 tracking-tight">
+                  What Sets Us Apart
+                </h3>
+                
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <MapPin size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">GTA Expertise</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Deep hyper-local insights spanning Toronto, Durham, York, and Peel regions.
                     </p>
                   </div>
 
-                  {/* Value 2 */}
-                  <div>
-                    <Map size={24} strokeWidth={1.5} className={`${BRAND_CONFIG.theme.accentText} mb-4`} />
-                    <h4 className={`font-bold ${BRAND_CONFIG.theme.primaryText} text-lg mb-2`}>Local Market Mastery</h4>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      Leveraging specialized local market knowledge to uncover hidden gems for buyers and price properties perfectly for sellers.
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <Building2 size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">Pre-Construction Specialization</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      VIP access, builder allocation guidance, and floor plan analysis.
                     </p>
                   </div>
 
-                  {/* Value 3 */}
-                  <div>
-                    <Handshake size={24} strokeWidth={1.5} className={`${BRAND_CONFIG.theme.accentText} mb-4`} />
-                    <h4 className={`font-bold ${BRAND_CONFIG.theme.primaryText} text-lg mb-2`}>Masterful Negotiation</h4>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      Securing optimal financial provisions through strategic, experienced negotiation tactics that consistently put your interests first.
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <Key size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">Resale Strategy</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Targeted pricing, property presentation, and seamless transaction management.
                     </p>
                   </div>
 
-                  {/* Value 4 */}
-                  <div>
-                    <Heart size={24} strokeWidth={1.5} className={`${BRAND_CONFIG.theme.accentText} mb-4`} />
-                    <h4 className={`font-bold ${BRAND_CONFIG.theme.primaryText} text-lg mb-2`}>Personalized Service</h4>
-                    <p className="text-sm text-gray-500 leading-relaxed">
-                      Transparent communication and an unwavering commitment to treating your family's residential real estate journey as if it were my own.
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <TrendingUp size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">Investment Advisory</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Evaluating real numbers, cash flow potential, and long-term equity growth.
                     </p>
                   </div>
 
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <Handshake size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">Tenacious Negotiation</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Client-first advocacy designed to maximize value and protect your bottom line.
+                    </p>
+                  </div>
+
+                  <div className="bg-white p-6 rounded-2xl border border-stone-200/80 shadow-sm">
+                    <ShieldCheck size={22} className="text-[#4D71A3] mb-3" />
+                    <h4 className="font-bold text-slate-900 text-base mb-1">Matchmaking Precision</h4>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Two decades of connecting buyers with properties that fit their lifestyle perfectly.
+                    </p>
+                  </div>
                 </div>
               </div>
 
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* 3. MIDDLE HERO BREAK */}
-      <section className="relative h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
+      {/* 3. INDIVIDUAL BIOS: PIRASHA & REEMA */}
+      <section className="py-20 lg:py-28 bg-white border-y border-stone-200/80">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-5 w-fit mx-auto shadow-sm">
+              Founding Leadership
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight">
+              Meet the Brokers
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
+            
+            {/* BIO 1: PIRASHA VYGUNTHAVASA */}
+            <div className="bg-[#FDFBF7] rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 rounded-full bg-slate-900 text-[#F9F6F0] font-bold text-xl flex items-center justify-center shrink-0">
+                    PV
+                  </div>
+                  <div>
+                    <h3 className="font-display text-2xl font-bold text-slate-900">Pirasha Vygunthavasa</h3>
+                    <p className="text-[#4D71A3] text-xs font-semibold uppercase tracking-wider mt-1">
+                      Award-Winning RE/MAX Real Estate Broker
+                    </p>
+                  </div>
+                </div>
+                
+                <p className="text-stone-600 text-sm leading-relaxed mb-6 font-normal">
+                  A professional home matchmaker since 2004, Pirasha brings over two decades of hands-on GTA market excellence. Her deep understanding of residential sales, pre-construction opportunities, and client relationship management ensures that every transaction is smooth and tailored to your needs.
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Since 2004</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Pre-Construction</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Matchmaking</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">GTA Resale</span>
+                </div>
+              </div>
+
+              <Link 
+                href="/contact" 
+                className="inline-flex items-center justify-center bg-slate-900 text-[#F9F6F0] hover:bg-slate-800 px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors w-fit"
+              >
+                Connect with Pirasha
+              </Link>
+            </div>
+
+            {/* BIO 2: REEMA SHAHZAD */}
+            <div className="bg-[#FDFBF7] rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-16 h-16 rounded-full bg-slate-900 text-[#F9F6F0] font-bold text-xl flex items-center justify-center shrink-0">
+                    RS
+                  </div>
+                  <div>
+                    <h3 className="font-display text-2xl font-bold text-slate-900">Reema Shahzad</h3>
+                    <p className="text-[#4D71A3] text-xs font-semibold uppercase tracking-wider mt-1">
+                      Real Estate Broker & Active Investor
+                    </p>
+                  </div>
+                </div>
+                
+                <p className="text-stone-600 text-sm leading-relaxed mb-6 font-normal">
+                  Combining her background as a Real Estate Broker and active investor, Reema offers clients a sharp, analytical perspective on property values, market trends, and long-term equity growth. She works closely with buyers, sellers, and investors to build solid real estate strategies.
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-6">
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Investment Specialist</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Market Analytics</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Seller Strategy</span>
+                  <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Negotiation</span>
+                </div>
+              </div>
+
+              <Link 
+                href="/contact" 
+                className="inline-flex items-center justify-center bg-slate-900 text-[#F9F6F0] hover:bg-slate-800 px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-colors w-fit"
+              >
+                Connect with Reema
+              </Link>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. CALL TO ACTION BREAK */}
+      <section className="relative h-[380px] md:h-[480px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2000" 
-            alt="Luxury Home"
+            alt="GTA Property Overview"
             className="w-full h-full object-cover"
           />
-          <div className={`absolute inset-0 ${BRAND_CONFIG.theme.primaryBg}/60`} />
+          <div className="absolute inset-0 bg-slate-950/75" />
         </div>
-        <div className="relative z-10 text-center px-6">
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-8">
-            Why {firstName}.
+        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-white tracking-tight mb-6 uppercase">
+            Ready to Start Your Next Move?
           </h2>
+          <p className="text-[#F9F6F0]/90 text-sm md:text-base font-light mb-8 max-w-xl mx-auto">
+            Get in touch with Reema and Pirasha today for personalized guidance tailored to your real estate goals.
+          </p>
           <Link 
-            className={`inline-flex items-center gap-2 ${BRAND_CONFIG.theme.accentBg} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white ${hoverPrimaryText} transition-colors shadow-xl`} 
+            className="inline-flex items-center gap-2 bg-[#4D71A3] text-white hover:bg-[#3B5B88] px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-all shadow-xl font-sans" 
             href="/contact"
           >
-            Work With Me
+            Work With RealtHer Group
           </Link>
         </div>
       </section>
 
-      {/* 4. ALTERNATING FEATURE BLOCKS (Z-Pattern) */}
-      <section className="py-20 lg:py-32 bg-off-white">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-10 space-y-24 lg:space-y-32">
-          
-          {/* Feature 1 */}
-          <div className="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
-            <div className="order-2 md:order-1 relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-              <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=800" alt="Consultation" className="object-cover w-full h-full" />
-            </div>
-            <div className="order-1 md:order-2 text-center md:text-left">
-              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">First-Time Buyers & Newcomers</p>
-              <h2 className={`font-display text-3xl lg:text-5xl font-bold ${BRAND_CONFIG.theme.primaryText} leading-[1.1] mb-6`}>Guiding You Home</h2>
-              <p className="text-gray-600 text-sm lg:text-base leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
-                Entering the market for the first time or moving to a new area can be overwhelming. I specialize in breaking down the complexities of purchasing and financing, providing a seamless, stress-free path to your first front door.
-              </p>
-              <Link 
-                className={`${BRAND_CONFIG.theme.primaryBg} text-white px-8 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase ${hoverAccentText} transition-colors inline-block`} 
-                href="/all-homes"
-              >
-                Start Searching &rarr;
-              </Link>
-            </div>
-          </div>
-
-          {/* Feature 2 (Reversed) */}
-          <div className="grid md:grid-cols-2 gap-10 lg:gap-20 items-center">
-            <div className="order-1 md:order-1 text-center md:text-left">
-              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Sellers & Resale</p>
-              <h2 className={`font-display text-3xl lg:text-5xl font-bold ${BRAND_CONFIG.theme.primaryText} leading-[1.1] mb-6`}>Maximizing Your Return</h2>
-              <p className="text-gray-600 text-sm lg:text-base leading-relaxed mb-8 max-w-md mx-auto md:mx-0">
-                When it's time to sell, you need more than just a sign on the lawn. You need a targeted pricing strategy, deep market insights, and relentless negotiation. I go the extra mile to ensure your property commands the value it deserves.
-              </p>
-              <Link 
-                className={`${BRAND_CONFIG.theme.primaryBg} text-white px-8 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase ${hoverAccentText} transition-colors inline-block`} 
-                href="/home-evaluation"
-              >
-                Valuate Home &rarr;
-              </Link>
-            </div>
-            <div className="order-2 md:order-2 relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 shadow-lg">
-              <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800" alt="Resale Property" className="object-cover w-full h-full" />
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. GET IN TOUCH FOOTER */}
+      {/* 5. LEAD QUALIFICATION FORM FOOTER */}
       <GetInTouch dark={true} />
     </>
   );

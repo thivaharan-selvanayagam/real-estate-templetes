@@ -1,46 +1,49 @@
 "use client";
 
-import { ShieldCheck, Award, Zap } from "lucide-react";
+import { Compass, Handshake, TrendingUp } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 
 export default function AgentValueSection() {
   const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
-  const cleanAccentText = BRAND_CONFIG.theme.accentText;
 
-  // Dynamically assemble icon background bubble and accent states
-  const iconWrapperStyle = `flex items-center justify-center w-12 h-12 rounded-full bg-slate-100 text-slate-700 shrink-0`;
+  // Icon wrapper styled in warm neutral tones
+  const iconWrapperStyle = `flex items-center justify-center w-12 h-12 rounded-full bg-stone-100 text-stone-800 shrink-0 border border-stone-200/60 shadow-sm`;
 
   const pillars = [
     {
-      icon: <ShieldCheck size={20} />,
-      title: "Secure Transactions",
-      desc: "We stand by you with complete representation framework protection from the initial title review process straight down to key delivery."
+      icon: <Compass size={22} className="text-stone-800" />,
+      title: "Strategic Local Guidance",
+      desc: "Deep neighborhood-level insight across the Greater Toronto Area to ensure first-time buyers and seasoned investors make confident, informed moves."
     },
     {
-      icon: <Award size={20} />,
-      title: "Premium Portfolio",
-      desc: "We strictly curate residential, portfolio, and luxury properties that meet our advanced design standards and offer high foundational investment value."
+      icon: <Handshake size={22} className="text-stone-800" />,
+      title: "Tenacious Negotiation",
+      desc: "Client-first representation focused on protecting your bottom line—whether securing top dollar for your sale or winning in competitive offer scenarios."
     },
     {
-      icon: <Zap size={20} />,
-      title: "Fast Valuation",
-      desc: "Discover the true real-time asset market value of your property within 24 hours leveraging advanced localized comparative analytics."
+      icon: <TrendingUp size={22} className="text-stone-800" />,
+      title: "Resale & Pre-Con Mastery",
+      desc: "Complete coverage from existing GTA residential homes to premier pre-construction developments, tailored to your long-term wealth goals."
     }
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-white overflow-hidden relative z-20">
+    <section className="py-20 md:py-28 bg-[#FDFBF7] overflow-hidden relative z-20">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* LEFT COLUMN: HIGH CONTRAST COPY & VALUE PILLARS (Spans 6 cols) */}
+          {/* LEFT COLUMN: WHY REALTHER COPY & PILLARS (Spans 6 cols) */}
           <div className="lg:col-span-6 flex flex-col items-start text-left max-w-xl">
+            <div className="bg-stone-200/60 text-stone-900 text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-sm border border-stone-300/40">
+              Why Choose RealtHer
+            </div>
+
             <h2 className={`font-display text-3xl md:text-4xl lg:text-5xl font-bold ${cleanPrimaryText} tracking-tight leading-[1.15] mb-6`}>
-              Redefining Standards in Real Estate Services
+              Two GTA Experts. One Strategic Partnership.
             </h2>
             
-            <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium mb-10">
-              Leave old traditional methods behind. We transform your property journey into a stress-free experience driven by deep analytics, completely transparent operations, and personalized high-tier consultancy.
+            <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal mb-10">
+              We founded RealtHer Group to replace standard corporate templates with real, personalized expertise. Led by Reema and Pirasha, our approach combines sharp local market knowledge, analytical foresight, and dedicated advocacy for every client.
             </p>
 
             {/* Value Features Vertical Stack */}
@@ -54,7 +57,7 @@ export default function AgentValueSection() {
                     <h3 className={`font-display text-base font-bold ${cleanPrimaryText} tracking-wide mb-1.5`}>
                       {pillar.title}
                     </h3>
-                    <p className="text-gray-400 text-xs md:text-sm leading-relaxed font-medium">
+                    <p className="text-stone-500 text-xs md:text-sm leading-relaxed font-normal">
                       {pillar.desc}
                     </p>
                   </div>
@@ -63,33 +66,33 @@ export default function AgentValueSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: PORTRAIT COMPOSITION WITH OVERLAPPING FLOATING TESTIMONIAL (Spans 6 cols) */}
+          {/* RIGHT COLUMN: PORTRAIT SPOTLIGHT WITH FLOATING TESTIMONIAL CARD (Spans 6 cols) */}
           <div className="lg:col-span-6 flex justify-center lg:justify-end relative w-full pt-6">
             
-            {/* Visual offset alignment background drop shadow card */}
-            <div className="relative w-full max-w-[500px] aspect-[4/5] rounded-3xl bg-neutral-100 shadow-xl overflow-visible">
+            {/* Image Container Card */}
+            <div className="relative w-full max-w-[480px] aspect-[4/5] rounded-3xl bg-stone-200 shadow-xl overflow-visible">
               
-              {/* Main Agent Portrait drawn dynamically from BRAND_CONFIG */}
+              {/* Main Team Portrait */}
               <img 
                 src={BRAND_CONFIG.agent.fullphoto} 
-                alt={`${BRAND_CONFIG.agent.name} - ${BRAND_CONFIG.agent.title}`}
+                alt="Reema and Pirasha - RealtHer Group Founders"
                 className="w-full h-full object-cover rounded-3xl relative z-10"
               />
 
-              {/* 🔑 FIXED: Floating Card Badge Overlay matching image_c41fb4.jpg precisely */}
-              <div className="absolute left-[-24px] sm:left-[-32px] bottom-[-24px] bg-white rounded-2xl p-5 shadow-2xl max-w-[280px] sm:max-w-[320px] z-20 border border-gray-100 animate-fade-up">
-                <p className={`text-gray-800 font-medium italic text-xs sm:text-sm leading-relaxed mb-4 text-justify`}>
-                  "Working with {BRAND_CONFIG.meta.siteName.split('.')[0]} was the best investment decision of my life."
+              {/* Floating Testimonial Overlay Card */}
+              <div className="absolute left-[-16px] sm:left-[-28px] bottom-[-20px] bg-[#F9F6F0] rounded-2xl p-6 shadow-2xl max-w-[290px] sm:max-w-[330px] z-20 border border-stone-200/80 animate-fade-up">
+                <p className="text-stone-800 font-light italic text-xs sm:text-sm leading-relaxed mb-4 text-left">
+                  "Reema and Pirasha made our GTA home buying process smooth and strategic. Their negotiation skills saved us thousands."
                 </p>
                 
                 {/* Reviewer Meta Profile */}
                 <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full ${BRAND_CONFIG.theme.primaryBg} text-white font-bold flex items-center justify-center text-[10px]`}>
-                    JC
+                  <div className="w-8 h-8 rounded-full bg-stone-900 text-[#F9F6F0] font-semibold flex items-center justify-center text-[10px] tracking-wider">
+                    RP
                   </div>
                   <div className="text-left">
-                    <h4 className={`font-bold ${cleanPrimaryText} text-xs tracking-wide`}>Jane Cooper</h4>
-                    <p className="text-gray-400 text-[10px] font-semibold mt-0.5">Architect</p>
+                    <h4 className={`font-semibold ${cleanPrimaryText} text-xs tracking-wide`}>R. & P. Sharma</h4>
+                    <p className="text-stone-500 text-[10px] font-medium mt-0.5">GTA Homeowners</p>
                   </div>
                 </div>
               </div>

@@ -5,24 +5,64 @@ import { notFound } from "next/navigation";
 import { BRAND_CONFIG } from "@/config/brand";
 
 const neighborhoodsData = [
-  { slug: "toronto", name: "Toronto", description: "Canada's largest city offering vibrant urban living, diverse neighborhoods, and endless cultural hotspots.", image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "oakville", name: "Oakville", description: "Prestigious lakeside town renowned for its historic downtown, upscale lifestyle, and top-ranked schools.", image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "mississauga", name: "Mississauga", description: "A booming urban center with a beautiful waterfront, diverse communities, and excellent transit hubs.", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "burlington", name: "Burlington", description: "Highly rated lakeside city perfectly balancing scenic nature, great schools, and modern family living.", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "markham", name: "Markham", description: "Canada's high-tech capital featuring highly sought-after schools, modern developments, and rich heritage.", image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "vaughan", name: "Vaughan", description: "Rapidly growing city famous for premium master-planned communities, luxury homes, and fantastic amenities.", image: "https://images.unsplash.com/photo-160066752355-35792bedcfea?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "richmond-hill", name: "Richmond Hill", description: "An upscale, green-filled municipality known for its excellent schools, pristine parks, and estate homes.", image: "https://images.unsplash.com/photo-160066753190-17f0baa2a6c3?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "hamilton", name: "Hamilton", description: "A vibrant, historic city blending a booming arts culture with stunning Niagara Escarpment nature.", image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "brampton", name: "Brampton", description: "One of Canada's fastest-growing, family-centric cities featuring diverse neighborhoods and great recreation.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "pickering", name: "Pickering", description: "A beautiful coastal community offering scenic waterfront trails and quick, easy transit access to Toronto.", image: "https://images.unsplash.com/photo-1600607687126-8a3414349a51?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "barrie", name: "Barrie", description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "stoufville", name: "Stoufville", description: "One of Canada's fastest-growing, family-centric cities featuring diverse neighborhoods and great recreation.", image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "ajax", name: "Ajax", description: "A beautiful coastal community offering scenic waterfront trails and quick, easy transit access to Toronto.", image: "https://images.unsplash.com/photo-1600607687126-8a3414349a51?q=80&w=1600&auto=format&fit=crop" },
-  { slug: "whitby", name: "Whitby", description: "A scenic lakeside city serving as the perfect gateway to outdoor recreation and cottage country.", image: "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=1600&auto=format&fit=crop" }
+  { 
+    slug: "pickering", 
+    name: "Pickering", 
+    description: "Vibrant waterfront community offering direct GO Transit access to downtown Toronto, expanding pre-construction projects, and strong long-term equity potential.", 
+    image: "/images/neighborhood/pickering.jpg" 
+  },
+  { 
+    slug: "ajax", 
+    name: "Ajax", 
+    description: "Family-centric Durham Region community featuring spacious residential floor plans, scenic lakeside parks, and accessible commuter routes.", 
+    image: "/images/neighborhood/ajax.jpg" 
+  },
+  { 
+    slug: "whitby", 
+    name: "Whitby", 
+    description: "Picturesque historic downtown combined with modern family subdivisions, highly rated schools, and excellent access to Highway 401 and 407.", 
+    image: "/images/neighborhood/whitby.jpg" 
+  },
+  { 
+    slug: "oshawa", 
+    name: "Oshawa", 
+    description: "One of Durham's top investment hubs, delivering accessible entry prices for first-time buyers and strong rental demand near post-secondary institutions.", 
+    image: "/images/neighborhood/oshawa.jpg" 
+  },
+  { 
+    slug: "stouffville", 
+    name: "Stouffville", 
+    description: "Charming small-town atmosphere surrounded by scenic country landscapes, newer master-planned developments, and a quiet pace of life.", 
+    image: "/images/neighborhood/stouffville.jpg" 
+  },
+  { 
+    slug: "markham", 
+    name: "Markham", 
+    description: "Dynamic technology and corporate hub renowned for top-tier school catchments, established neighborhoods, and high resale stability.", 
+    image: "/images/neighborhood/markham.jpg" 
+  },
+  { 
+    slug: "vaughan", 
+    name: "Vaughan", 
+    description: "Rapidly expanding urban center anchored by subway line connectivity, major commercial developments, and versatile family properties.", 
+    image: "/images/neighborhood/vaughan.jpg" 
+  },
+  { 
+    slug: "richmond-hill", 
+    name: "Richmond Hill", 
+    description: "Sought-after York Region enclave featuring pristine greenbelt trails, highly ranked educational options, and enduring real estate value.", 
+    image: "/images/neighborhood/richmond-hill.jpg" 
+  },
+  { 
+    slug: "toronto", 
+    name: "Toronto", 
+    description: "Canada's economic heart, featuring diverse downtown condo developments, historic tree-lined neighborhoods, and high-demand investment corridors.", 
+    image: "/images/neighborhood/toronto.avif" 
+  }
 ];
 
 const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
     maximumFractionDigits: 0,
@@ -84,58 +124,64 @@ export default async function CityPage({ params, searchParams }: Props) {
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="bg-[#F8F7F4] min-h-screen">
+    <div className="bg-[#FDFBF7] min-h-screen">
       
       {/* 1. HERO SECTION */}
-      <section className="relative h-[50vh] lg:h-[60vh] flex flex-col items-center justify-center bg-slate-900 overflow-hidden pt-20">
+      <section className="relative h-[480px] lg:h-[540px] flex flex-col items-center justify-center bg-slate-950 overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
-          <img src={city.image} alt={city.name} className="w-full h-full object-cover opacity-60" />
-          <div className="absolute inset-0 bg-slate-950/50" />
+          <img src={city.image} alt={`${city.name} community panorama`} className="w-full h-full object-cover opacity-25" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/60 to-slate-950" />
         </div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
-          <div className="flex items-center justify-center gap-2 text-xs font-bold tracking-widest uppercase mb-4 text-white/80">
+          <div className="flex items-center justify-center gap-2 text-xs font-semibold tracking-wider uppercase mb-4 text-stone-300">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <span className="text-white/50">/</span>
-            <Link href="/neighbourhoods" className="hover:text-white transition-colors">Neighborhoods</Link>
-            <span className="text-white/50">/</span>
+            <span className="text-stone-500">/</span>
+            <Link href="/neighbourhoods" className="hover:text-white transition-colors">Neighbourhoods</Link>
+            <span className="text-stone-500">/</span>
             <span className="text-white">{city.name}</span>
           </div>
 
-          <h1 className="font-display text-5xl md:text-6xl lg:text-8xl font-bold text-white tracking-tight">
+          <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-4 shadow-md">
+            GTA Community Spotlight
+          </div>
+
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight uppercase leading-tight">
             {city.name}
           </h1>
-          <p className="mt-6 text-white/90 text-sm md:text-lg font-medium tracking-wide max-w-2xl mx-auto">
+          <p className="mt-4 text-[#F9F6F0]/85 text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto">
             {city.description}
           </p>
         </div>
       </section>
 
       {/* 2. LISTINGS SECTION */}
-      <section className="py-20 lg:py-24">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
+      <section className="py-16 lg:py-24">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-12 border-b border-gray-200 pb-6 gap-4">
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-800">
-              Homes for Sale in <span className="text-amber-600">{city.name}</span> 
-              <span className="text-xs font-semibold text-gray-400 block sm:inline sm:ml-3">
-                (Showing {totalResults.toLocaleString()} active profiles matched)
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-12 border-b border-stone-200/80 pb-6 gap-4">
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900 text-left">
+              Homes for Sale in <span className="text-[#4D71A3]">{city.name}</span> 
+              <span className="text-xs font-normal text-stone-500 block sm:inline sm:ml-3">
+                ({totalResults.toLocaleString()} active listings)
               </span>
             </h2>
-            <Link href="/neighbourhoods" className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-slate-800 hover:text-amber-600 transition-colors">
-              <ArrowLeft size={16} /> Back to Neighborhoods
+            <Link 
+              href="/neighbourhoods" 
+              className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-slate-900 hover:text-[#4D71A3] transition-colors font-sans"
+            >
+              <ArrowLeft size={16} /> All Neighbourhoods
             </Link>
           </div>
 
           {listings.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {listings.map((listing: any) => {
                   const img = listing.images?.[0];
                   const beds = listing.details?.numBedrooms || 0;
                   const baths = listing.details?.numBathrooms || 0;
                   
-                  // 🔑 FIXED: Parse the sqft data safely into a plain integer block to ensure numeric compatibility
                   const sqftRawValue = listing.details?.sqft || listing.details?.squareFootage || "";
                   const parsedSqftNum = parseInt(String(sqftRawValue).replace(/[^0-9]/g, ""), 10);
                   const isSqftValid = !isNaN(parsedSqftNum) && parsedSqftNum > 0;
@@ -144,23 +190,43 @@ export default async function CityPage({ params, searchParams }: Props) {
                   const fullAddressString = `${streetAddress}, ${listing.address?.city || city.name}, ${listing.address?.state || 'ON'}`.trim().replace(/,\s*$/, "");
 
                   return (
-                    <Link href={`/listings/${listing.mlsNumber}`} key={listing.mlsNumber} className="flex flex-col group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
-                      <div className="w-full aspect-[4/3] relative overflow-hidden bg-gray-100">
-                        {img ? <img src={`https://cdn.repliers.io/${img}?w=500`} alt={fullAddressString} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" /> : <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold uppercase tracking-wider bg-neutral-900">No Image</div>}
-                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded text-slate-800 shadow-sm">{listing.status === "A" ? "Active" : listing.status}</div>
+                    <Link 
+                      href={`/listings/${listing.mlsNumber}`} 
+                      key={listing.mlsNumber} 
+                      className="flex flex-col group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200/80"
+                    >
+                      <div className="w-full aspect-[4/3] relative overflow-hidden bg-stone-100">
+                        {img ? (
+                          <img 
+                            src={`https://cdn.repliers.io/${img}?w=500`} 
+                            alt={fullAddressString} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs font-semibold uppercase tracking-wider bg-slate-950">
+                            No Image Available
+                          </div>
+                        )}
+                        <div className="absolute top-4 left-4 bg-slate-950/80 backdrop-blur-md text-[10px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-sm">
+                          {listing.status === "A" ? "Active" : listing.status}
+                        </div>
                       </div>
-                      <div className="p-6 text-left">
-                        <h3 className="text-2xl font-bold text-slate-800 tracking-tight mb-1">{formatPrice(listing.listPrice)}</h3>
-                        <p className="text-xs font-semibold text-gray-500 mb-4 truncate" title={fullAddressString}>{fullAddressString}</p>
+
+                      <div className="p-6 text-left flex flex-col flex-grow">
+                        <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-1">
+                          {formatPrice(listing.listPrice)}
+                        </h3>
+                        <p className="text-xs font-normal text-stone-500 mb-4 truncate" title={fullAddressString}>
+                          {fullAddressString}
+                        </p>
                         
-                        <div className="flex items-center justify-between text-xs font-semibold text-gray-600 border-t border-gray-100 pt-4 mt-auto">
-                          <span className="flex items-center gap-1.5"><Bed size={16} className="text-amber-600"/> {beds} Bd</span>
-                          <span className="flex items-center gap-1.5"><Bath size={16} className="text-amber-600"/> {baths} Ba</span>
+                        <div className="flex items-center justify-between text-xs font-medium text-stone-700 border-t border-stone-100 pt-4 mt-auto">
+                          <span className="flex items-center gap-1.5"><Bed size={15} className="text-[#4D71A3]"/> {beds} Bd</span>
+                          <span className="flex items-center gap-1.5"><Bath size={15} className="text-[#4D71A3]"/> {baths} Ba</span>
                           
-                          {/* 🔑 FIXED: Use the validated number layout to print nicely formatted values */}
                           {isSqftValid && (
                             <span className="flex items-center gap-1.5 ml-auto">
-                              <Maximize size={14} className="text-amber-600"/> 
+                              <Maximize size={13} className="text-[#4D71A3]"/> 
                               {parsedSqftNum.toLocaleString()} sqft
                             </span>
                           )}
@@ -175,8 +241,8 @@ export default async function CityPage({ params, searchParams }: Props) {
               {totalPages > 1 && (
                 <div className="mt-16 flex items-center justify-center gap-2">
                   <Link 
-                    href={`/neighborhoods/${slug}?page=${activePage - 1}`}
-                    className={`w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white shadow-sm hover:bg-neutral-50 text-slate-700 transition-colors ${activePage === 1 ? "pointer-events-none opacity-30" : ""}`}
+                    href={`/neighbourhoods/${slug}?page=${activePage - 1}`}
+                    className={`w-10 h-10 rounded-full border border-stone-200/80 flex items-center justify-center bg-white shadow-sm hover:bg-stone-100 text-slate-900 transition-colors ${activePage === 1 ? "pointer-events-none opacity-30" : ""}`}
                   >
                     <ChevronDown size={18} className="rotate-90" />
                   </Link>
@@ -184,16 +250,16 @@ export default async function CityPage({ params, searchParams }: Props) {
                   {visiblePages.map(p => (
                     <Link
                       key={p}
-                      href={`/neighborhoods/${slug}?page=${p}`}
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-all shadow-sm ${p === activePage ? `${BRAND_CONFIG.theme.primaryBg} text-white scale-105` : "border border-gray-200 bg-white hover:bg-neutral-50 text-slate-700"}`}
+                      href={`/neighbourhoods/${slug}?page=${p}`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-xs transition-all shadow-sm ${p === activePage ? "bg-slate-900 text-[#F9F6F0]" : "border border-stone-200/80 bg-white hover:bg-stone-100 text-slate-900"}`}
                     >
                       {p}
                     </Link>
                   ))}
 
                   <Link 
-                    href={`/neighborhoods/${slug}?page=${activePage + 1}`}
-                    className={`w-10 h-10 rounded-xl border border-gray-200 flex items-center justify-center bg-white shadow-sm hover:bg-neutral-50 text-slate-700 transition-colors ${activePage === totalPages ? "pointer-events-none opacity-30" : ""}`}
+                    href={`/neighbourhoods/${slug}?page=${activePage + 1}`}
+                    className={`w-10 h-10 rounded-full border border-stone-200/80 flex items-center justify-center bg-white shadow-sm hover:bg-stone-100 text-slate-900 transition-colors ${activePage === totalPages ? "pointer-events-none opacity-30" : ""}`}
                   >
                     <ChevronDown size={18} className="-rotate-90" />
                   </Link>
@@ -201,15 +267,16 @@ export default async function CityPage({ params, searchParams }: Props) {
               )}
             </>
           ) : (
-            <div className="text-center py-20 bg-white rounded-2xl border border-gray-100 shadow-sm">
-              <h3 className="text-xl font-bold text-slate-800 mb-2">No Active Listings</h3>
-              <p className="text-gray-500">There are currently no active properties available in {city.name}.</p>
+            <div className="text-center py-20 bg-white rounded-3xl border border-stone-200/80 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 mb-2">No Active Listings</h3>
+              <p className="text-stone-500 text-sm font-normal">There are currently no active properties available in {city.name}.</p>
             </div>
           )}
 
         </div>
       </section>
 
+      {/* Global Contact Form */}
       <GetInTouch dark={true} />
     </div>
   );

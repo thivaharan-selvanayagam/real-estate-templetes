@@ -1,101 +1,102 @@
 import Link from "next/link";
-import { ArrowRight, Calculator } from "lucide-react";
+import { ArrowRight, Calculator, Calendar } from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
-import { BRAND_CONFIG } from "@/config/brand"; // 🔑 IMPORT: Connected to your master config file
+import { BRAND_CONFIG } from "@/config/brand";
 
-export const metadata = { title: `Buyer's Guide | ${BRAND_CONFIG.meta.siteName}` };
+export const metadata = { 
+  title: `Buyer's Guide | ${BRAND_CONFIG.meta.siteName}` 
+};
 
 const buyerSteps = [
   { 
-    title: 'Research', 
-    text: `Do you already know where you want to buy? If you want a condo, townhome, or single-family home? Which features do you like and dislike? What’s available on the market now? If you answered no to any of these questions, now is the time to start researching. In addition to looking for homes that interest you, also take note of any changes in asking prices. This could give you valuable insight into housing trends in specific neighborhoods and help you when the time comes to make an offer.`,
+    title: 'Explore & Define Your Goals', 
+    text: `Buying in the Greater Toronto Area begins with understanding your core needs. Are you looking for a condo, townhouse, or detached home? Do you prioritize transit access, top school districts, or future capital growth? Starting with a clear list of non-negotiables and researching local neighborhood trends gives you a distinct advantage before entering the market.`,
     img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000&q=80'
   },
   { 
-    title: 'Decide on Your Budget', 
-    text: `Notice I said to decide on your budget—not determine how much the mortgage company will give you. In many cases, a mortgage company will pre-approve you for more than you’re comfortable spending, which is why you need to determine the monthly payment you feel comfortable with before talking to a lender. This likely includes doing a full household budget and taking into consideration what changes other than a mortgage payment will occur once you move into your new home. If you’ve lived in an apartment or with roommates, you may overlook new expenses like garbage, water, or HOA fees that could easily blow your budget.`,
+    title: 'Establish Your Comfortable Budget', 
+    text: `Lenders may pre-approve you for a maximum loan amount, but your target budget should reflect what you are comfortable paying each month. Take into account total carrying costs—including property taxes, maintenance fees, utilities, and emergency reserves—to ensure your real estate decision supports your long-term financial health.`,
     img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1000&q=80'
   },
   { 
-    title: 'Get Prequalified', 
-    text: `Just because you think you can afford a certain payment every month doesn’t mean the mortgage company will agree. Just as they may approve you for too large of an amount, they may also approve you for a lesser amount or deny you a mortgage altogether. Lack of time at a job, insufficient credit, past bankruptcies, or other financial issues can cause major problems when trying to secure a mortgage. Before you get your heart set on a home, talk to a mortgage professional to find out what amount you can qualify for. This will also be an advantage when you make an offer on a home, as some sellers won’t entertain offers from those who aren’t already prequalified for a loan.`,
+    title: 'Secure Mortgage Pre-Approval', 
+    text: `A formal pre-approval locks in an interest rate and confirms your actual buying power. In a competitive GTA market, sellers favor buyers who have their financing verified. Reema and Pirasha can connect you with trusted GTA mortgage specialists to help streamline this process.`,
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80'
   },
   { 
-    title: 'Choose a Real Estate Agent', 
-    text: `Can you shop for, look at, and ultimately make an offer on a home without a real estate agent? Technically yes, but why would you when it costs you nothing for an agent to take much of the stress off your shoulders? Not only will I help identify properties you might be interested in, arrange showings, and ultimately handle the offer process, but I also have a knowledge of the market that you don’t possess. Finding the perfect home can be a daunting task, this is where my expertise and wealth of knowledge come into play. Let me show you around some homes that meet your dream home criteria so you can find the one that's right for you.`,
+    title: 'Partner with Experienced GTA Brokers', 
+    text: `Navigating GTA real estate requires sharp local insights, proactive communication, and tenacious negotiation. Having RealtHer Group in your corner costs you nothing as a buyer, but provides you with full market representation, off-market insight, and strategic protection at every turn.`,
     img: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1000&q=80'
   },
   { 
-    title: 'Find the Right Home', 
-    text: `This should be the most enjoyable step of the entire process (other than moving in!). I will arrange showings of homes you’re interested in that are within your price range. Take notes about what you like and don’t like, and make sure to pay attention to details. Turn light switches on and off, open and close doors, and run the faucets in various rooms. Don’t limit your inspection to the home itself. Make sure to take time to explore the neighborhood and keep an eye on traffic at certain times of the day, the parking situation, and how close it is to necessities like schools and grocery stores.`,
+    title: 'Tour Targeted Properties', 
+    text: `We curate property viewings that fit your criteria and schedule. During showings, we evaluate layout utility, structural condition, neighborhood dynamics, parking, and proximity to key amenities across Toronto, Durham, York, and Peel regions.`,
     img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1000&q=80'
   },
   { 
-    title: 'Make an Offer', 
-    text: `Once you have selected the perfect home, work with your agent to craft a fair offer based on the value of comparable homes on the market. Depending on what the home is listed at and whether the current environment is a buyer’s or seller’s market, your offer may be below, at, or even above the asking price. I will be able to help you negotiate if you receive a counteroffer and reach an agreement. At this point, the house will go into escrow.`,
+    title: 'Craft a Strategic Offer', 
+    text: `When you find the right property, we analyze recent comparable sales and local demand drivers to structure a fair, competitive offer. Whether navigating multiple offers or negotiating directly with a seller, we advocate aggressively to secure the best price and favorable terms.`,
     img: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1000&q=80'
   },
   { 
-    title: 'Have the Home Inspected', 
-    text: `In most cases, your offer will be contingent on having the home inspected to ensure there is no major structural damage or large repairs needed. I can help you arrange this, and you can schedule it within days of making an offer. If there are no major issues, the process goes to step eight. If there is, you can renegotiate your offer based on what needs to be fixed, or you can withdraw it.`,
+    title: 'Complete Due Diligence & Inspection', 
+    text: `Once your offer is accepted, we ensure all protective conditions—such as home inspections, status certificate reviews (for condos), and financing verification—are satisfied so you move forward with complete peace of mind.`,
     img: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1000&q=80'
   },
   { 
-    title: 'Select Your Loan', 
-    text: `Now is the time to go back to the mortgage lender who pre-approved or pre-qualified you and choose your mortgage. You will be presented with various options based on your unique financial situation, including fixed-rate, variable-rate, 15-year, 30-year, or special programs such as VA loans or FHA loans. Work with your mortgage lender to select the option you feel the most comfortable with.`,
-    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1000&q=80'
-  },
-  { 
-    title: 'Get a Home Appraisal', 
-    text: `Your lender will have your new home appraised so they have their independent value of it. The appraisal is to ensure that all parties involved are paying a fair price for the house.`,
-    img: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1000&q=80'
-  },
-  { 
-    title: 'Finish Paperwork', 
-    text: `No one looks forward to all the paperwork involved in buying a home, but it’s a necessary part of the process. Fortunately, everything will be arranged by your lender and title company and, when you’re finished, you’ll know you are the legal owner of your new home.`,
+    title: 'Finalize Lender Paperwork & Legal Closing', 
+    text: `Your lender finalizes mortgage documents while your real estate lawyer completes title searches, property transfer tax filings, and legal adjustments. We work closely with your legal team to ensure a smooth transition to closing day.`,
     img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1000&q=80'
   }
 ];
 
 export default function BuyersGuidePage() {
-  const firstName = BRAND_CONFIG.agent.name.split(" ")[0];
-
-  // Helper styles to build structured theme tokens inside templates safely
-  const hoverAccentText = `hover:${BRAND_CONFIG.theme.accentText}`;
-  const hoverPrimaryText = `hover:${BRAND_CONFIG.theme.primaryText}`;
-  const hoverPrimaryBg = `hover:${BRAND_CONFIG.theme.primaryBg}`;
-
   return (
     <>
-      {/* 1. DYNAMIC HERO SECTION */}
-      <section className={`relative h-[60vh] lg:h-[70vh] flex flex-col items-center justify-center ${BRAND_CONFIG.theme.primaryBg} overflow-hidden pt-20`}>
+      {/* 1. HERO SECTION */}
+      <section className="relative h-[60vh] lg:h-[70vh] flex flex-col items-center justify-center bg-slate-950 overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1400&q=80" 
-            alt="Buyer's Guide Blueprint"
-            className="w-full h-full object-cover opacity-40"
+            alt="GTA Homebuyer Guidance"
+            className="w-full h-full object-cover opacity-35"
           />
-          <div className={`absolute inset-0 bg-gradient-to-b from-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/80 via-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}/60 to-${BRAND_CONFIG.theme.primaryBg.replace('bg-', '')}`} />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/60 to-slate-950" />
         </div>
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
-          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight animate-fade-up">
+          <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-md">
+            First-Time Buyers & Investors
+          </div>
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight animate-fade-up uppercase leading-[1.1]">
             Buyer's Guide
           </h1>
+          <p className="mt-4 text-[#F9F6F0]/90 text-base md:text-xl font-light max-w-2xl mx-auto">
+            A practical, step-by-step roadmap to purchasing real estate in the Greater Toronto Area.
+          </p>
+          <div className="mt-8">
+            <Link 
+              href="/contact?intent=Book%20a%20Buyer%20Consultation"
+              className="inline-flex items-center gap-2 bg-[#F9F6F0] text-slate-900 hover:bg-white px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-xl"
+            >
+              <Calendar size={15} /> Book a Buyer Consultation
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* 2. INTRO SECTION */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[760px] mx-auto px-6 text-center">
-          <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Your Roadmap</p>
-          <h2 className={`font-display text-3xl md:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
-            Steps to Buying Your Home
+      <section className="py-20 bg-[#FDFBF7]">
+        <div className="max-w-[780px] mx-auto px-6 text-center">
+          <div className="bg-stone-200/60 text-stone-900 text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-5 w-fit mx-auto shadow-sm border border-stone-300/40">
+            Navigating the GTA
+          </div>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+            Clear Guidance at Every Step
           </h2>
-          <div className={`w-10 h-[1px] ${BRAND_CONFIG.theme.accentBg} mx-auto my-6`}></div>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-            Buying property is one of the most significant financial milestones of your life. Our team provides a tailored, step-by-step framework to navigate the competitive market with absolute confidence.
+          <div className="w-12 h-[2px] bg-[#4D71A3] mx-auto my-6"></div>
+          <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal">
+            Purchasing property is one of the most important decisions you will make. Whether buying your first home or expanding an investment portfolio, Reema and Pirasha deliver a straightforward, strategic framework so you move forward with absolute confidence.
           </p>
         </div>
       </section>
@@ -106,10 +107,10 @@ export default function BuyersGuidePage() {
           const isEven = index % 2 !== 0;
 
           return (
-            <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 ${isEven ? 'bg-gray-50' : 'bg-white'}`}>
+            <div key={index} className={`grid grid-cols-1 lg:grid-cols-2 ${isEven ? 'bg-[#F9F6F0]' : 'bg-white'}`}>
               
               {/* Media Frame Container */}
-              <div className={`relative min-h-[400px] lg:min-h-[600px] group overflow-hidden ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
+              <div className={`relative min-h-[380px] lg:min-h-[520px] group overflow-hidden ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
                 <img 
                   src={step.img} 
                   alt={step.title} 
@@ -119,19 +120,19 @@ export default function BuyersGuidePage() {
               </div>
 
               {/* Text Panel Container */}
-              <div className={`flex flex-col justify-center px-8 py-16 lg:px-20 xl:px-24 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText}`}>
-                    Phase {String(index + 1).padStart(2, '0')}
+              <div className={`flex flex-col justify-center px-8 py-14 lg:px-20 xl:px-24 ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-[11px] font-semibold tracking-widest uppercase text-[#4D71A3]">
+                    Step {String(index + 1).padStart(2, '0')}
                   </span>
-                  <div className={`w-6 h-[1px] ${BRAND_CONFIG.theme.accentBg} hidden md:block`}></div>
+                  <div className="w-8 h-[1px] bg-stone-300 hidden md:block"></div>
                 </div>
                 
-                <h3 className={`font-display text-2xl lg:text-3xl xl:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} mb-5 uppercase tracking-wide leading-snug`}>
+                <h3 className="font-display text-2xl lg:text-3xl font-bold text-slate-900 mb-4 tracking-tight leading-snug">
                   {step.title}
                 </h3>
                 
-                <p className="text-gray-600 text-sm lg:text-[15px] leading-loose font-medium">
+                <p className="text-stone-600 text-sm lg:text-[15px] leading-relaxed font-normal">
                   {step.text}
                 </p>
               </div>
@@ -141,61 +142,78 @@ export default function BuyersGuidePage() {
         })}
       </section>
 
-      {/* 4. ACTIONS FOOTER */}
-      <section className="py-24 bg-gray-50 border-t border-gray-100 text-center">
+      {/* 4. ACTIONS FOOTER WITH CORE BUYER CTA */}
+      <section className="py-20 bg-white border-t border-stone-200/80 text-center">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className={`font-display text-3xl md:text-4xl font-bold ${BRAND_CONFIG.theme.primaryText} tracking-wide uppercase mb-10`}>
-            Ready to Begin Your Search?
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 tracking-tight uppercase mb-8">
+            Ready to Take the Next Step?
           </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link href="/all-homes" className={`btn flex items-center justify-center gap-2 ${BRAND_CONFIG.theme.primaryBg} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase ${hoverAccentText} transition-all`}>
-              Browse Live Listings <ArrowRight size={16} />
+            <Link 
+              href="/contact?intent=Book%20a%20Buyer%20Consultation" 
+              className="inline-flex items-center justify-center gap-2 bg-[#4D71A3] text-white hover:bg-[#3B5B88] px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-all shadow-md font-sans"
+            >
+              <Calendar size={16} /> Book a Buyer Consultation
             </Link>
-            <Link href="/contact" className={`btn flex items-center justify-center gap-2 border ${BRAND_CONFIG.theme.primaryBorder} ${BRAND_CONFIG.theme.primaryText} px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase ${hoverPrimaryBg} hover:text-white transition-all`}>
-              Schedule Consultation
+            <Link 
+              href="/all-homes" 
+              className="inline-flex items-center justify-center gap-2 border border-slate-300 text-slate-900 hover:bg-slate-900 hover:text-white px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-all shadow-sm font-sans"
+            >
+              Browse GTA Listings <ArrowRight size={16} />
             </Link>
           </div>
         </div>
       </section>
 
       {/* 5. CALCULATOR CTA SECTION */}
-      <section className={`py-20 ${BRAND_CONFIG.theme.primaryBg} text-center border-t border-white/5`}>
+      <section className="py-20 bg-slate-950 text-center border-t border-white/10">
         <div className="max-w-3xl mx-auto px-6">
-          <p className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText} mb-4`}>Financial Analytics</p>
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-white tracking-tight mb-10">
-            Estimate Your Real Estate Carrying Costs
+          <p className="text-[11px] font-semibold tracking-widest uppercase text-[#4D71A3] mb-4">Financial Planning</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">
+            Want to Estimate Your Carrying Costs?
           </h2>
-          <Link href="/calculator" className={`inline-flex items-center gap-3 bg-white ${BRAND_CONFIG.theme.primaryText} px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-neutral-100 transition-colors shadow-xl`}>
-            <Calculator size={16} /> Launch Calculator Matrix
+          <p className="text-stone-300 text-sm md:text-base leading-relaxed mb-8 max-w-xl mx-auto">
+            Use our calculator to estimate monthly mortgage payments, down payments, and closing expenses for GTA properties.
+          </p>
+          <Link 
+            href="/calculator" 
+            className="inline-flex items-center gap-3 bg-[#F9F6F0] text-slate-900 hover:bg-white px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors shadow-xl"
+          >
+            <Calculator size={16} /> Launch Mortgage Calculator
           </Link>
         </div>
       </section>
 
-      {/* 6. DYNAMIC BRAND ADVOCATE CALLOUT HERO */}
-      <section className="relative h-[500px] flex items-center justify-center text-center overflow-hidden">
+      {/* 6. FOUNDER ADVOCATE CALLOUT HERO */}
+      <section className="relative h-[480px] flex items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
             src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=1400&q=80" 
-            alt={`Work with ${BRAND_CONFIG.agent.name}`}
+            alt="Work with RealtHer Group"
             className="w-full h-full object-cover"
           />
-          <div className={`absolute inset-0 ${BRAND_CONFIG.theme.primaryBg}/70`} />
+          <div className="absolute inset-0 bg-slate-950/75" />
         </div>
         <div className="relative z-10 px-6 max-w-2xl mx-auto">
-          <p className={`text-[11px] font-bold tracking-[0.2em] uppercase ${BRAND_CONFIG.theme.accentText} mb-4`}>Start Today</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-white tracking-tight mb-6">
-            Work With {firstName}
+          <div className="bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-5 w-fit mx-auto shadow-sm">
+            Personalized Guidance
+          </div>
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-white tracking-tight mb-6">
+            Partner with RealtHer Group
           </h2>
-          <p className="text-white/90 text-sm md:text-base leading-relaxed mb-10">
-            With a passion for real estate and structural refinement alongside deep proficiency in execution and contract validation, {firstName} ensures every client achieves premium advisory service. Connect with us today to observe how our model guides you across standard market barriers with absolute clarity.
+          <p className="text-[#F9F6F0]/90 text-sm md:text-base leading-relaxed mb-8 font-light">
+            With decades of combined GTA expertise, Reema Shahzad and Pirasha Vygunthavasa protect your interests, negotiate strongly, and guide you to a property that supports your long-term goals.
           </p>
-          <Link href="/contact" className={`${BRAND_CONFIG.theme.accentBg} text-white px-8 py-4 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-white ${hoverPrimaryText} transition-colors inline-block shadow-xl`}>
-            Let's Connect
+          <Link 
+            href="/contact?intent=Book%20a%20Buyer%20Consultation" 
+            className="bg-[#F9F6F0] text-slate-900 hover:bg-white px-8 py-4 rounded-full text-xs font-semibold tracking-wider uppercase transition-all inline-block shadow-xl"
+          >
+            Book a Buyer Consultation
           </Link>
         </div>
       </section>
 
-      {/* Global Footer Inclusion */}
+      {/* Global Contact Form */}
       <GetInTouch dark={true} />
     </>
   );
