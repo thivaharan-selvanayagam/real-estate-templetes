@@ -61,9 +61,9 @@ export default function HeroVariant4() {
             Serving Greater Toronto Area
           </div>
 
-          {/* Headline Layout */}
+          {/* Headline Layout with Mobile Line Break */}
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight uppercase max-w-5xl leading-[1.15] mb-6 drop-shadow-md animate-fade-up">
-            REAL ESTATE, DONE DIFFERENTLY.
+            REAL ESTATE,<br className="sm:hidden" /> DONE DIFFERENTLY.
           </h1>
 
           {/* Subtitle Description */}
@@ -71,7 +71,7 @@ export default function HeroVariant4() {
             Strategic guidance. Local expertise. A smarter move.
           </p>
 
-          {/* 4-BUTTON ACTION DECK (FIXED LAYOUT & UNIFORM HEIGHTS) */}
+          {/* 4-BUTTON ACTION DECK */}
           <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 w-full max-w-5xl mx-auto">
             <Link 
               href="/all-homes" 
