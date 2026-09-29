@@ -107,7 +107,11 @@ export default function Footer() {
             <div className="space-y-4 text-xs text-stone-300 font-light">
               <a href={`tel:${BRAND_CONFIG.agent.phoneRaw}`} className="flex items-center gap-3 hover:text-white transition-colors">
                 <Phone size={15} className="text-[#4D71A3] shrink-0" />
-                <span>{BRAND_CONFIG.agent.phone}</span>
+                <span>Pirasha : {BRAND_CONFIG.agent.phone}</span>
+              </a>
+               <a href={`tel:${BRAND_CONFIG.agent.reemaRaw}`} className="flex items-center gap-3 hover:text-white transition-colors">
+                <Phone size={15} className="text-[#4D71A3] shrink-0" />
+                <span>Reema : {BRAND_CONFIG.agent.reema}</span>
               </a>
 
               <a href={`mailto:${BRAND_CONFIG.agent.email}`} className="flex items-center gap-3 hover:text-white transition-colors">

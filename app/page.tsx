@@ -40,7 +40,7 @@ export default async function HomePage() {
       <HeroVariant4 />
       {/* <HeroSearchSection /> */}
       <AgentValueSection />
-      <FeaturedListingsSlider listings={featured.listings} />
+      {/* <FeaturedListingsSlider listings={featured.listings} /> */}
       <NeighborhoodGrid />
 
       {/* 2. Neighborhood Map Geographies Directory */}

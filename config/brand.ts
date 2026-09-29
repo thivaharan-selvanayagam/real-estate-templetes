@@ -8,6 +8,8 @@ export const BRAND_CONFIG = {
     title: "Real Estate Brokers",
     phone: "(647) 409-1719",
     phoneRaw: "6474091719",
+    reema: "(647) 830-7779",
+    reemaRaw:"6478307779",
     email: "realthergroup@gmail.com",
     headshot: "/images/pirasha.jpg",
     fullphoto: "/images/pirasha.jpg",

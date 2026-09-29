@@ -87,9 +87,20 @@ function ContactFormContent() {
                 <Phone size={18} />
               </div>
               <div className="text-left">
-                <span className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider block mb-0.5">Call / Text</span>
+                <span className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider block mb-0.5">Call / Text to Pirasha</span>
                 <span className="text-xs sm:text-sm font-semibold tracking-wide text-white group-hover:text-[#4D71A3] transition-colors">
                   {BRAND_CONFIG.agent.phone}
+                </span>
+              </div>
+            </a>
+            <a href={`tel:${BRAND_CONFIG.agent.reemaRaw}`} className="flex items-center gap-4 group w-fit">
+              <div className="w-11 h-11 rounded-full bg-stone-900 border border-stone-800 flex items-center justify-center text-[#4D71A3] group-hover:bg-[#4D71A3] group-hover:text-white transition-all shrink-0">
+                <Phone size={18} />
+              </div>
+              <div className="text-left">
+                <span className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider block mb-0.5">Call / Text to Reema</span>
+                <span className="text-xs sm:text-sm font-semibold tracking-wide text-white group-hover:text-[#4D71A3] transition-colors">
+                  {BRAND_CONFIG.agent.reema}
                 </span>
               </div>
             </a>
