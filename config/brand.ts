@@ -36,7 +36,7 @@ export const BRAND_CONFIG = {
     siteName: "RealtHer Group",
     tagline: "REAL ESTATE, DONE DIFFERENTLY.",
     subtagline: "Strategic guidance. Local expertise. A smarter move.",
-    logoSvgPath: "/images/logore.png",
+    logoSvgPath: "/images/logo2.png",
     title: "RealtHer Group | Greater Toronto Area Real Estate Brokers",
     description: "Strategic guidance and local GTA expertise for first-time buyers, sellers, investors, and pre-construction clients.",
     coverImage: "/images/pirasha.jpg",
