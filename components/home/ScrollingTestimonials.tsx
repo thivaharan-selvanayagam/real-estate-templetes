@@ -15,63 +15,103 @@ interface Testimonial {
 
 const row1Testimonials: Testimonial[] = [
   {
-    name: "Priya & Rohan M.",
-    role: "First-Time Buyers",
-    location: "Pickering",
+    name: "Mohamed Hagi",
+    role: "Condo Buyer",
+    location: "Toronto",
     category: "Buyer",
-    text: "Reema and Pirasha made buying our first home in Pickering completely stress-free. Their local knowledge, patience, and step-by-step guidance gave us so much confidence.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80"
-  },
-  {
-    name: "Michael & Elena K.",
-    role: "Home Sellers",
-    location: "Markham",
-    category: "Seller",
-    text: "Their valuation and strategy call were spot-on. We sold above our target price in under a week thanks to their proactive staging advice and sharp negotiation skills.",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80"
-  },
-  {
-    name: "David T.",
-    role: "Real Estate Investor",
-    location: "Oshawa",
-    category: "Investor",
-    text: "Working with RealtHer Group on our investment property was seamless. They ran the numbers on actual properties, verified rental yields, and secured fantastic terms.",
+    text: "Reema was an absolute pleasure to work with! She helped me find the condo I wanted very quickly and made the whole process smooth and stress-free. She always had my best interest at heart.",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80"
   },
   {
-    name: "Anita B.",
-    role: "Pre-Con Client",
-    location: "Vaughan",
-    category: "Pre-Construction",
-    text: "Navigating pre-construction allocations can be overwhelming, but Pirasha guided us through builder incentives and floor plan selections effortlessly.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80"
+    name: "Leanne Taylor",
+    role: "First-Time Buyer",
+    location: "GTA",
+    category: "Buyer",
+    text: "Reema was an absolute joy to work with! She helped me originally with my first rental, and now purchasing my very first home! She walked me through every step and was so supportive.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80"
+  },
+  {
+    name: "Phillip Henriques",
+    role: "Income Property Investor",
+    location: "GTA",
+    category: "Investor",
+    text: "I had an incredible experience working with Reema Shahzad. She went above and beyond to help us find the perfect income property, and her expertise was evident throughout the entire process.",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80"
+  },
+  {
+    name: "Rusha Khan",
+    role: "First-Time Buyer",
+    location: "GTA",
+    category: "Buyer",
+    text: "Reema has a problem-solving mindset and understands the housing market very well. As a first-time home buyer with very little knowledge, she was helpful, honest, and truly fantastic.",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80"
+  },
+  {
+    name: "Sobia Khatoon",
+    role: "Property Landlord",
+    location: "GTA",
+    category: "Seller",
+    text: "We put our brand new home for rent with Reema as our agent. I was very apprehensive, but Reema was patient, kind, empathetic, and understanding towards our feelings.",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&q=80"
+  },
+  {
+    name: "Hamza Bin Zubair",
+    role: "First-Time Buyer",
+    location: "GTA",
+    category: "Buyer",
+    text: "Reema was the most professional person I have met in the industry. So knowledgeable about interest rates, market rents, comparisons, and got me my dream first home!",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&q=80"
   }
 ];
 
 const row2Testimonials: Testimonial[] = [
   {
-    name: "Kevin & Sarah L.",
-    role: "Sellers & Buyers",
-    location: "Toronto to Whitby",
-    category: "Seller",
-    text: "Reema managed both our sale in Toronto and our purchase in Whitby without missing a beat. Outstanding strategy, constant communication, and clear advice throughout.",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80"
-  },
-  {
-    name: "Vanessa C.",
-    role: "First-Time Buyer",
-    location: "Stouffville",
-    category: "Buyer",
-    text: "They took the time to explain every clause in the offer. As a first-time homebuyer, having two experienced brokers in my corner made all the difference.",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&q=80"
-  },
-  {
-    name: "Alex R.",
+    name: "Nabeel Syed",
     role: "Portfolio Investor",
-    location: "Richmond Hill",
+    location: "GTA",
     category: "Investor",
-    text: "Strategic advice at its finest. Reema and Pirasha know the GTA market inside out and helped us identify strong long-term appreciation corridors.",
+    text: "With Reema’s help I purchased my second investment property. She also helped me lease out 2 of my other properties. I appreciate that she has been a valuable resource for me throughout!",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&q=80"
+  },
+  {
+    name: "Umna Asim",
+    role: "Condo Buyer",
+    location: "Mississauga",
+    category: "Buyer",
+    text: "Reema helped us get a condo in Mississauga in a very competitive market. She went above and beyond and drove us to showings when we didn't have a car! To this day she continues to help.",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&q=80"
+  },
+  {
+    name: "Nicole Taylor",
+    role: "Relocation Buyer",
+    location: "Toronto",
+    category: "Buyer",
+    text: "I really appreciated the care and dedication Reema brings to her work. She helped me relocate from the eastern suburbs to Toronto to cut down on commuting strain seamlessly.",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80"
+  },
+  {
+    name: "Nabeel Rahman",
+    role: "Buyer & Landlord",
+    location: "GTA",
+    category: "Investor",
+    text: "Reema has helped me with buying a house and also renting out a house, and both times she was exceptional. Understanding, empathetic, knowledgeable, and presented all options clearly.",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&q=80"
+  },
+  {
+    name: "Kiran Sethi",
+    role: "Homebuyer",
+    location: "GTA",
+    category: "Buyer",
+    text: "Reema worked with us extensively and was committed to helping us find the perfect home. Her positive attitude and bubbly personality made her a breath of fresh air to be around.",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&q=80"
+  },
+  {
+    name: "Sal",
+    role: "Homeowner",
+    location: "GTA",
+    category: "Seller",
+    text: "Reema is very courteous and thoughtful when considering the needs of her clients. She is timely in her follow-up and great at helping understand process nuances and next steps. 10/10!",
+    avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&q=80"
   }
 ];
 
@@ -147,7 +187,7 @@ export default function ScrollingTestimonials() {
         </h2>
         
         <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal max-w-2xl">
-          Read real stories from homebuyers, sellers, and investors who partnered with Reema and Pirasha for strategic advice and smooth moves.
+          Read real Google reviews from homebuyers, sellers, and investors who experienced seamless real estate transactions with Reema.
         </p>
       </div>
 

@@ -6,22 +6,22 @@ import { BRAND_CONFIG } from "@/config/brand";
 
 const heroReviews = [
   {
-    name: "Sarah & David C.",
-    role: "First-Time Buyers in Pickering",
-    text: "Reema and Pirasha guided us through every step. Their strategic advice made buying our first home stress-free.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80"
-  },
-  {
-    name: "Marcus J.",
-    role: "Seller in Markham",
-    text: "The valuation was spot-on. Their local GTA expertise and negotiation skills helped us sell above our goal.",
+    name: "Hamza Bin Zubair",
+    role: "First-Time Homebuyer",
+    text: "Reema was the most professional person I have met in the industry. She was so knowledgeable about market comparisons and interest rates, and got me my dream first home!",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80"
   },
   {
-    name: "Emily P.",
-    role: "Pre-Construction Investor",
-    text: "Unmatched market knowledge and strategic advice. They secured us the exact allocation we were targeting.",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&q=80"
+    name: "Phillip Henriques",
+    role: "Income Property Investor",
+    text: "I had an incredible experience working with Reema Shahzad. She went above and beyond to help us find the perfect income property, and her expertise was evident throughout the process.",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80"
+  },
+  {
+    name: "Leanne Taylor",
+    role: "First-Time Buyer & Repeat Client",
+    text: "Reema was an absolute joy to work with! She helped me with my first rental and now purchasing my very first home! She walked me through every step and was so supportive.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80"
   }
 ];
 
@@ -105,7 +105,7 @@ export default function HeroVariant4() {
         </div>
       </div>
 
-      {/* SECOND VIEWPORT VIEW (BELOW THE FOLD) */}
+      {/* SECOND VIEWPORT VIEW (BELOW THE FOLD - REAL GOOGLE REVIEWS) */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 lg:px-12 pb-20 lg:pb-28">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
           {heroReviews.map((review, idx) => (

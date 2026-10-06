@@ -19,76 +19,108 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Priya & Rohan M.",
-    location: "Pickering, ON",
+    name: "Mohamed Hagi",
+    location: "Toronto, ON",
     category: "Buyer",
-    text: "Reema and Pirasha made finding our first home in Pickering completely stress-free. As first-time buyers, we had so many questions, but their step-by-step guidance, patience, and local market insight gave us total confidence.",
+    text: "Reema was an absolute pleasure to work with! She helped me find the condo I wanted very quickly and made the whole process smooth and stress-free. She always had my best interest at heart, was attentive to my needs, and went above and beyond.",
+    rating: 5,
+    tag: "Condo Buyer"
+  },
+  {
+    name: "Leanne Taylor",
+    location: "GTA, ON",
+    category: "Buyer",
+    text: "Reema was an absolute joy to work with! She had helped me originally with my first rental, and now purchasing my very first home! She walked me through every step, and was so supportive in the process.",
     rating: 5,
     tag: "First-Time Buyer"
   },
   {
-    name: "Michael & Elena K.",
-    location: "Markham, ON",
-    category: "Seller",
-    text: "Their valuation and strategy call were spot-on. From pricing advice to staging guidance and multi-channel marketing, we received clean offers and sold above our target price in under a week. Outstanding negotiation!",
-    rating: 5,
-    tag: "Home Seller"
-  },
-  {
-    name: "David T.",
-    location: "Oshawa, ON",
-    category: "Investor",
-    text: "Working with RealtHer Group on our investment property was seamless. Reema ran real numbers on actual properties, evaluated rental yields, and helped us secure a high-performing property with long-term equity potential.",
-    rating: 5,
-    tag: "Property Investor"
-  },
-  {
-    name: "Anita & Marcus B.",
-    location: "Vaughan, ON",
-    category: "Pre-Construction",
-    text: "Navigating pre-construction allocations can be overwhelming, but Pirasha guided us through builder contracts, deposit structures, and floor plan selection effortlessly. We secured the exact allocation we wanted.",
-    rating: 5,
-    tag: "Pre-Construction"
-  },
-  {
-    name: "Kevin & Sarah L.",
-    location: "Toronto to Whitby, ON",
-    category: "Seller",
-    text: "Reema managed both our sale in Toronto and our purchase in Whitby perfectly. Managing simultaneous closings is usually stressful, but their team kept everything synchronized and transparent throughout.",
-    rating: 5,
-    tag: "Seller & Buyer"
-  },
-  {
-    name: "Vanessa C.",
-    location: "Stouffville, ON",
+    name: "Nicole Taylor",
+    location: "Toronto, ON",
     category: "Buyer",
-    text: "They took the time to explain every single detail in the offer contract. Having two experienced brokers in my corner who truly understand the GTA market made all the difference during negotiations.",
+    text: "I really appreciated the care and dedication Reema brings to her work. After a lot of thought, I decided it was time for me to relocate from the eastern suburbs to Toronto to help cut down the strain commuting was putting on me. Reema was exceptionally supportive throughout.",
+    rating: 5,
+    tag: "Relocation Buyer"
+  },
+  {
+    name: "Sobia Khatoon",
+    location: "GTA, ON",
+    category: "Seller",
+    text: "Reema is amazing! We put our brand new home for rent with Reema as our agent. I was very apprehensive about putting our home on the renter's market; it was our baby. Reema was patient, kind, empathetic, and understanding towards our feelings.",
+    rating: 5,
+    tag: "Home Leasing"
+  },
+  {
+    name: "Rusha Khan",
+    location: "GTA, ON",
+    category: "Buyer",
+    text: "Reema has a problem-solving mindset and understands the housing market very well. As a first-time home buyer with very little knowledge about the market, Reema was helpful, honest, and made the whole experience fantastic.",
     rating: 5,
     tag: "First-Time Buyer"
   },
   {
-    name: "Alex R.",
-    location: "Richmond Hill, ON",
+    name: "Nabeel Rahman",
+    location: "GTA, ON",
     category: "Investor",
-    text: "Strategic advice at its finest. Reema and Pirasha know the York Region market inside out. They helped us identify strong growth corridors and ran thorough financial projections before we made an offer.",
+    text: "Reema has helped me with buying a house and also renting out a house, and both times she was exceptional. She was understanding, empathetic, and very knowledgeable. She presented us with all options available and was very patient.",
+    rating: 5,
+    tag: "Buyer & Landlord"
+  },
+  {
+    name: "Phillip Henriques",
+    location: "GTA, ON",
+    category: "Investor",
+    text: "I had an incredible experience working with Reema Shahzad as our realtor. She went above and beyond to help us find the perfect income property, and her expertise was evident throughout the entire process.",
+    rating: 5,
+    tag: "Income Property"
+  },
+  {
+    name: "Hamza Bin Zubair",
+    location: "GTA, ON",
+    category: "Buyer",
+    text: "Reema was the most professional person I have met in the industry. She was so knowledgeable about everything we had asked her; including interest rates, market rents, comparisons, overall an amazing understanding of the market. And she got me my dream first home!",
+    rating: 5,
+    tag: "First-Time Buyer"
+  },
+  {
+    name: "Kiran Sethi",
+    location: "GTA, ON",
+    category: "Buyer",
+    text: "Reema worked with us extensively and was committed to helping us find the perfect home. Her positive attitude and bubbly personality was easy going and a breath of fresh air to be around. Highly recommend her as a realtor.",
+    rating: 5,
+    tag: "Homebuyer"
+  },
+  {
+    name: "Umna Asim",
+    location: "Mississauga, ON",
+    category: "Buyer",
+    text: "Reema helped us get a condo in Mississauga last year in a very competitive market. She was super helpful and was also driving us to places since we didn’t have a car. She went above and beyond and to this day, we’re in touch and she continues to help.",
+    rating: 5,
+    tag: "Condo Buyer"
+  },
+  {
+    name: "Sal",
+    location: "GTA, ON",
+    category: "Seller",
+    text: "Reema is very courteous and thoughtful when considering the needs of her real estate clients. She is timely in her follow-up and was great at helping me understand process nuances and next-steps. 10/10 would recommend.",
+    rating: 5,
+    tag: "Client Success"
+  },
+  {
+    name: "Nabeel Syed",
+    location: "GTA, ON",
+    category: "Investor",
+    text: "With Reema’s help I purchased my second investment property. She also helped me lease out 2 of my other properties. I appreciate that she has been a valuable resource for me throughout these transactions. Would highly recommend her!",
     rating: 5,
     tag: "Portfolio Investor"
   },
   {
-    name: "Daniela & Mark S.",
-    location: "Ajax, ON",
+    name: "God Holiday",
+    location: "GTA, ON",
     category: "Buyer",
-    text: "Pirasha's home matchmaking skills are real! She listened to everything our family needed, showed us properties that actually fit our budget, and negotiated a fantastic deal for us in Ajax.",
+    text: "Reema was a pleasure to work with, she went above and beyond to help my wife and I find exactly what we were looking for. Truly happy in our new place. Thank you Reema!",
     rating: 5,
-    tag: "Suburban Buyer"
-  },
-  {
-    name: "Jason & Chloe W.",
-    location: "Toronto, ON",
-    category: "Pre-Construction",
-    text: "The pre-construction insight Reema and Pirasha provided was invaluable. They pointed out potential builder fee traps and guided us to a project along a major transit corridor with high rental demand.",
-    rating: 5,
-    tag: "Pre-Con Portfolio"
+    tag: "Homebuyer"
   }
 ];
 
@@ -127,14 +159,14 @@ export default function TestimonialsPage() {
         
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto w-full mt-10">
           <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-4 shadow-md">
-            Client Experiences & Reviews
+            Verified Google Reviews
           </div>
 
           <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight uppercase mb-4 leading-tight">
             Client Stories
           </h1>
           <p className="max-w-xl mx-auto text-[#F9F6F0]/85 text-sm md:text-base leading-relaxed font-light">
-            Read real stories from GTA homebuyers, sellers, and investors who partnered with Reema and Pirasha for strategic real estate moves.
+            Read authentic Google reviews from GTA homebuyers, sellers, and investors who partnered with Reema and Pirasha for strategic real estate moves.
           </p>
         </div>
       </section>
