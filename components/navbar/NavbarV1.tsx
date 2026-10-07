@@ -62,7 +62,7 @@ export default function NavbarV1({ scrolled, isHome }: any) {
   return (
     <header className={`fixed top-0 z-50 transition-all duration-300 ${scrolled ? stickyStyles : defaultStyles}`}>
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="flex items-center justify-between h-14 lg:h-20 relative">
+        <div className="flex items-center justify-between h-16 lg:h-20 relative">
           
           {/* DESKTOP SPLIT GRID */}
           <div className="hidden lg:grid grid-cols-12 w-full items-center">
@@ -166,12 +166,11 @@ export default function NavbarV1({ scrolled, isHome }: any) {
 
           </div>
 
-          {/* MOBILE RESPONSIVE HEADER (FIXED ALIGNMENT) */}
+          {/* MOBILE RESPONSIVE HEADER (INCREASED LOGO SCALE) */}
           <div className="flex lg:hidden items-center justify-between w-full px-2">
             <Link href="/" className="flex items-center group shrink-0">
               {BRAND_CONFIG.meta.logoSvgPath ? (
-                /* Auto-scaled mobile logo bounds: fits inside floating bar cleanly without clipping */
-                <div className="relative h-10 sm:h-16 w-auto max-w-[180px] sm:max-w-[220px] flex items-center transition-opacity duration-300 group-hover:opacity-85">
+                <div className="relative h-12 sm:h-16 w-auto max-w-[200px] sm:max-w-[260px] flex items-center transition-opacity duration-300 group-hover:opacity-85">
                   <img 
                     src={BRAND_CONFIG.meta.logoSvgPath} 
                     alt={`${BRAND_CONFIG.meta.siteName} Mobile Logo`}
@@ -179,7 +178,7 @@ export default function NavbarV1({ scrolled, isHome }: any) {
                   />
                 </div>
               ) : (
-                <span className="text-xl sm:text-2xl font-bold tracking-widest font-display text-white">
+                <span className="text-2xl sm:text-3xl font-bold tracking-widest font-display text-white">
                   REALTHER<span className="text-[#4D71A3]">.</span>
                 </span>
               )}

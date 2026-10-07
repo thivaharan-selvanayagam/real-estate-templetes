@@ -40,7 +40,7 @@ export const BRAND_CONFIG = {
     title: "RealtHer Group | Greater Toronto Area Real Estate Brokers",
     description: "Strategic guidance and local GTA expertise for first-time buyers, sellers, investors, and pre-construction clients.",
     coverImage: "/images/pirasha.jpg",
-    domain: "https://real-estate-templetes.vercel.app/",
+    domain: "https://realthergroup.com/",
   },
 
   // 🔑 UPDATED: Aligned Theme System to the new Slate Blue & Dark Slate UI
