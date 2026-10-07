@@ -9,19 +9,16 @@ const heroReviews = [
     name: "Hamza Bin Zubair",
     role: "First-Time Homebuyer",
     text: "Reema was the most professional person I have met in the industry. She was so knowledgeable about market comparisons and interest rates, and got me my dream first home!",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80"
   },
   {
     name: "Phillip Henriques",
     role: "Income Property Investor",
     text: "I had an incredible experience working with Reema Shahzad. She went above and beyond to help us find the perfect income property, and her expertise was evident throughout the process.",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&q=80"
   },
   {
     name: "Leanne Taylor",
     role: "First-Time Buyer & Repeat Client",
     text: "Reema was an absolute joy to work with! She helped me with my first rental and now purchasing my very first home! She walked me through every step and was so supportive.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&q=80"
   }
 ];
 
@@ -31,6 +28,12 @@ export default function HeroVariant4() {
   const starColor = cleanAccentText.includes('gold') 
     ? 'text-gold fill-gold' 
     : `text-${cleanAccentText.replace('text-', '')} fill-${cleanAccentText.replace('text-', '')}`;
+
+  const getInitials = (name: string) => {
+    const parts = name.trim().split(" ");
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  };
 
   return (
     <section className="relative w-full flex flex-col bg-slate-950 z-10">
@@ -125,11 +128,9 @@ export default function HeroVariant4() {
               </div>
 
               <div className="flex items-center gap-3 mt-auto pt-3 border-t border-white/10">
-                <img 
-                  src={review.avatar} 
-                  alt={`${review.name}`} 
-                  className="w-9 h-9 rounded-full object-cover shadow-inner border border-white/20" 
-                />
+                <div className="w-9 h-9 rounded-full bg-[#4D71A3] text-white flex items-center justify-center font-bold text-xs shrink-0 tracking-wider border border-white/20 shadow-inner">
+                  {getInitials(review.name)}
+                </div>
                 <div>
                   <h4 className="text-white font-semibold text-xs tracking-wide">{review.name}</h4>
                   <p className="text-white/50 text-[10px] font-medium mt-0.5">{review.role}</p>
