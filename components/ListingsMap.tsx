@@ -19,7 +19,7 @@ function MapRecenterController({ activeCoordinates }: { activeCoordinates: [numb
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: "CAD",
     maximumFractionDigits: 0,
   }).format(price);
 };
@@ -57,10 +57,11 @@ export default function ListingsMap({
   const createCustomIcon = (price: number, isHovered: boolean, isActive: boolean) => {
     const formattedPrice = formatPrice(price);
     
-    const bgColor = isHovered || isActive ? "#D4AF37" : "#1E293B";
-    const textColor = isHovered || isActive ? "#1E293B" : "#FFFFFF";
-    const borderColor = isHovered || isActive ? "#D4AF37" : "#1E293B";
-    const scale = isHovered || isActive ? "scale(1.1) z-index: 9999;" : "scale(1);";
+    // Deep Green (#2b4b46) base state, Soft Peach (#e9b3b0) hover/active state
+    const bgColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
+    const textColor = isHovered || isActive ? "#2b4b46" : "#FFFFFF";
+    const borderColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
+    const scale = isHovered || isActive ? "scale(1.1); z-index: 9999;" : "scale(1);";
 
     return L.divIcon({
       className: "bg-transparent border-none",
@@ -80,14 +81,14 @@ export default function ListingsMap({
             ${formattedPrice}
             <div style="
               position: absolute; 
-              bottom: -4px; 
+              bottom: -5px; 
               left: 50%; 
               transform: translateX(-50%); 
               width: 0; 
               height: 0; 
-              border-l: 5px solid transparent; 
-              border-r: 5px solid transparent; 
-              border-t: 5px solid ${borderColor};
+              border-left: 5px solid transparent; 
+              border-right: 5px solid transparent; 
+              border-top: 5px solid ${borderColor};
             "></div>
           </div>
         </div>
@@ -113,13 +114,12 @@ export default function ListingsMap({
         className="w-full h-full"
         zoomControl={true}
         ref={mapRef}
-        // 🔑 FIXED: Smoothly distributes marker placement across multiple animation frames 
-        // to completely eliminate appendChild race-conditions with the DOM
         preferCanvas={true}
       >
+        {/* 🔑 OPENSTREETMAP PUBLIC STANDARD TILES (NO API KEY REQUIRED) */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         
         <MapRecenterController activeCoordinates={activeHoveredCoords} />

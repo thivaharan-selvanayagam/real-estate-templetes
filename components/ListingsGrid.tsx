@@ -7,10 +7,14 @@ import dynamic from "next/dynamic";
 import { Search, ChevronDown, Grid, List as ListIcon, Bed, Bath, Maximize } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 
-// Dynamic import for Leaflet map to prevent SSR crashes completely
+// Dynamic import for Leaflet map with free tile layer
 const DynamicMap = dynamic(() => import("./ListingsMap"), { 
   ssr: false, 
-  loading: () => <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 font-bold uppercase tracking-widest text-xs animate-pulse">Loading Map Layer...</div> 
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 font-bold uppercase tracking-widest text-xs animate-pulse">
+      Loading Map Layer...
+    </div>
+  ) 
 });
 
 const formatPrice = (price: number) => {
@@ -40,8 +44,8 @@ export default function ListingsGrid({
   initialSearch, 
   initialTotal, 
   currentPage = 1,
-  type,
-  propertyClass,
+  type = "sale",
+  propertyClass = "Residential",
   currentMinPrice,
   currentMaxPrice,
   currentBeds,
@@ -62,7 +66,6 @@ export default function ListingsGrid({
     setSearchInput(initialSearch);
   }, [initialSearch]);
 
-  // --- PAGINATION MATH ---
   const listingsPerPage = 24;
   
   const totalResults = useMemo(() => {
@@ -86,13 +89,12 @@ export default function ListingsGrid({
     return { lat, lng };
   }, [initialListings]);
 
-  // Syncs parameters to the URL query string
   const applyFilters = (updates: Record<string, string>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set("page", "1");
 
     Object.entries(updates).forEach(([key, value]) => {
-      if (!value || value === "all" || value === "Any") {
+      if (!value || value === "Any") {
         current.delete(key);
       } else {
         current.set(key, value);
@@ -129,7 +131,6 @@ export default function ListingsGrid({
   const focusBorderPrimary = `focus-within:border-${cleanPrimaryClass} focus:border-${cleanPrimaryClass}`;
   const focusRingPrimary = `focus-within:ring-${cleanPrimaryClass}`;
 
-  // Helper labels for cleaner button UI text
   const displayBedsLabel = currentBeds === "Any" ? "Any" : `${currentBeds}+ Beds`;
   const displayBathsLabel = currentBaths === "Any" ? "Any" : `${currentBaths}+ Baths`;
 
@@ -157,26 +158,25 @@ export default function ListingsGrid({
         {/* Dropdowns Filters Deck Container */}
         <div className="flex flex-wrap items-center gap-2.5 shrink-0 relative">
           
-          {/* PROPERTY CLASS SWITCH */}
+          {/* 🔑 PROPERTY CLASS SWITCH: ONLY RESIDENTIAL & COMMERCIAL */}
           <select
-            value={propertyClass}
+            value={propertyClass || "Residential"}
             onChange={(e) => applyFilters({ class: e.target.value })}
             className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide outline-none bg-white cursor-pointer hover:bg-gray-50 transition-colors`}
           >
-            <option value="all">All Classifications</option>
-            <option value="Residential">Residential Feed</option>
-            <option value="Commercial">Commercial Portfolio</option>
+            <option value="Residential">Residential</option>
+            <option value="Commercial">Commercial</option>
           </select>
 
-          {/* TRANSACTION TYPE TOGGLE */}
+          {/* 🔑 TRANSACTION TYPE TOGGLE: BUY, SALE, SOLD */}
           <select
-            value={type}
+            value={type || "buy"}
             onChange={(e) => applyFilters({ type: e.target.value })}
             className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide outline-none bg-white cursor-pointer hover:bg-gray-50 transition-colors`}
           >
-            <option value="all">Buy or Lease</option>
-            <option value="sale">For Sale</option>
-            <option value="lease">For Lease</option>
+            <option value="buy">Buy</option>
+            <option value="sale">Sale</option>
+            <option value="sold">Sold</option>
           </select>
 
           {propertyClass !== "Commercial" && (
@@ -188,7 +188,6 @@ export default function ListingsGrid({
                 </button>
                 {openDropdown === 'beds' && (
                   <div className="absolute top-full mt-2 right-0 bg-white shadow-xl border border-gray-100 rounded-xl p-3 w-48 z-50 flex flex-col gap-1">
-                    {/* 🔑 FIXED: Maps matching clean numeric items directly into URL state to ensure API processes query counts */}
                     {[
                       { val: "Any", label: "Any Beds" },
                       { val: "1", label: "1+ Beds" },
@@ -216,7 +215,6 @@ export default function ListingsGrid({
                 </button>
                 {openDropdown === 'baths' && (
                   <div className="absolute top-full mt-2 right-0 bg-white shadow-xl border border-gray-100 rounded-xl p-3 w-48 z-50 flex flex-col gap-1">
-                    {/* 🔑 FIXED: Maps matching clean numeric items directly into URL state to ensure API processes query counts */}
                     {[
                       { val: "Any", label: "Any Baths" },
                       { val: "1", label: "1+ Baths" },
@@ -265,7 +263,7 @@ export default function ListingsGrid({
             )}
           </div>
 
-          {(initialSearch || currentMinPrice || currentMaxPrice || currentBeds !== "Any" || currentBaths !== "Any" || propertyClass !== "all" || type !== "all") && (
+          {(initialSearch || currentMinPrice || currentMaxPrice || currentBeds !== "Any" || currentBaths !== "Any" || propertyClass !== "Residential" || type !== "buy") && (
             <button onClick={() => router.push('/all-homes')} className="text-xs font-bold text-red-500 hover:underline px-2 py-1">
               Clear All
             </button>
@@ -296,7 +294,7 @@ export default function ListingsGrid({
         <div id="listings-grid-scroll-wrap" className={`h-full overflow-y-auto p-4 lg:p-6 bg-white relative transition-all duration-300 ${viewMode === "split" ? "w-full lg:w-[55%]" : "w-full"}`}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-bold text-gray-800">
-              Showing <span className={BRAND_CONFIG.theme.accentText}>{totalResults.toLocaleString()}</span> listings found across Canada
+              Showing <span className={BRAND_CONFIG.theme.accentText}>{totalResults.toLocaleString()}</span> listings found
             </h2>
             
             <div className="flex items-center gap-1 bg-gray-100 rounded-xl p-1">
@@ -326,7 +324,7 @@ export default function ListingsGrid({
                   >
                     <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative bg-gray-100 border border-gray-50">
                       {img ? <img src={`https://cdn.repliers.io/${img}?w=500`} alt={completeAddress} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-104" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-gray-400 uppercase bg-neutral-900">No Image</div>}
-                      <div className={`absolute top-3 left-3 bg-white/90 backdrop-blur text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md ${BRAND_CONFIG.theme.primaryText} shadow-sm`}>{listing.type === "lease" || listing.status === "Lsd" ? "For Lease" : "For Sale"}</div>
+                      <div className={`absolute top-3 left-3 bg-white/90 backdrop-blur text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md ${BRAND_CONFIG.theme.primaryText} shadow-sm`}>{listing.status === "Sld" ? "Sold" : listing.type === "lease" || listing.status === "Lsd" ? "For Lease" : "For Sale"}</div>
                       <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-sm text-[9px] font-bold text-white uppercase tracking-wider px-2 py-0.5 rounded-md shadow-sm">{listing.class || "Residential"}</div>
                     </div>
 
