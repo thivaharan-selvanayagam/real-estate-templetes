@@ -19,12 +19,11 @@ export default async function AllHomesPage({
   const resolvedParams = await searchParams;
 
   const searchString = typeof resolvedParams.search === "string" ? resolvedParams.search : undefined;
-  // Default directly to Residential instead of "all"
   const propClass = typeof resolvedParams.class === "string" && resolvedParams.class !== "all" 
     ? resolvedParams.class 
     : "Residential"; 
 
-  const trxType = typeof resolvedParams.type === "string" ? resolvedParams.type : "sale"; 
+  const trxType = typeof resolvedParams.type === "string" ? resolvedParams.type : "buy"; 
   const minPrice = typeof resolvedParams.minPrice === "string" ? resolvedParams.minPrice : undefined;
   const maxPrice = typeof resolvedParams.maxPrice === "string" ? resolvedParams.maxPrice : undefined;
   const beds = typeof resolvedParams.beds === "string" ? resolvedParams.beds : undefined;
@@ -34,18 +33,33 @@ export default async function AllHomesPage({
   const activePage = isNaN(urlPage) || urlPage < 1 ? 1 : urlPage;
 
   try { 
+    // 🔑 Repliers API Payload Configuration
     const baseQueryPayload: any = {
-      type: trxType === "buy" ? "sale" : trxType,
-      status: trxType === "sold" ? "A" : undefined, // Handles sold status queries when selected
       pageSize: 24,
       pageNum: activePage,
-      search: searchString,
+      search: searchString || undefined,
       minPrice: minPrice || undefined,
       maxPrice: maxPrice || undefined,
-      beds: beds || undefined,
-      baths: baths || undefined,
+      // 🔑 FIX: Repliers API requires 'minBedrooms' and 'minBaths'
+      minBedrooms: beds && beds !== "Any" ? beds : undefined,
+      minBaths: baths && baths !== "Any" ? baths : undefined,
       class: propClass
     };
+
+    // 🔑 FIX: Strict separation for Buy (Active) vs. Leased vs. Sold (Unavailable/Off-Market)
+    if (trxType === "sold") {
+      baseQueryPayload.status = "U";
+      baseQueryPayload.lastStatus = "Sld";
+      baseQueryPayload.type = "sale";
+    } else if (trxType === "lease") {
+      baseQueryPayload.status = "A";
+      baseQueryPayload.type = "lease";
+      delete baseQueryPayload.lastStatus;
+    } else { // "buy" or "sale"
+      baseQueryPayload.status = "A";
+      baseQueryPayload.type = "sale";
+      delete baseQueryPayload.lastStatus;
+    }
 
     const data = await getListings(baseQueryPayload);
     combinedListings = data?.listings || [];
@@ -63,7 +77,6 @@ export default async function AllHomesPage({
   
   return (
     <>
-      {/* MAIN LISTINGS CONTAINER (Top padding clears fixed Navbar) */}
       <section className="bg-[#FDFBF7] min-h-[90vh] relative z-20 w-full pt-28 lg:pt-36 pb-8">
         <ListingsGrid 
           type={trxType} 

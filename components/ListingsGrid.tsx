@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { Search, ChevronDown, Grid, List as ListIcon, Bed, Bath, Maximize } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 
-// Dynamic import for Leaflet map with free tile layer
 const DynamicMap = dynamic(() => import("./ListingsMap"), { 
   ssr: false, 
   loading: () => (
@@ -36,7 +35,6 @@ interface ListingsGridProps {
   currentMaxPrice: string;
   currentBeds: string;
   currentBaths: string;
-  initialCity?: string;
 }
 
 export default function ListingsGrid({ 
@@ -44,7 +42,7 @@ export default function ListingsGrid({
   initialSearch, 
   initialTotal, 
   currentPage = 1,
-  type = "sale",
+  type = "buy",
   propertyClass = "Residential",
   currentMinPrice,
   currentMaxPrice,
@@ -94,7 +92,7 @@ export default function ListingsGrid({
     current.set("page", "1");
 
     Object.entries(updates).forEach(([key, value]) => {
-      if (!value || value === "Any") {
+      if (!value || value === "Any" || value === "all") {
         current.delete(key);
       } else {
         current.set(key, value);
@@ -134,31 +132,38 @@ export default function ListingsGrid({
   const displayBedsLabel = currentBeds === "Any" ? "Any" : `${currentBeds}+ Beds`;
   const displayBathsLabel = currentBaths === "Any" ? "Any" : `${currentBaths}+ Baths`;
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    applyFilters({ search: searchInput });
+  };
+
   return (
     <div className="flex flex-col flex-1 h-[calc(100vh-80px)] w-full overflow-hidden bg-neutral-50">
       
-      {/* ─── FILTER TOP BAR ─── */}
+      {/* FILTER TOP BAR */}
       <div className="border-b border-gray-200 bg-white px-6 py-4 flex flex-wrap items-center justify-between z-30 shrink-0 overflow-visible gap-4 w-full shadow-sm">
         
-        {/* Search Input Field */}
-        <div className={`flex items-center w-full sm:max-w-xs md:max-w-sm border border-gray-200 rounded-full px-4 py-2 bg-gray-50 shrink-0 ${focusBorderPrimary} ${focusRingPrimary} focus-within:ring-1 transition-all`}>
-          <Search size={16} className="text-gray-400 mr-2" />
+        {/* 🔑 FIX: Search Form with Enter & Click Handler */}
+        <form 
+          onSubmit={handleSearchSubmit}
+          className={`flex items-center w-full sm:max-w-xs md:max-w-sm border border-gray-200 rounded-full px-4 py-2 bg-gray-50 shrink-0 ${focusBorderPrimary} ${focusRingPrimary} focus-within:ring-1 transition-all`}
+        >
+          <button type="submit" aria-label="Search" className="mr-2 text-gray-400 hover:text-gray-700">
+            <Search size={16} />
+          </button>
           <input 
             type="text" 
-            placeholder="Search by city, neighborhood, MLS#..." 
+            placeholder="Search city, neighborhood, MLS#..." 
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') applyFilters({ search: searchInput });
-            }}
             className="bg-transparent outline-none text-sm w-full text-gray-800 placeholder:text-gray-400"
           />
-        </div>
+        </form>
 
         {/* Dropdowns Filters Deck Container */}
         <div className="flex flex-wrap items-center gap-2.5 shrink-0 relative">
           
-          {/* 🔑 PROPERTY CLASS SWITCH: ONLY RESIDENTIAL & COMMERCIAL */}
+          {/* PROPERTY CLASS SWITCH */}
           <select
             value={propertyClass || "Residential"}
             onChange={(e) => applyFilters({ class: e.target.value })}
@@ -168,20 +173,20 @@ export default function ListingsGrid({
             <option value="Commercial">Commercial</option>
           </select>
 
-          {/* 🔑 TRANSACTION TYPE TOGGLE: BUY, SALE, SOLD */}
+          {/* 🔑 FIX: TRANSACTION TYPE TOGGLE (Buy, Lease, Sold) */}
           <select
             value={type || "buy"}
             onChange={(e) => applyFilters({ type: e.target.value })}
             className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide outline-none bg-white cursor-pointer hover:bg-gray-50 transition-colors`}
           >
             <option value="buy">Buy</option>
-            <option value="sale">Sale</option>
+            <option value="lease">For Lease</option>
             <option value="sold">Sold</option>
           </select>
 
           {propertyClass !== "Commercial" && (
             <>
-              {/* BEDS FILTER */}
+              {/* 🔑 FIX: BEDS FILTER */}
               <div className="relative">
                 <button onClick={() => toggleDropdown('beds')} className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1 hover:bg-gray-50 transition-colors`}>
                   <Bed size={14} className="mr-1" /> Beds ({displayBedsLabel}) <ChevronDown size={14} className={`transition-transform ${openDropdown === 'beds' ? 'rotate-180' : ''}`} />
@@ -208,7 +213,7 @@ export default function ListingsGrid({
                 )}
               </div>
 
-              {/* BATHS FILTER */}
+              {/* 🔑 FIX: BATHS FILTER */}
               <div className="relative">
                 <button onClick={() => toggleDropdown('baths')} className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1 hover:bg-gray-50 transition-colors`}>
                   <Bath size={14} className="mr-1" /> Baths ({displayBathsLabel}) <ChevronDown size={14} className={`transition-transform ${openDropdown === 'baths' ? 'rotate-180' : ''}`} />
@@ -271,7 +276,7 @@ export default function ListingsGrid({
         </div>
       </div>
 
-      {/* ─── DISPLAY SYSTEM PANELS ─── */}
+      {/* DISPLAY SYSTEM PANELS */}
       <div className="flex flex-1 overflow-hidden relative w-full h-full">
         
         {/* LEFT SIDE MAP CONTAINER */}
@@ -290,7 +295,7 @@ export default function ListingsGrid({
           </div>
         )}
 
-        {/* RIGHT SIDEBAR COMPONENT PANEL: Listings Grid */}
+        {/* RIGHT SIDEBAR PANEL: Listings Grid */}
         <div id="listings-grid-scroll-wrap" className={`h-full overflow-y-auto p-4 lg:p-6 bg-white relative transition-all duration-300 ${viewMode === "split" ? "w-full lg:w-[55%]" : "w-full"}`}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-sm font-bold text-gray-800">
@@ -314,6 +319,9 @@ export default function ListingsGrid({
                 const completeAddress = `${streetAddress}, ${listing.address?.city || ''}, ${listing.address?.state || listing.address?.area || ''}`.trim().replace(/,\s*$/, "");
                 const isHovered = hoveredListing === listing.mlsNumber;
 
+                const isSold = listing.lastStatus === "Sld" || listing.status === "U" || listing.standardStatus === "Closed";
+                const isLease = listing.type === "lease" || listing.status === "Lsd";
+
                 return (
                   <Link 
                     href={`/listings/${listing.mlsNumber}`}
@@ -324,12 +332,18 @@ export default function ListingsGrid({
                   >
                     <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3 relative bg-gray-100 border border-gray-50">
                       {img ? <img src={`https://cdn.repliers.io/${img}?w=500`} alt={completeAddress} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-104" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-gray-400 uppercase bg-neutral-900">No Image</div>}
-                      <div className={`absolute top-3 left-3 bg-white/90 backdrop-blur text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md ${BRAND_CONFIG.theme.primaryText} shadow-sm`}>{listing.status === "Sld" ? "Sold" : listing.type === "lease" || listing.status === "Lsd" ? "For Lease" : "For Sale"}</div>
+                      
+                      <div className={`absolute top-3 left-3 bg-white/90 backdrop-blur text-[9px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-md ${BRAND_CONFIG.theme.primaryText} shadow-sm`}>
+                        {isSold ? "Sold" : isLease ? "For Lease" : "For Sale"}
+                      </div>
+                      
                       <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-sm text-[9px] font-bold text-white uppercase tracking-wider px-2 py-0.5 rounded-md shadow-sm">{listing.class || "Residential"}</div>
                     </div>
 
                     <div className="px-1 text-left">
-                      <h3 className={`text-lg font-black ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>{formatPrice(listing.listPrice)}</h3>
+                      <h3 className={`text-lg font-black ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
+                        {formatPrice(isSold && listing.soldPrice ? listing.soldPrice : listing.listPrice)}
+                      </h3>
                       <p className="text-xs font-semibold text-gray-500 mt-0.5 truncate" title={completeAddress}>{completeAddress || "Premium Property"}</p>
                       <div className="flex items-center gap-3 mt-3 text-xs font-bold text-gray-400 border-t border-gray-50 pt-2.5">
                         {(listing.class || "").toLowerCase() === "commercial" ? <span className="text-xs uppercase tracking-wide font-extrabold text-[#2F527E]">Commercial Asset</span> : <><span className="flex items-center gap-1"><Bed size={14} className="text-gray-400"/> {bedsCount} Bd</span><span className="flex items-center gap-1"><Bath size={14} className="text-gray-400"/> {bathsCount} Ba</span></>}

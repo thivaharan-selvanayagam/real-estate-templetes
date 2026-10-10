@@ -1,9 +1,9 @@
 "use client";
 
+import { useState, useEffect, useMemo, useRef } from "react";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 function MapRecenterController({ activeCoordinates }: { activeCoordinates: [number, number] | null }) {
@@ -34,8 +34,12 @@ export default function ListingsMap({
   
   const router = useRouter();
   const mapRef = useRef<any>(null);
+  
+  // 🔑 FIX: Prevents Leaflet appendChild race condition in Next.js App Router
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -57,7 +61,6 @@ export default function ListingsMap({
   const createCustomIcon = (price: number, isHovered: boolean, isActive: boolean) => {
     const formattedPrice = formatPrice(price);
     
-    // Deep Green (#2b4b46) base state, Soft Peach (#e9b3b0) hover/active state
     const bgColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
     const textColor = isHovered || isActive ? "#2b4b46" : "#FFFFFF";
     const borderColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
@@ -102,7 +105,8 @@ export default function ListingsMap({
     ? [center.lat, center.lng] 
     : [43.6532, -79.3832];
 
-  if (!center || typeof window === "undefined") {
+  // 🔑 Return neutral skeleton placeholder until client DOM mounting completes
+  if (!mounted) {
     return <div className="w-full h-full bg-neutral-100 animate-pulse" />;
   }
 
@@ -116,7 +120,6 @@ export default function ListingsMap({
         ref={mapRef}
         preferCanvas={true}
       >
-        {/* 🔑 OPENSTREETMAP PUBLIC STANDARD TILES (NO API KEY REQUIRED) */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
