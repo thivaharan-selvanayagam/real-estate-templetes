@@ -7,8 +7,14 @@ interface FeaturedPropertiesProps {
   listings: any[];
 }
 
-const ALLOWED_CITIES = [
+// Includes all Toronto boroughs & municipal name variations in MLS data
+const TARGET_CITIES = [
   "toronto",
+  "etobicoke",
+  "north york",
+  "scarborough",
+  "east york",
+  "york",
   "markham",
   "stouffville",
   "whitchurch-stouffville",
@@ -17,35 +23,63 @@ const ALLOWED_CITIES = [
   "oshawa",
   "mississauga",
   "brampton",
-  "vaughan",
+  "vaughan"
 ];
 
 export default function FeaturedProperties({ listings }: FeaturedPropertiesProps) {
   const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
   const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
 
+  // Filter listings for residential-only properties within target GTA cities/boroughs
   const filteredListings = listings.filter((listing) => {
-    // Normalize city string for safe evaluation
-    const city = (listing.city || listing.address?.city || "").trim().toLowerCase();
-    const isAllowedCity = ALLOWED_CITIES.some((allowedCity) => city.includes(allowedCity));
+    // 1. Extract location fields
+    const city = (listing.address?.city || listing.city || "").toLowerCase().trim();
+    const area = (listing.address?.area || "").toLowerCase().trim();
+    const district = (listing.address?.district || "").toLowerCase().trim();
 
-    // Normalize property category/type string
-    const propertyType = (
-      listing.propertyType ||
+    const matchesTargetCity = TARGET_CITIES.some(
+      (target) =>
+        city.includes(target) ||
+        area.includes(target) ||
+        district.includes(target)
+    );
+
+    // 2. Commercial / Non-residential Filter
+    const propertyClass = (
+      listing.class || 
+      listing.details?.class || 
       listing.type ||
-      listing.class ||
-      listing.category ||
       ""
     ).toLowerCase();
 
-    // Check if the property is commercial
-    const isCommercial =
-      propertyType.includes("commercial") ||
-      listing.isCommercial === true ||
-      listing.class === "Commercial";
+    const propertyType = (
+      listing.details?.propertyType || 
+      listing.propertyType || 
+      ""
+    ).toLowerCase();
 
-    return isAllowedCity && !isCommercial;
+    const isCommercial = 
+      propertyClass.includes("commercial") || 
+      propertyClass.includes("industrial") || 
+      propertyClass.includes("business") || 
+      propertyClass.includes("retail") ||
+      propertyType.includes("commercial") || 
+      propertyType.includes("industrial") ||
+      propertyType.includes("business") ||
+      propertyType.includes("retail");
+
+    return matchesTargetCity && !isCommercial;
   });
+
+  // Fallback: If city-strict filtering yields fewer than 3 properties,
+  // display all non-commercial residential properties from the fetched API batch
+  const displayListings =
+    filteredListings.length >= 3
+      ? filteredListings
+      : listings.filter((l) => {
+          const pClass = (l.class || l.details?.class || l.type || "").toLowerCase();
+          return !pClass.includes("commercial") && !pClass.includes("industrial");
+        });
 
   return (
     <section className="py-16 md:py-24 bg-white">
@@ -55,28 +89,27 @@ export default function FeaturedProperties({ listings }: FeaturedPropertiesProps
             Featured Properties
           </h2>
           <p className="text-gray-500 text-sm mt-3 leading-relaxed">
-            Explore some of our most exclusive houses, apartments, townhomes, penthouses, and asset portfolios.
+            Explore active residential listings across Toronto, Markham, Stouffville, Pickering, Ajax, Oshawa, Mississauga, Brampton, and Vaughan.
           </p>
         </div>
 
-        {filteredListings.length > 0 ? (
+        {displayListings.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
-            {filteredListings.slice(0, 9).map((l) => (
+            {/* 🔑 Updated: Display only first 6 listings */}
+            {displayListings.slice(0, 6).map((l) => (
               <PropertyCard key={l.mlsNumber || l.id} listing={l} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 text-gray-400">
-            <p className="text-lg">No residential listings available in these cities at the moment.</p>
+          <div className="text-center py-20 text-gray-400 border border-dashed border-stone-200 rounded-3xl">
+            <p className="text-lg font-medium text-slate-700 mb-1">No Active Residential Listings Found</p>
+            <p className="text-xs text-stone-500">There are currently no active residential properties matched in the target municipalities.</p>
           </div>
         )}
 
         <div className="mt-14 flex justify-start">
-          <Link
-            href="/all-homes"
-            className={`inline-flex items-center gap-3 ${cleanPrimaryBg} text-white text-xs font-bold tracking-widest uppercase px-8 py-4 rounded-full hover:opacity-90 transition-all shadow-md`}
-          >
-            <span>View More</span>
+          <Link href="/all-homes" className={`inline-flex items-center gap-3 ${cleanPrimaryBg} text-white text-xs font-bold tracking-widest uppercase px-8 py-4 rounded-full hover:opacity-90 transition-all shadow-md font-sans`}>
+            <span>View All GTA Listings</span>
             <ChevronRight size={14} className="stroke-[3px]" />
           </Link>
         </div>
