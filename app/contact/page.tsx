@@ -73,7 +73,7 @@ function ContactFormContent() {
             RealtHer Group
           </h2>
           <p className="text-[#4D71A3] text-xs font-semibold uppercase tracking-wider mb-6">
-            Reema Shahzad & Pirasha Vygunthavasa
+            Reema Shahzad & Pirasha Vygunthavasan
           </p>
 
           <p className="text-[#F9F6F0]/80 text-xs sm:text-sm leading-relaxed mb-10 font-light">
@@ -342,7 +342,7 @@ export default function ContactPage() {
               Get In Touch
             </h1>
             <p className="text-[#F9F6F0]/85 text-sm md:text-base leading-relaxed font-light">
-              Have questions about first-time home buying, pre-construction allocations, or home valuations? Connect directly with Reema Shahzad and Pirasha Vygunthavasa.
+              Have questions about first-time home buying, pre-construction allocations, or home valuations? Connect directly with Reema Shahzad and Pirasha Vygunthavasan.
             </p>
           </div>
         </div>

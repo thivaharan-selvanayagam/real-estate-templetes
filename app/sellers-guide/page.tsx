@@ -93,7 +93,7 @@ export default function SellersGuidePage() {
           </h2>
           <div className="w-12 h-[2px] bg-[#4D71A3] mx-auto my-6"></div>
           <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal">
-            Selling your home doesn't have to be overwhelming. With strategic preparation, sharp pricing analytics, and dedicated negotiation advocacy from Reema Shahzad and Pirasha Vygunthavasa, we make your selling process seamless and rewarding.
+            Selling your home doesn't have to be overwhelming. With strategic preparation, sharp pricing analytics, and dedicated negotiation advocacy from Reema Shahzad and Pirasha Vygunthavasan, we make your selling process seamless and rewarding.
           </p>
         </div>
       </section>
@@ -236,7 +236,7 @@ export default function SellersGuidePage() {
             Ready to Sell with Confidence?
           </h2>
           <p className="text-[#F9F6F0]/90 text-sm md:text-base leading-relaxed mb-8 font-light">
-            Partner with Reema Shahzad and Pirasha Vygunthavasa for strategic pricing, tailored property marketing, and tenacious negotiation advocacy.
+            Partner with Reema Shahzad and Pirasha Vygunthavasan for strategic pricing, tailored property marketing, and tenacious negotiation advocacy.
           </p>
           <Link 
             href="/contact?intent=Book%20a%20Home%20Selling%20Strategy%20Call" 

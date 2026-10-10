@@ -7,9 +7,45 @@ interface FeaturedPropertiesProps {
   listings: any[];
 }
 
+const ALLOWED_CITIES = [
+  "toronto",
+  "markham",
+  "stouffville",
+  "whitchurch-stouffville",
+  "pickering",
+  "ajax",
+  "oshawa",
+  "mississauga",
+  "brampton",
+  "vaughan",
+];
+
 export default function FeaturedProperties({ listings }: FeaturedPropertiesProps) {
   const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
   const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
+
+  const filteredListings = listings.filter((listing) => {
+    // Normalize city string for safe evaluation
+    const city = (listing.city || listing.address?.city || "").trim().toLowerCase();
+    const isAllowedCity = ALLOWED_CITIES.some((allowedCity) => city.includes(allowedCity));
+
+    // Normalize property category/type string
+    const propertyType = (
+      listing.propertyType ||
+      listing.type ||
+      listing.class ||
+      listing.category ||
+      ""
+    ).toLowerCase();
+
+    // Check if the property is commercial
+    const isCommercial =
+      propertyType.includes("commercial") ||
+      listing.isCommercial === true ||
+      listing.class === "Commercial";
+
+    return isAllowedCity && !isCommercial;
+  });
 
   return (
     <section className="py-16 md:py-24 bg-white">
@@ -23,20 +59,23 @@ export default function FeaturedProperties({ listings }: FeaturedPropertiesProps
           </p>
         </div>
 
-        {listings.length > 0 ? (
+        {filteredListings.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
-            {listings.slice(0, 9).map((l) => (
-              <PropertyCard key={l.mlsNumber} listing={l} />
+            {filteredListings.slice(0, 9).map((l) => (
+              <PropertyCard key={l.mlsNumber || l.id} listing={l} />
             ))}
           </div>
         ) : (
           <div className="text-center py-20 text-gray-400">
-            <p className="text-lg">No listings available at the moment.</p>
+            <p className="text-lg">No residential listings available in these cities at the moment.</p>
           </div>
         )}
 
         <div className="mt-14 flex justify-start">
-          <Link href="/all-homes" className={`inline-flex items-center gap-3 ${cleanPrimaryBg} text-white text-xs font-bold tracking-widest uppercase px-8 py-4 rounded-full hover:opacity-90 transition-all shadow-md`}>
+          <Link
+            href="/all-homes"
+            className={`inline-flex items-center gap-3 ${cleanPrimaryBg} text-white text-xs font-bold tracking-widest uppercase px-8 py-4 rounded-full hover:opacity-90 transition-all shadow-md`}
+          >
             <span>View More</span>
             <ChevronRight size={14} className="stroke-[3px]" />
           </Link>

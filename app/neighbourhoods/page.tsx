@@ -118,7 +118,7 @@ export default function NeighborhoodsPage() {
               Find Your Ideal Community
             </h2>
             <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal">
-              Reema Shahzad and Pirasha Vygunthavasa bring hands-on market insight across the Greater Toronto Area. Explore local amenities, school catchments, and real estate opportunities below.
+              Reema Shahzad and Pirasha Vygunthavasan bring hands-on market insight across the Greater Toronto Area. Explore local amenities, school catchments, and real estate opportunities below.
             </p>
           </div>
 

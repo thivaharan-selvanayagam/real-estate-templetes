@@ -4,7 +4,7 @@ import GetInTouch from "@/components/GetInTouch";
 import { BRAND_CONFIG } from "@/config/brand";
 
 export const metadata = { 
-  title: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasa` 
+  title: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasan` 
 };
 
 export default function AboutPage() {
@@ -62,7 +62,7 @@ export default function AboutPage() {
               <div className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-stone-200/80">
                 <img 
                   src={BRAND_CONFIG.agent.fullphoto || "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"} 
-                  alt="Reema Shahzad and Pirasha Vygunthavasa" 
+                  alt="Reema Shahzad and Pirasha Vygunthavasan" 
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -77,7 +77,7 @@ export default function AboutPage() {
                 </h3>
                 
                 <p>
-                  Led by experienced real estate professionals <strong>Pirasha Vygunthavasa</strong> and <strong>Reema Shahzad</strong>, our team brings together years of industry knowledge, market expertise, and a genuine passion for helping people achieve their real estate goals.
+                  Led by experienced real estate professionals <strong>Pirasha Vygunthavasan</strong> and <strong>Reema Shahzad</strong>, our team brings together years of industry knowledge, market expertise, and a genuine passion for helping people achieve their real estate goals.
                 </p>
                 
                 <p>
@@ -175,7 +175,7 @@ export default function AboutPage() {
 
           <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
             
-            {/* BIO 1: PIRASHA VYGUNTHAVASA */}
+            {/* BIO 1: PIRASHA Vygunthavasan */}
             <div className="bg-[#FDFBF7] rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-4 mb-6">
@@ -183,7 +183,7 @@ export default function AboutPage() {
                     PV
                   </div>
                   <div>
-                    <h3 className="font-display text-2xl font-bold text-slate-900">Pirasha Vygunthavasa</h3>
+                    <h3 className="font-display text-2xl font-bold text-slate-900">Pirasha Vygunthavasan</h3>
                     <p className="text-[#4D71A3] text-xs font-semibold uppercase tracking-wider mt-1">
                       Award-Winning RE/MAX Real Estate Broker
                     </p>

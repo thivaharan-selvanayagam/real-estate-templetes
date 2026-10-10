@@ -202,7 +202,7 @@ export default function BuyersGuidePage() {
             Partner with RealtHer Group
           </h2>
           <p className="text-[#F9F6F0]/90 text-sm md:text-base leading-relaxed mb-8 font-light">
-            With decades of combined GTA expertise, Reema Shahzad and Pirasha Vygunthavasa protect your interests, negotiate strongly, and guide you to a property that supports your long-term goals.
+            With decades of combined GTA expertise, Reema Shahzad and Pirasha Vygunthavasan protect your interests, negotiate strongly, and guide you to a property that supports your long-term goals.
           </p>
           <Link 
             href="/contact?intent=Book%20a%20Buyer%20Consultation" 

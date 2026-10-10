@@ -153,7 +153,7 @@ export default function HomeEvaluationPage() {
                     className="mt-1 w-4 h-4 rounded border-stone-300 text-[#4D71A3] focus:ring-[#4D71A3]"
                   />
                   <label htmlFor="consent" className="text-[11px] leading-relaxed text-stone-300 font-light">
-                    I agree to be contacted by RealtHer Group (Reema Shahzad & Pirasha Vygunthavasa) via call, email, or text regarding my GTA home evaluation inquiry.
+                    I agree to be contacted by RealtHer Group (Reema Shahzad & Pirasha Vygunthavasan) via call, email, or text regarding my GTA home evaluation inquiry.
                   </label>
                 </div>
 
@@ -215,7 +215,7 @@ export default function HomeEvaluationPage() {
               Online valuation portals use generic algorithms that miss what makes your property unique—such as recent high-end upgrades, micro-neighborhood demand, school catchments, and specific floor plan layouts.
             </p>
             <p className="text-stone-600 text-sm md:text-base leading-relaxed font-normal">
-              As active Greater Toronto Area brokers and investors, Reema Shahzad and Pirasha Vygunthavasa combine real-time local MLS market data with hands-on GTA experience to give you a true, actionable assessment of what your home could sell for in today’s market.
+              As active Greater Toronto Area brokers and investors, Reema Shahzad and Pirasha Vygunthavasan combine real-time local MLS market data with hands-on GTA experience to give you a true, actionable assessment of what your home could sell for in today’s market.
             </p>
           </div>
           <div className="aspect-[4/3] w-full rounded-3xl overflow-hidden shadow-xl border border-stone-200/80">

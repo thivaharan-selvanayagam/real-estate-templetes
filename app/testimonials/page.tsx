@@ -244,7 +244,7 @@ export default function TestimonialsPage() {
             Ready to Plan Your Next Move?
           </h2>
           <p className="text-[#F9F6F0]/85 text-sm md:text-base font-light mb-8 max-w-xl mx-auto">
-            Partner with Reema Shahzad and Pirasha Vygunthavasa for strategic advice, local GTA knowledge, and tenacious negotiation advocacy.
+            Partner with Reema Shahzad and Pirasha Vygunthavasan for strategic advice, local GTA knowledge, and tenacious negotiation advocacy.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 

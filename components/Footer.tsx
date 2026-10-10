@@ -29,7 +29,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-stone-400 text-xs leading-relaxed max-w-sm font-light mb-6">
-              Strategic real estate guidance across the Greater Toronto Area. Founded by Reema Shahzad and Pirasha Vygunthavasa to deliver personalized, expert advocacy for buyers, sellers, and investors.
+              Strategic real estate guidance across the Greater Toronto Area. Founded by Reema Shahzad and Pirasha Vygunthavasan to deliver personalized, expert advocacy for buyers, sellers, and investors.
             </p>
 
             {/* INLINE SVG SOCIAL ICONS */}
