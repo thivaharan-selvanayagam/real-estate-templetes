@@ -7,6 +7,8 @@ interface PropertyCardProps {
   listing: Listing & {
     lastStatus?: string;
     standardStatus?: string;
+    bedrooms?: number;
+    bathrooms?: number;
   };
 }
 
@@ -22,7 +24,7 @@ const formatPrice = (price?: number | string) => {
   return `$${num.toLocaleString()}`;
 };
 
-// 🔑 SAFE SQFT HELPER: Handles numeric values, ranges ("2000-2500"), and missing data
+// 🔑 Safe Square Footage Formatter
 const getFormattedSqft = (listing: any) => {
   const rawSqft = 
     listing.details?.sqft || 
@@ -33,17 +35,14 @@ const getFormattedSqft = (listing: any) => {
 
   const str = String(rawSqft).trim();
 
-  // Filter out invalid/empty strings
   if (!str || str === "0" || str.toLowerCase() === "n/a" || str.toLowerCase() === "null") {
     return null;
   }
 
-  // If TRREB/Repliers provides a range like "2000-2500" or "1500 - 2000"
   if (str.includes("-")) {
     return `${str} SQ.FT.`;
   }
 
-  // Strip out any accidental non-digit characters
   const parsedNum = parseFloat(str.replace(/[^0-9.]/g, ""));
   if (isNaN(parsedNum) || parsedNum === 0) {
     return null;
@@ -54,8 +53,10 @@ const getFormattedSqft = (listing: any) => {
 
 export default function PropertyCard({ listing }: PropertyCardProps) {
   const img = listing.images?.[0];
-  const beds = listing.details?.numBedrooms || listing.bedrooms || 0;
-  const baths = listing.details?.numBathrooms || listing.bathrooms || 0;
+  
+  // 🔑 Type-safe bedroom and bathroom extraction
+  const beds = listing.details?.numBedrooms || (listing as any).bedrooms || 0;
+  const baths = listing.details?.numBathrooms || (listing as any).bathrooms || 0;
   
   const streetNumber = listing.address?.streetNumber || "";
   const streetName = listing.address?.streetName || "";
@@ -104,7 +105,6 @@ export default function PropertyCard({ listing }: PropertyCardProps) {
           <span>•</span>
           <span>{baths} Full Baths</span>
           
-          {/* 🔑 Only renders if valid square footage exists */}
           {sqftDisplay && (
             <>
               <span>•</span>
