@@ -1,155 +1,212 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import { useEffect, useState, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
-import { useRouter } from "next/navigation";
+import "leaflet/dist/leaflet.css";
+import Link from "next/link";
 
-function MapRecenterController({ activeCoordinates }: { activeCoordinates: [number, number] | null }) {
+interface ListingsMapProps {
+  listings: any[];
+  center: { lat: number; lng: number };
+  activeListing?: string | null;
+  setActiveListing?: (id: string | null) => void;
+  hoveredListing?: string | null;
+  setHoveredListing?: (id: string | null) => void;
+}
+
+// 🔑 Formats map pin price badges (e.g., $1.15M, $850K, $2.5K/mo)
+const formatMapPrice = (price?: number | string, isLease?: boolean) => {
+  if (!price) return "$N/A";
+  const num = typeof price === "string" ? parseFloat(price) : price;
+  if (isNaN(num)) return "$N/A";
+
+  if (num >= 1000000) {
+    return `$${(num / 1000000).toFixed(2)}M`;
+  }
+  if (num >= 1000) {
+    return `$${Math.round(num / 1000)}K${isLease ? "/mo" : ""}`;
+  }
+  return `$${num.toLocaleString()}`;
+};
+
+// 🔑 Custom Leaflet HTML Pin Icon displaying the exact price amount
+const createPricePinIcon = (priceText: string, isHovered: boolean) => {
+  const badgeStyle = isHovered
+    ? "bg-[#2b4b46] text-white scale-110 ring-2 ring-emerald-400 z-50 shadow-2xl"
+    : "bg-slate-900 text-white border border-stone-600 shadow-md hover:scale-105";
+
+  return L.divIcon({
+    className: "custom-price-pin",
+    html: `
+      <div class="px-2.5 py-1 rounded-full text-[10px] font-black tracking-wider uppercase transition-all duration-200 shadow-md cursor-pointer whitespace-nowrap flex items-center justify-center ${badgeStyle}">
+        ${priceText}
+      </div>
+    `,
+    iconSize: [64, 26],
+    iconAnchor: [32, 13],
+    popupAnchor: [0, -14],
+  });
+};
+
+// 🔑 MAP CONTROLLER: Smooth-pans to exact location & opens popup on hover
+function MapController({
+  center,
+  hoveredListing,
+  listings,
+  markerRefs,
+}: {
+  center: { lat: number; lng: number };
+  hoveredListing?: string | null;
+  listings: any[];
+  markerRefs: React.MutableRefObject<{ [key: string]: L.Marker | null }>;
+}) {
   const map = useMap();
+
+  // Initial load or search center pan
   useEffect(() => {
-    if (map && activeCoordinates && activeCoordinates[0] && activeCoordinates[1]) {
-      map.panTo(activeCoordinates, { animate: true, duration: 0.4 });
+    if (center && typeof center.lat === "number" && typeof center.lng === "number" && !hoveredListing) {
+      map.setView([center.lat, center.lng], map.getZoom());
     }
-  }, [activeCoordinates, map]);
+  }, [center, map]);
+
+  // Smooth-pan to hovered listing & open popup
+  useEffect(() => {
+    if (!hoveredListing) return;
+
+    const target = listings.find((l) => l.mlsNumber === hoveredListing);
+    if (target?.map?.latitude && target?.map?.longitude) {
+      const lat = Number(target.map.latitude);
+      const lng = Number(target.map.longitude);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        map.panTo([lat, lng], { animate: true, duration: 0.4 });
+
+        const marker = markerRefs.current[hoveredListing];
+        if (marker) {
+          marker.openPopup();
+        }
+      }
+    }
+  }, [hoveredListing, listings, map, markerRefs]);
+
   return null;
 }
 
-// 🔑 Compact price formatter: Converts 5,500,000 -> 5.5M, 55,000,000 -> 55M, 850,000 -> 850K
-const formatCompactPrice = (price: number) => {
-  if (!price || isNaN(price)) return "";
-  if (price >= 1000000) {
-    const millions = price / 1000000;
-    return `${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)}M`;
-  }
-  if (price >= 1000) {
-    const thousands = price / 1000;
-    return `${thousands % 1 === 0 ? thousands.toFixed(0) : thousands.toFixed(0)}K`;
-  }
-  return `${price}`;
+const formatFullPrice = (price: number) => {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 0,
+  }).format(price);
 };
 
-export default function ListingsMap({ 
-  listings = [], 
-  center, 
-  activeListing, 
-  setActiveListing, 
-  hoveredListing 
-}: any) {
-  
-  const router = useRouter();
-  const mapRef = useRef<any>(null);
+export default function ListingsMap({
+  listings = [],
+  center,
+  activeListing,
+  setActiveListing,
+  hoveredListing,
+  setHoveredListing,
+}: ListingsMapProps) {
   const [mounted, setMounted] = useState(false);
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
 
   useEffect(() => {
     setMounted(true);
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-      iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    });
   }, []);
 
-  const activeHoveredCoords = useMemo<[number, number] | null>(() => {
-    const activeTargetId = hoveredListing || activeListing;
-    if (!activeTargetId) return null;
-    const match = listings.find((l: any) => l.mlsNumber === activeTargetId);
-    const lat = Number(match?.map?.latitude);
-    const lng = Number(match?.map?.longitude);
-    if (lat && lng) return [lat, lng];
-    return null;
-  }, [hoveredListing, activeListing, listings]);
-
-  const createCustomIcon = (price: number, isHovered: boolean, isActive: boolean) => {
-    const formattedPrice = formatCompactPrice(price);
-    
-    const bgColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
-    const textColor = isHovered || isActive ? "#2b4b46" : "#FFFFFF";
-    const borderColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
-    const scale = isHovered || isActive ? "scale(1.1); z-index: 9999;" : "scale(1);";
-
-    return L.divIcon({
-      className: "bg-transparent border-none",
-      html: `
-        <div style="transform: ${scale} transition: all 0.2s ease; position: relative;">
-          <div style="
-            background-color: ${bgColor}; 
-            color: ${textColor}; 
-            padding: 5px 10px; 
-            border-radius: 50px; 
-            font-size: 11px; 
-            font-weight: 800; 
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
-            border: 1.5px solid white; 
-            white-space: nowrap;
-          ">
-            ${formattedPrice}
-            <div style="
-              position: absolute; 
-              bottom: -5px; 
-              left: 50%; 
-              transform: translateX(-50%); 
-              width: 0; 
-              height: 0; 
-              border-left: 5px solid transparent; 
-              border-right: 5px solid transparent; 
-              border-top: 5px solid ${borderColor};
-            "></div>
-          </div>
-        </div>
-      `,
-      iconSize: [50, 26],
-      iconAnchor: [25, 26], 
-    });
-  };
-
-  const mapCenterPoint: [number, number] = center?.lat && center?.lng 
-    ? [center.lat, center.lng] 
-    : [43.6532, -79.3832];
-
   if (!mounted) {
-    return <div className="w-full h-full bg-neutral-100 animate-pulse" />;
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400 font-bold uppercase tracking-widest text-xs animate-pulse">
+        Loading Map Layer...
+      </div>
+    );
   }
 
+  const validCenter =
+    center && typeof center.lat === "number" && typeof center.lng === "number"
+      ? center
+      : { lat: 43.6532, lng: -79.3832 };
+
+  const validListings = listings.filter(
+    (l) => l?.map?.latitude && l?.map?.longitude && !isNaN(Number(l.map.latitude)) && !isNaN(Number(l.map.longitude))
+  );
+
   return (
-    <div className="w-full h-full relative" id="leaflet-map-root-frame">
-      <MapContainer 
-        center={mapCenterPoint} 
-        zoom={11} 
-        className="w-full h-full"
-        zoomControl={true}
-        ref={mapRef}
-        preferCanvas={true}
+    <div className="w-full h-full relative">
+      <MapContainer
+        center={[validCenter.lat, validCenter.lng]}
+        zoom={11}
+        scrollWheelZoom={true}
+        className="w-full h-full z-10"
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        <MapRecenterController activeCoordinates={activeHoveredCoords} />
-        
-        {listings.map((listing: any) => {
-          if (!listing?.map?.latitude || !listing?.map?.longitude) return null;
-          
-          const isHovered = hoveredListing === listing.mlsNumber;
-          const isActive = activeListing === listing.mlsNumber;
+
+        <MapController
+          center={validCenter}
+          hoveredListing={hoveredListing}
+          listings={validListings}
+          markerRefs={markerRefs}
+        />
+
+        {validListings.map((listing) => {
+          const lat = Number(listing.map.latitude);
+          const lng = Number(listing.map.longitude);
+          const isSelected = activeListing === listing.mlsNumber || hoveredListing === listing.mlsNumber;
+          const img = listing.images?.[0];
+          const isLease = listing.type === "lease" || listing.status === "Lsd";
+          const displayPrice = listing.listPrice || listing.soldPrice || 0;
 
           return (
             <Marker
               key={listing.mlsNumber}
-              position={[Number(listing.map.latitude), Number(listing.map.longitude)]}
-              icon={createCustomIcon(listing.listPrice, isHovered, isActive)}
+              ref={(ref) => {
+                if (ref) markerRefs.current[listing.mlsNumber] = ref;
+              }}
+              position={[lat, lng]}
+              icon={createPricePinIcon(formatMapPrice(displayPrice, isLease), isSelected)}
+              zIndexOffset={isSelected ? 1000 : 0}
               eventHandlers={{
                 click: () => {
-                  if (setActiveListing) {
-                    setActiveListing(listing.mlsNumber);
-                  }
-                  router.push(`/listings/${listing.mlsNumber}`); 
+                  if (setActiveListing) setActiveListing(listing.mlsNumber);
+                },
+                mouseover: () => {
+                  if (setHoveredListing) setHoveredListing(listing.mlsNumber);
+                },
+                mouseout: () => {
+                  if (setHoveredListing) setHoveredListing(null);
                 },
               }}
-            />
+            >
+              <Popup className="rounded-2xl overflow-hidden">
+                <div className="p-1 max-w-[210px] text-left">
+                  {img && (
+                    <img
+                      src={img.startsWith("http") ? img : `https://cdn.repliers.io/${img}?w=300`}
+                      alt={listing.address?.streetName || "Property"}
+                      className="w-full h-24 object-cover rounded-xl mb-2"
+                    />
+                  )}
+                  <p className="font-black text-slate-900 text-sm tracking-tight">
+                    {formatFullPrice(displayPrice)}
+                  </p>
+                  <p className="text-xs text-stone-500 truncate mt-0.5 font-medium">
+                    {listing.address?.streetNumber} {listing.address?.streetName}, {listing.address?.city}
+                  </p>
+                  <Link
+                    href={`/listings/${listing.mlsNumber}`}
+                    className="inline-block mt-2 text-[10px] font-extrabold text-[#2b4b46] hover:underline uppercase tracking-wider"
+                  >
+                    View Details →
+                  </Link>
+                </div>
+              </Popup>
+            </Marker>
           );
         })}
       </MapContainer>

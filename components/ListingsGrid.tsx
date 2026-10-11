@@ -24,6 +24,32 @@ const formatPrice = (price: number) => {
   }).format(price);
 };
 
+const getFormattedSqft = (listing: any) => {
+  const rawSqft = 
+    listing.details?.sqft || 
+    listing.details?.squareFootage || 
+    listing.sqft;
+
+  if (!rawSqft) return null;
+
+  const str = String(rawSqft).trim();
+
+  if (!str || str === "0" || str.toLowerCase() === "n/a" || str.toLowerCase() === "null") {
+    return null;
+  }
+
+  if (str.includes("-")) {
+    return `${str} sqft`;
+  }
+
+  const parsedNum = parseFloat(str.replace(/[^0-9.]/g, ""));
+  if (isNaN(parsedNum) || parsedNum === 0) {
+    return null;
+  }
+
+  return `${parsedNum.toLocaleString()} sqft`;
+};
+
 interface ListingsGridProps {
   type: string;
   propertyClass: string;
@@ -35,7 +61,7 @@ interface ListingsGridProps {
   currentMaxPrice: string;
   currentBeds: string;
   currentBaths: string;
- initialCity?: string; // 👈 Add missing prop definition
+  initialCity?: string;
 }
 
 export default function ListingsGrid({ 
@@ -49,7 +75,7 @@ export default function ListingsGrid({
   currentMaxPrice,
   currentBeds,
   currentBaths,
-  initialCity = "" // 👈 Destructure with default
+  initialCity = ""
 }: ListingsGridProps) {
   
   const router = useRouter();
@@ -89,7 +115,13 @@ export default function ListingsGrid({
     return { lat, lng };
   }, [initialListings]);
 
+  // 🔑 ROUTING HANDLER: Redirects to /sold-homes when "sold" is selected
   const applyFilters = (updates: Record<string, string>) => {
+    if (updates.type === "sold") {
+      router.push("/sold-homes");
+      return;
+    }
+
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.set("page", "1");
 
@@ -316,7 +348,8 @@ export default function ListingsGrid({
                 const img = listing.images?.[0];
                 const bedsCount = listing.details?.numBedrooms || listing.bedrooms || 0;
                 const bathsCount = listing.details?.numBathrooms || listing.bathrooms || listing.details?.numBaths || 0;
-                const sqftMeasure = listing.details?.sqft || "N/A";
+                const sqftDisplay = getFormattedSqft(listing);
+
                 const streetAddress = `${listing.address?.streetNumber || ''} ${listing.address?.streetName || ''}`.trim();
                 const completeAddress = `${streetAddress}, ${listing.address?.city || ''}, ${listing.address?.state || listing.address?.area || ''}`.trim().replace(/,\s*$/, "");
                 const isHovered = hoveredListing === listing.mlsNumber;
@@ -343,7 +376,6 @@ export default function ListingsGrid({
                     </div>
 
                     <div className="px-1 text-left">
-                      {/* 🔑 Displays both Sold Price and Listed Price when property is sold */}
                       {isSold ? (
                         <div className="flex items-baseline justify-between gap-2 flex-wrap">
                           <div>
@@ -374,8 +406,19 @@ export default function ListingsGrid({
                       <p className="text-xs font-semibold text-gray-500 mt-0.5 truncate" title={completeAddress}>{completeAddress || "Premium Property"}</p>
                       
                       <div className="flex items-center gap-3 mt-3 text-xs font-bold text-gray-400 border-t border-gray-50 pt-2.5">
-                        {(listing.class || "").toLowerCase() === "commercial" ? <span className="text-xs uppercase tracking-wide font-extrabold text-[#2F527E]">Commercial Asset</span> : <><span className="flex items-center gap-1"><Bed size={14} className="text-gray-400"/> {bedsCount} Bd</span><span className="flex items-center gap-1"><Bath size={14} className="text-gray-400"/> {bathsCount} Ba</span></>}
-                        {sqftMeasure !== "N/A" && sqftMeasure !== "0" && <span className="flex items-center gap-1 ml-auto"><Maximize size={12} className="text-gray-400"/> {Number(sqftMeasure).toLocaleString()} sqft</span>}
+                        {(listing.class || "").toLowerCase() === "commercial" ? (
+                          <span className="text-xs uppercase tracking-wide font-extrabold text-[#2F527E]">Commercial Asset</span>
+                        ) : (
+                          <>
+                            <span className="flex items-center gap-1"><Bed size={14} className="text-gray-400"/> {bedsCount} Bd</span>
+                            <span className="flex items-center gap-1"><Bath size={14} className="text-gray-400"/> {bathsCount} Ba</span>
+                          </>
+                        )}
+                        {sqftDisplay && (
+                          <span className="flex items-center gap-1 ml-auto">
+                            <Maximize size={12} className="text-gray-400"/> {sqftDisplay}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </Link>

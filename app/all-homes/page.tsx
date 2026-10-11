@@ -35,13 +35,19 @@ export default async function AllHomesPage({
   const reqBeds = beds && beds !== "Any" ? parseInt(beds, 10) : undefined;
   const reqBaths = baths && baths !== "Any" ? parseInt(baths, 10) : undefined;
 
+  // 🔑 FIX 1: Ignore high sale-scale minPrice when querying lease properties
+  const parsedMinPrice = minPrice && !isNaN(Number(minPrice)) ? Number(minPrice) : undefined;
+  const effectiveMinPrice = (trxType === "lease" && parsedMinPrice && parsedMinPrice >= 50000) 
+    ? undefined 
+    : minPrice;
+
   try { 
     // 🔑 Repliers API Payload
     const baseQueryPayload: any = {
       pageSize: 24,
       pageNum: activePage,
       search: searchString || undefined,
-      minPrice: minPrice || undefined,
+      minPrice: effectiveMinPrice || undefined,
       maxPrice: maxPrice || undefined,
       // Pass all parameter name variations so Repliers receives the constraint
       minBedrooms: reqBeds,
@@ -84,18 +90,28 @@ export default async function AllHomesPage({
     }
 
     // 3. Transaction Type Filter Pass
+    // 🔑 FIX 2: Case-insensitive type matching (handles "Lease", "lease", "Rent", "rent")
     if (trxType === "sold") {
-      rawListings = rawListings.filter((l: any) => 
-        l.lastStatus === "Sld" || l.status === "U" || l.standardStatus === "Closed"
-      );
+      rawListings = rawListings.filter((l: any) => {
+        const lastSt = (l.lastStatus || "").toLowerCase();
+        const st = (l.status || "").toLowerCase();
+        const stdSt = (l.standardStatus || "").toLowerCase();
+        return lastSt === "sld" || st === "u" || stdSt === "closed";
+      });
     } else if (trxType === "lease") {
-      rawListings = rawListings.filter((l: any) => 
-        (l.type === "lease" || l.status === "Lsd") && l.lastStatus !== "Sld" && l.status !== "U"
-      );
+      rawListings = rawListings.filter((l: any) => {
+        const listingType = (l.type || l.details?.type || "").toLowerCase();
+        const st = (l.status || "").toLowerCase();
+        const lastSt = (l.lastStatus || "").toLowerCase();
+        return (listingType === "lease" || listingType === "rent" || st === "lsd") && lastSt !== "sld" && st !== "u";
+      });
     } else if (trxType === "buy" || trxType === "sale") {
-      rawListings = rawListings.filter((l: any) => 
-        l.type !== "lease" && l.lastStatus !== "Sld" && l.status !== "U"
-      );
+      rawListings = rawListings.filter((l: any) => {
+        const listingType = (l.type || l.details?.type || "").toLowerCase();
+        const st = (l.status || "").toLowerCase();
+        const lastSt = (l.lastStatus || "").toLowerCase();
+        return listingType !== "lease" && listingType !== "rent" && lastSt !== "sld" && st !== "u";
+      });
     }
 
     combinedListings = rawListings;
