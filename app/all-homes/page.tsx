@@ -32,37 +32,73 @@ export default async function AllHomesPage({
   const urlPage = typeof resolvedParams.page === "string" ? parseInt(resolvedParams.page, 10) : 1;
   const activePage = isNaN(urlPage) || urlPage < 1 ? 1 : urlPage;
 
+  const reqBeds = beds && beds !== "Any" ? parseInt(beds, 10) : undefined;
+  const reqBaths = baths && baths !== "Any" ? parseInt(baths, 10) : undefined;
+
   try { 
-    // 🔑 Repliers API Payload Configuration
+    // 🔑 Repliers API Payload
     const baseQueryPayload: any = {
       pageSize: 24,
       pageNum: activePage,
       search: searchString || undefined,
       minPrice: minPrice || undefined,
       maxPrice: maxPrice || undefined,
-      // 🔑 FIX: Repliers API requires 'minBedrooms' and 'minBaths'
-      minBedrooms: beds && beds !== "Any" ? beds : undefined,
-      minBaths: baths && baths !== "Any" ? baths : undefined,
+      // Pass all parameter name variations so Repliers receives the constraint
+      minBedrooms: reqBeds,
+      minBeds: reqBeds,
+      minBaths: reqBaths,
+      minBathrooms: reqBaths,
       class: propClass
     };
 
-    // 🔑 FIX: Strict separation for Buy (Active) vs. Leased vs. Sold (Unavailable/Off-Market)
+    // 🔑 Explicit transaction mapping (Buy vs Lease vs Sold)
     if (trxType === "sold") {
       baseQueryPayload.status = "U";
       baseQueryPayload.lastStatus = "Sld";
-      baseQueryPayload.type = "sale";
     } else if (trxType === "lease") {
       baseQueryPayload.status = "A";
       baseQueryPayload.type = "lease";
-      delete baseQueryPayload.lastStatus;
-    } else { // "buy" or "sale"
+    } else { // "buy" / "sale"
       baseQueryPayload.status = "A";
       baseQueryPayload.type = "sale";
-      delete baseQueryPayload.lastStatus;
     }
 
     const data = await getListings(baseQueryPayload);
-    combinedListings = data?.listings || [];
+    let rawListings = data?.listings || [];
+
+    // 🔑 IN-MEMORY POST-FILTER GUARANTEE
+    // 1. Bedroom Filter Pass
+    if (reqBeds) {
+      rawListings = rawListings.filter((l: any) => {
+        const numBeds = Number(l.details?.numBedrooms || l.numBedrooms || l.bedrooms || 0);
+        return numBeds >= reqBeds;
+      });
+    }
+
+    // 2. Bathroom Filter Pass
+    if (reqBaths) {
+      rawListings = rawListings.filter((l: any) => {
+        const numBaths = Number(l.details?.numBathrooms || l.numBathrooms || l.bathrooms || l.details?.numBaths || 0);
+        return numBaths >= reqBaths;
+      });
+    }
+
+    // 3. Transaction Type Filter Pass
+    if (trxType === "sold") {
+      rawListings = rawListings.filter((l: any) => 
+        l.lastStatus === "Sld" || l.status === "U" || l.standardStatus === "Closed"
+      );
+    } else if (trxType === "lease") {
+      rawListings = rawListings.filter((l: any) => 
+        (l.type === "lease" || l.status === "Lsd") && l.lastStatus !== "Sld" && l.status !== "U"
+      );
+    } else if (trxType === "buy" || trxType === "sale") {
+      rawListings = rawListings.filter((l: any) => 
+        l.type !== "lease" && l.lastStatus !== "Sld" && l.status !== "U"
+      );
+    }
+
+    combinedListings = rawListings;
     
     const genericData = data as any;
     totalResultsCount = Number(genericData?.numResults || genericData?.count || genericData?.metadata?.numResults || combinedListings.length);
@@ -72,7 +108,7 @@ export default async function AllHomesPage({
   }
 
   if (totalResultsCount <= 0 && combinedListings.length > 0) {
-    totalResultsCount = 120; 
+    totalResultsCount = combinedListings.length; 
   }
   
   return (

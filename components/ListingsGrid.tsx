@@ -68,7 +68,7 @@ export default function ListingsGrid({
   
   const totalResults = useMemo(() => {
     if (initialTotal && initialTotal > 0) return initialTotal;
-    if (initialListings && initialListings.length > 0) return initialListings.length * 8;
+    if (initialListings && initialListings.length > 0) return initialListings.length;
     return 0;
   }, [initialTotal, initialListings]);
 
@@ -143,7 +143,7 @@ export default function ListingsGrid({
       {/* FILTER TOP BAR */}
       <div className="border-b border-gray-200 bg-white px-6 py-4 flex flex-wrap items-center justify-between z-30 shrink-0 overflow-visible gap-4 w-full shadow-sm">
         
-        {/* 🔑 FIX: Search Form with Enter & Click Handler */}
+        {/* Search Input Field */}
         <form 
           onSubmit={handleSearchSubmit}
           className={`flex items-center w-full sm:max-w-xs md:max-w-sm border border-gray-200 rounded-full px-4 py-2 bg-gray-50 shrink-0 ${focusBorderPrimary} ${focusRingPrimary} focus-within:ring-1 transition-all`}
@@ -173,7 +173,7 @@ export default function ListingsGrid({
             <option value="Commercial">Commercial</option>
           </select>
 
-          {/* 🔑 FIX: TRANSACTION TYPE TOGGLE (Buy, Lease, Sold) */}
+          {/* TRANSACTION TYPE TOGGLE */}
           <select
             value={type || "buy"}
             onChange={(e) => applyFilters({ type: e.target.value })}
@@ -186,7 +186,7 @@ export default function ListingsGrid({
 
           {propertyClass !== "Commercial" && (
             <>
-              {/* 🔑 FIX: BEDS FILTER */}
+              {/* BEDS FILTER */}
               <div className="relative">
                 <button onClick={() => toggleDropdown('beds')} className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1 hover:bg-gray-50 transition-colors`}>
                   <Bed size={14} className="mr-1" /> Beds ({displayBedsLabel}) <ChevronDown size={14} className={`transition-transform ${openDropdown === 'beds' ? 'rotate-180' : ''}`} />
@@ -213,7 +213,7 @@ export default function ListingsGrid({
                 )}
               </div>
 
-              {/* 🔑 FIX: BATHS FILTER */}
+              {/* BATHS FILTER */}
               <div className="relative">
                 <button onClick={() => toggleDropdown('baths')} className={`border border-gray-200 ${BRAND_CONFIG.theme.primaryText} px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide flex items-center gap-1 hover:bg-gray-50 transition-colors`}>
                   <Bath size={14} className="mr-1" /> Baths ({displayBathsLabel}) <ChevronDown size={14} className={`transition-transform ${openDropdown === 'baths' ? 'rotate-180' : ''}`} />
@@ -312,8 +312,8 @@ export default function ListingsGrid({
             <div className={`grid gap-6 ${viewMode === "split" ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}`}>
               {initialListings.map((listing) => {
                 const img = listing.images?.[0];
-                const bedsCount = listing.details?.numBedrooms || 0;
-                const bathsCount = listing.details?.numBathrooms || 0;
+                const bedsCount = listing.details?.numBedrooms || listing.bedrooms || 0;
+                const bathsCount = listing.details?.numBathrooms || listing.bathrooms || listing.details?.numBaths || 0;
                 const sqftMeasure = listing.details?.sqft || "N/A";
                 const streetAddress = `${listing.address?.streetNumber || ''} ${listing.address?.streetName || ''}`.trim();
                 const completeAddress = `${streetAddress}, ${listing.address?.city || ''}, ${listing.address?.state || listing.address?.area || ''}`.trim().replace(/,\s*$/, "");

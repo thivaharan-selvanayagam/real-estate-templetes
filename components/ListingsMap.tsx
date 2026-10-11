@@ -16,12 +16,18 @@ function MapRecenterController({ activeCoordinates }: { activeCoordinates: [numb
   return null;
 }
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "CAD",
-    maximumFractionDigits: 0,
-  }).format(price);
+// 🔑 Compact price formatter: Converts 5,500,000 -> 5.5M, 55,000,000 -> 55M, 850,000 -> 850K
+const formatCompactPrice = (price: number) => {
+  if (!price || isNaN(price)) return "";
+  if (price >= 1000000) {
+    const millions = price / 1000000;
+    return `${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)}M`;
+  }
+  if (price >= 1000) {
+    const thousands = price / 1000;
+    return `${thousands % 1 === 0 ? thousands.toFixed(0) : thousands.toFixed(0)}K`;
+  }
+  return `${price}`;
 };
 
 export default function ListingsMap({ 
@@ -34,8 +40,6 @@ export default function ListingsMap({
   
   const router = useRouter();
   const mapRef = useRef<any>(null);
-  
-  // 🔑 FIX: Prevents Leaflet appendChild race condition in Next.js App Router
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export default function ListingsMap({
   }, [hoveredListing, activeListing, listings]);
 
   const createCustomIcon = (price: number, isHovered: boolean, isActive: boolean) => {
-    const formattedPrice = formatPrice(price);
+    const formattedPrice = formatCompactPrice(price);
     
     const bgColor = isHovered || isActive ? "#e9b3b0" : "#2b4b46";
     const textColor = isHovered || isActive ? "#2b4b46" : "#FFFFFF";
@@ -73,7 +77,7 @@ export default function ListingsMap({
           <div style="
             background-color: ${bgColor}; 
             color: ${textColor}; 
-            padding: 6px 12px; 
+            padding: 5px 10px; 
             border-radius: 50px; 
             font-size: 11px; 
             font-weight: 800; 
@@ -96,8 +100,8 @@ export default function ListingsMap({
           </div>
         </div>
       `,
-      iconSize: [60, 30],
-      iconAnchor: [30, 30], 
+      iconSize: [50, 26],
+      iconAnchor: [25, 26], 
     });
   };
 
@@ -105,7 +109,6 @@ export default function ListingsMap({
     ? [center.lat, center.lng] 
     : [43.6532, -79.3832];
 
-  // 🔑 Return neutral skeleton placeholder until client DOM mounting completes
   if (!mounted) {
     return <div className="w-full h-full bg-neutral-100 animate-pulse" />;
   }
