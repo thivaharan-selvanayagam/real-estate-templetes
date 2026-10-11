@@ -35,6 +35,7 @@ interface ListingsGridProps {
   currentMaxPrice: string;
   currentBeds: string;
   currentBaths: string;
+ initialCity?: string; // 👈 Add missing prop definition
 }
 
 export default function ListingsGrid({ 
@@ -47,7 +48,8 @@ export default function ListingsGrid({
   currentMinPrice,
   currentMaxPrice,
   currentBeds,
-  currentBaths
+  currentBaths,
+  initialCity = "" // 👈 Destructure with default
 }: ListingsGridProps) {
   
   const router = useRouter();

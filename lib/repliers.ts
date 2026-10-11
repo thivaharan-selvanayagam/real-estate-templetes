@@ -4,6 +4,8 @@ const API_KEY = process.env.REPLIERS_API_KEY || "";
 export interface Listing {
   mlsNumber: string;
   status: string;
+  lastStatus?: string;      // 👈 Add optional property
+  standardStatus?: string;  // 👈 Add optional property
   listPrice: number;
   soldPrice?: number;
   address: {
