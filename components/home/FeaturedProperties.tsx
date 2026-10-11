@@ -7,84 +7,62 @@ interface FeaturedPropertiesProps {
   listings: any[];
 }
 
-// Includes all Toronto boroughs & municipal name variations in MLS data
 const TARGET_CITIES = [
-  "toronto",
-  "etobicoke",
-  "north york",
-  "scarborough",
-  "east york",
-  "york",
-  "markham",
-  "stouffville",
-  "whitchurch-stouffville",
-  "pickering",
-  "ajax",
-  "oshawa",
-  "mississauga",
-  "brampton",
-  "vaughan"
+  "toronto", "etobicoke", "north york", "scarborough", "east york", "york",
+  "markham", "stouffville", "whitchurch-stouffville", "pickering", "ajax",
+  "oshawa", "mississauga", "brampton", "vaughan", "gta"
 ];
 
-export default function FeaturedProperties({ listings }: FeaturedPropertiesProps) {
+export default function FeaturedProperties({ listings = [] }: FeaturedPropertiesProps) {
   const cleanPrimaryText = BRAND_CONFIG.theme.primaryText;
   const cleanPrimaryBg = BRAND_CONFIG.theme.primaryBg;
 
-  // Filter listings for residential-only properties within target GTA cities/boroughs
-  const filteredListings = listings.filter((listing) => {
-    // 1. Extract location fields
-    const city = (listing.address?.city || listing.city || "").toLowerCase().trim();
-    const area = (listing.address?.area || "").toLowerCase().trim();
-    const district = (listing.address?.district || "").toLowerCase().trim();
-
-    const matchesTargetCity = TARGET_CITIES.some(
-      (target) =>
-        city.includes(target) ||
-        area.includes(target) ||
-        district.includes(target)
-    );
-
-    // 2. Commercial / Non-residential Filter
-    const propertyClass = (
+  // 1. Filter out commercial / non-residential properties
+  const residentialListings = listings.filter((listing) => {
+    const pClass = (
       listing.class || 
       listing.details?.class || 
-      listing.type ||
+      listing.type || 
       ""
     ).toLowerCase();
 
-    const propertyType = (
+    const pType = (
       listing.details?.propertyType || 
       listing.propertyType || 
       ""
     ).toLowerCase();
 
     const isCommercial = 
-      propertyClass.includes("commercial") || 
-      propertyClass.includes("industrial") || 
-      propertyClass.includes("business") || 
-      propertyClass.includes("retail") ||
-      propertyType.includes("commercial") || 
-      propertyType.includes("industrial") ||
-      propertyType.includes("business") ||
-      propertyType.includes("retail");
+      pClass.includes("commercial") || 
+      pClass.includes("industrial") || 
+      pClass.includes("business") || 
+      pClass.includes("retail") ||
+      pType.includes("commercial") || 
+      pType.includes("industrial") ||
+      pType.includes("business") ||
+      pType.includes("retail");
 
-    return matchesTargetCity && !isCommercial;
+    return !isCommercial;
   });
 
-  // Fallback: If city-strict filtering yields fewer than 3 properties,
-  // display all non-commercial residential properties from the fetched API batch
-  const displayListings =
-    filteredListings.length >= 3
-      ? filteredListings
-      : listings.filter((l) => {
-          const pClass = (l.class || l.details?.class || l.type || "").toLowerCase();
-          return !pClass.includes("commercial") && !pClass.includes("industrial");
-        });
+  // 2. City-based filter
+  const cityFiltered = residentialListings.filter((listing) => {
+    const city = (listing.address?.city || listing.city || "").toLowerCase().trim();
+    const area = (listing.address?.area || "").toLowerCase().trim();
+    const district = (listing.address?.district || "").toLowerCase().trim();
+
+    return TARGET_CITIES.some((target) => 
+      city.includes(target) || area.includes(target) || district.includes(target)
+    );
+  });
+
+  // 🔑 Fallback: Use cityFiltered if 6+ match; otherwise use all residential listings
+  const displayListings = cityFiltered.length >= 6 ? cityFiltered : residentialListings;
 
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-        <div className="mb-12 max-w-2xl">
+        <div className="mb-12 max-w-2xl text-left">
           <h2 className={`font-display text-4xl md:text-5xl font-bold ${cleanPrimaryText} tracking-tight`}>
             Featured Properties
           </h2>
@@ -94,8 +72,8 @@ export default function FeaturedProperties({ listings }: FeaturedPropertiesProps
         </div>
 
         {displayListings.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
-            {/* 🔑 Updated: Display only first 6 listings */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+            {/* 🔑 Displays top 6 residential properties */}
             {displayListings.slice(0, 6).map((l) => (
               <PropertyCard key={l.mlsNumber || l.id} listing={l} />
             ))}

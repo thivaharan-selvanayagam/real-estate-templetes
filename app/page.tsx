@@ -1,7 +1,7 @@
 import { getFeaturedListings } from "@/lib/repliers";
 
 // 🔑 CORE COMPONENTS: Modular component layers
-import HeroSearchSection from "@/components/HeroSearchSection"; // Variant controls happen here
+import HeroSearchSection from "@/components/HeroSearchSection";
 import OurNeighborhoods from "@/components/OurNeighborhoods";
 import BrandInnovationSection from "@/components/BrandInnovationSection";
 import GetInTouch from "@/components/GetInTouch";
@@ -26,9 +26,10 @@ export default async function HomePage() {
   let rentals = { listings: [] as any[], numResults: 0 };
   
   try {
+    // 🔑 Fetches 36 listings so FeaturedProperties receives enough data to render 6 cards
     [featured, rentals] = await Promise.all([
-      getFeaturedListings({ type: "sale", pageSize: 9 }),
-      getFeaturedListings({ type: "lease", pageSize: 9 }),
+      getFeaturedListings({ type: "sale", pageSize: 36 }),
+      getFeaturedListings({ type: "lease", pageSize: 36 }),
     ]);
   } catch (e) { 
     console.error("Failed to compile master home page payloads:", e); 
