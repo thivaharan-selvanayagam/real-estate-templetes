@@ -319,7 +319,7 @@ export default function ListingsGrid({
                 const completeAddress = `${streetAddress}, ${listing.address?.city || ''}, ${listing.address?.state || listing.address?.area || ''}`.trim().replace(/,\s*$/, "");
                 const isHovered = hoveredListing === listing.mlsNumber;
 
-                const isSold = listing.lastStatus === "Sld" || listing.status === "U" || listing.standardStatus === "Closed";
+                const isSold = listing.lastStatus === "Sld" || listing.status === "U" || listing.standardStatus === "Closed" || Boolean(listing.soldPrice);
                 const isLease = listing.type === "lease" || listing.status === "Lsd";
 
                 return (
@@ -341,10 +341,36 @@ export default function ListingsGrid({
                     </div>
 
                     <div className="px-1 text-left">
-                      <h3 className={`text-lg font-black ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
-                        {formatPrice(isSold && listing.soldPrice ? listing.soldPrice : listing.listPrice)}
-                      </h3>
+                      {/* 🔑 Displays both Sold Price and Listed Price when property is sold */}
+                      {isSold ? (
+                        <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
+                              Sold Price
+                            </span>
+                            <span className={`text-lg font-black ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
+                              {formatPrice(listing.soldPrice || listing.listPrice)}
+                            </span>
+                          </div>
+                          {listing.soldPrice && listing.listPrice && Number(listing.soldPrice) !== Number(listing.listPrice) && (
+                            <div className="text-right">
+                              <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">
+                                Listed Price
+                              </span>
+                              <span className="text-xs font-semibold text-stone-400 line-through">
+                                {formatPrice(listing.listPrice)}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <h3 className={`text-lg font-black ${BRAND_CONFIG.theme.primaryText} tracking-tight`}>
+                          {formatPrice(listing.listPrice)}
+                        </h3>
+                      )}
+
                       <p className="text-xs font-semibold text-gray-500 mt-0.5 truncate" title={completeAddress}>{completeAddress || "Premium Property"}</p>
+                      
                       <div className="flex items-center gap-3 mt-3 text-xs font-bold text-gray-400 border-t border-gray-50 pt-2.5">
                         {(listing.class || "").toLowerCase() === "commercial" ? <span className="text-xs uppercase tracking-wide font-extrabold text-[#2F527E]">Commercial Asset</span> : <><span className="flex items-center gap-1"><Bed size={14} className="text-gray-400"/> {bedsCount} Bd</span><span className="flex items-center gap-1"><Bath size={14} className="text-gray-400"/> {bathsCount} Ba</span></>}
                         {sqftMeasure !== "N/A" && sqftMeasure !== "0" && <span className="flex items-center gap-1 ml-auto"><Maximize size={12} className="text-gray-400"/> {Number(sqftMeasure).toLocaleString()} sqft</span>}

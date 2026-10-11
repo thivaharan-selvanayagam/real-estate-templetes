@@ -14,7 +14,7 @@ const navItems = [
     label: "Buyer", 
     subItems: [
       { label: "Home Search", href: "/all-homes" },
-      { label: "Our Listings", href: "/all-homes" },
+      { label: "Sold Listings", href: "/sold-homes" },
       { label: "Buyer's Guide", href: "/buyers-guide" },
     ] 
   },
