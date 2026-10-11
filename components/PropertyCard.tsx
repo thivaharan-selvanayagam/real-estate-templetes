@@ -1,120 +1,119 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { Listing, formatPrice, formatAddress } from "@/lib/repliers";
-import { BRAND_CONFIG } from "@/config/brand"; 
+import { Listing } from "@/lib/repliers";
 
-interface Props { listing: Listing; }
-
-export default function PropertyCard({ listing }: Props) {
-  const img = listing.images?.[0];
-  
-  // Status check logic
-  const isSold = listing.lastStatus === "Sld" || listing.status === "U" || listing.standardStatus === "Closed" || Boolean(listing.soldPrice);
-  const isLease = listing.type === "lease" || listing.status === "Lsd";
-
-  const formattedListPrice = formatPrice(listing.listPrice);
-  const formattedSoldPrice = listing.soldPrice ? formatPrice(listing.soldPrice) : formattedListPrice;
-  const priceLabel = isLease ? `${formattedListPrice}/mo` : formattedListPrice;
-
-  // Extract clean address components
-  const streetAddress = formatAddress(listing.address);
-  const city = listing.address?.city || "";
-  const state = listing.address?.state || "";
-  const zip = listing.address?.zip || "";
-  const completeAddress = `${streetAddress}, ${city}, ${state} ${zip}`.trim().replace(/,\s*$/, "");
-
-  // Specs calculations matching the layout style
-  const beds = listing.details?.numBedrooms || 0;
-  const bedsPlus = listing.details?.numBedroomsPlus ? `+${listing.details.numBedroomsPlus}` : "";
-  const baths = listing.details?.numBathrooms || 0;
-  const sqft = listing.details?.sqft;
-
-  // Resolves the raw filename into an absolute URL pointing to the Repliers CDN
-  const getSafeImageUrl = (src: string | undefined) => {
-    if (!src) return "";
-    if (src.startsWith("http://") || src.startsWith("https://")) return src;
-    if (src.startsWith("/")) return src;
-    return `https://cdn.repliers.io/${src}`;
+interface PropertyCardProps {
+  listing: Listing & {
+    lastStatus?: string;
+    standardStatus?: string;
   };
+}
+
+// 🔑 Helper to safely format prices
+const formatPrice = (price?: number | string) => {
+  if (!price) return "N/A";
+  const num = typeof price === "string" ? parseFloat(price) : price;
+  if (isNaN(num)) return "N/A";
+
+  if (num >= 1000000) {
+    return `$${(num / 1000000).toFixed(2)}M`;
+  }
+  return `$${num.toLocaleString()}`;
+};
+
+// 🔑 SAFE SQFT HELPER: Handles numeric values, ranges ("2000-2500"), and missing data
+const getFormattedSqft = (listing: any) => {
+  const rawSqft = 
+    listing.details?.sqft || 
+    listing.details?.squareFootage || 
+    listing.sqft;
+
+  if (!rawSqft) return null;
+
+  const str = String(rawSqft).trim();
+
+  // Filter out invalid/empty strings
+  if (!str || str === "0" || str.toLowerCase() === "n/a" || str.toLowerCase() === "null") {
+    return null;
+  }
+
+  // If TRREB/Repliers provides a range like "2000-2500" or "1500 - 2000"
+  if (str.includes("-")) {
+    return `${str} SQ.FT.`;
+  }
+
+  // Strip out any accidental non-digit characters
+  const parsedNum = parseFloat(str.replace(/[^0-9.]/g, ""));
+  if (isNaN(parsedNum) || parsedNum === 0) {
+    return null;
+  }
+
+  return `${parsedNum.toLocaleString()} SQ.FT.`;
+};
+
+export default function PropertyCard({ listing }: PropertyCardProps) {
+  const img = listing.images?.[0];
+  const beds = listing.details?.numBedrooms || listing.bedrooms || 0;
+  const baths = listing.details?.numBathrooms || listing.bathrooms || 0;
+  
+  const streetNumber = listing.address?.streetNumber || "";
+  const streetName = listing.address?.streetName || "";
+  const city = listing.address?.city || "";
+  const state = listing.address?.state || "Ontario";
+  const zip = listing.address?.zip || "";
+
+  const fullAddress = `${streetNumber} ${streetName}, ${city}, ${state} ${zip}`.trim();
+  const sqftDisplay = getFormattedSqft(listing);
+
+  const imageUrl = img 
+    ? (img.startsWith("http") ? img : `https://cdn.repliers.io/${img}?w=600`)
+    : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=600";
 
   return (
-    <Link href={`/listings/${listing.mlsNumber}`} className="block group w-full bg-transparent cursor-pointer">
+    <div className="flex flex-col group transition-all duration-300 bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl text-left border border-stone-100">
       
-      {/* 1. Image Container with All-Around Rounded Design */}
-      <div className="relative overflow-hidden aspect-[4/3] w-full rounded-2xl bg-gray-100 shadow-sm">
-        {img ? (
-          <Image 
-            src={getSafeImageUrl(img)} 
-            alt={streetAddress} 
-            fill 
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-102" 
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-navy/20 to-navy/40 flex items-center justify-center">
-            <span className="text-white/40 font-display text-4xl font-bold">{BRAND_CONFIG.agent.name}</span>
-          </div>
-        )}
+      {/* Photo Header */}
+      <div className="w-full aspect-[4/3] relative overflow-hidden bg-stone-100">
+        <img 
+          src={imageUrl} 
+          alt={city ? `${city} Property` : "Property"} 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
 
-        {/* Top-Left Status Tag */}
-        <div className="absolute top-4 left-4">
-          <span className="bg-white text-navy text-[10px] font-extrabold tracking-widest uppercase px-3 py-1.5 shadow-sm rounded-[2px]">
-            {isSold ? "Sold" : isLease ? "For Lease" : "For Sale"}
-          </span>
+        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-md shadow-sm">
+          {listing.type === "lease" ? "For Rent" : "For Sale"}
         </div>
       </div>
 
-      {/* 2. Text Meta Details Content Area */}
-      <div className="pt-4 pb-1 px-1">
-        
-        {/* Dual Price Display for Sold vs Active Listings */}
-        {isSold ? (
-          <div className="flex items-baseline justify-between gap-2 flex-wrap">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 block">
-                Sold Price
-              </span>
-              <p className="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">
-                {formattedSoldPrice}
-              </p>
-            </div>
-            
-            {listing.soldPrice && listing.listPrice && Number(listing.soldPrice) !== Number(listing.listPrice) && (
-              <div className="text-right">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">
-                  Listed Price
-                </span>
-                <span className="text-sm font-semibold text-gray-400 line-through">
-                  {formattedListPrice}
-                </span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <p className="text-xl md:text-2xl font-extrabold text-gray-900 tracking-tight">
-            {priceLabel}
+      {/* Card Body */}
+      <div className="p-4 flex flex-col flex-1 justify-between">
+        <div>
+          <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+            {formatPrice(listing.listPrice)}
+          </h3>
+
+          <p className="text-xs font-semibold text-stone-600 mt-1 truncate" title={fullAddress}>
+            {fullAddress}
           </p>
-        )}
+        </div>
 
-        {/* Full Wrapped Address Context */}
-        <p className="text-sm font-medium text-gray-800 mt-1.5 line-clamp-2 min-h-[40px] leading-snug max-w-md">
-          {completeAddress}
-        </p>
-
-        {/* Typographic Specs Row */}
-        <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-3 text-[11px] font-extrabold tracking-wider text-black uppercase">
-          <span>{beds}{bedsPlus} Beds</span>
-          <span className="text-gray-300 font-normal select-none text-xs">•</span>
+        {/* Property Features Line */}
+        <div className="flex items-center gap-2 mt-4 text-[11px] font-black uppercase tracking-wider text-slate-800 border-t border-stone-100 pt-3">
+          <span>{beds} Beds</span>
+          <span>•</span>
           <span>{baths} Full Baths</span>
-          {sqft && (
+          
+          {/* 🔑 Only renders if valid square footage exists */}
+          {sqftDisplay && (
             <>
-              <span className="text-gray-300 font-normal select-none text-xs">•</span>
-              <span>{Number(sqft).toLocaleString()} Sq.Ft.</span>
+              <span>•</span>
+              <span>{sqftDisplay}</span>
             </>
           )}
         </div>
       </div>
 
-    </Link>
+    </div>
   );
 }
