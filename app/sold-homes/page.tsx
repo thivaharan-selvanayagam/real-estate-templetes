@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { Lock, ShieldCheck, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { Lock, ShieldCheck, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { getListings } from "@/lib/repliers";
 import { BRAND_CONFIG } from "@/config/brand";
 
@@ -16,7 +17,7 @@ const formatPrice = (price?: number | string) => {
   return `$${num.toLocaleString()}`;
 };
 
-// Safe sqft formatter
+// Safe sqft formatter (prevents NaN)
 const getFormattedSqft = (listing: any) => {
   const raw = listing.details?.sqft || listing.details?.squareFootage || listing.sqft;
   if (!raw) return null;
@@ -33,7 +34,14 @@ export default async function SoldHomesPage({
 }: {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  // 1. Verify User Session from Cookies
+  const resolvedParams = searchParams ? await searchParams : {};
+  
+  // 1. Pagination Parameters
+  const rawPage = typeof resolvedParams.page === "string" ? parseInt(resolvedParams.page, 10) : 1;
+  const currentPage = isNaN(rawPage) || rawPage < 1 ? 1 : rawPage;
+  const pageSize = 24;
+
+  // 2. Verify User Session from Cookies
   const cookieStore = await cookies();
   const sessionToken = 
     cookieStore.get("session")?.value || 
@@ -43,19 +51,48 @@ export default async function SoldHomesPage({
 
   const isAuthenticated = Boolean(sessionToken);
 
-  // 2. Fetch Sold Listings (Always fetched so previews render in the background)
+  // 3. Fetch Sold Listings with Pagination
   let soldListings: any[] = [];
+  let totalCount = 0;
+
   try {
-    const data = await getListings({
+    // 🔑 Fix TS2353: Declare payload as `any` to prevent excess property checking
+    const queryPayload: any = {
       status: "U",
       lastStatus: "Sld",
       class: "Residential",
-      pageSize: 24,
-    });
+      pageSize,
+      pageNum: currentPage,
+      page: currentPage,
+      resultsPerPage: pageSize,
+    };
+
+    const data: any = await getListings(queryPayload);
+
     soldListings = data?.listings || [];
+    totalCount = Number(data?.numResults || data?.count || data?.metadata?.numResults || soldListings.length);
   } catch (error) {
     console.error("Error fetching sold properties:", error);
   }
+
+  // 4. Calculate Total & Visible Pages
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  
+  const getVisiblePages = () => {
+    const maxVisible = 5;
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  const visiblePages = getVisiblePages();
 
   return (
     <main className="min-h-screen bg-stone-50 pt-28 lg:pt-36 pb-20 px-6 lg:px-12 relative overflow-hidden">
@@ -73,14 +110,14 @@ export default async function SoldHomesPage({
             Recently Sold Properties
           </h1>
           <p className="text-sm text-stone-500 mt-1">
-            Browse verified final selling prices and days-on-market metrics across the GTA.
+            Showing <span className="font-bold text-slate-900">{totalCount.toLocaleString()}</span> properties sold across the Greater Toronto Area.
           </p>
         </div>
 
         {/* Listings Grid Container */}
         <div className="relative">
           
-          {/* 🔒 FLOATING BLUR OVERLAY (Only visible when NOT logged in) */}
+          {/* 🔒 FLOATING BLUR OVERLAY (Only visible when unauthenticated) */}
           {!isAuthenticated && (
             <div className="absolute inset-0 z-30 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-gradient-to-b from-stone-50/40 via-stone-50/70 to-stone-50/95 backdrop-blur-[2px]">
               <div className="sticky top-40 max-w-lg w-full bg-white/95 backdrop-blur-md rounded-3xl p-8 sm:p-10 shadow-2xl border border-stone-200 text-center">
@@ -103,7 +140,7 @@ export default async function SoldHomesPage({
 
                 <div className="mt-7 space-y-3">
                   <a
-                    href="/api/auth/google?redirect=/sold-homes"
+                    href={`/api/auth/google?redirect=/sold-homes${currentPage > 1 ? `?page=${currentPage}` : ''}`}
                     className="w-full flex items-center justify-center gap-3 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-2xl transition-all shadow-md text-sm hover:scale-[1.01]"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -137,7 +174,7 @@ export default async function SoldHomesPage({
             </div>
           )}
 
-          {/* Cards Grid (Partially blurred if unauthenticated) */}
+          {/* Cards Grid */}
           <div
             className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-500 ${
               !isAuthenticated ? "filter blur-[6px] select-none pointer-events-none opacity-60" : ""
@@ -205,7 +242,6 @@ export default async function SoldHomesPage({
                           Final Sold Price
                         </span>
                         
-                        {/* 🔑 Protected blurred price text */}
                         <span
                           className={`text-2xl font-black text-slate-900 tracking-tight ${
                             !isAuthenticated ? "filter blur-sm select-none" : ""
@@ -230,6 +266,61 @@ export default async function SoldHomesPage({
               );
             })}
           </div>
+
+          {/* 🔑 PAGINATION CONTROLS */}
+          {totalPages > 1 && (
+            <div className={`mt-14 flex items-center justify-center gap-2 pb-6 ${!isAuthenticated ? "filter blur-sm pointer-events-none opacity-40" : ""}`}>
+              
+              {/* Previous Page Button */}
+              {currentPage > 1 ? (
+                <Link
+                  href={`/sold-homes?page=${currentPage - 1}`}
+                  className="w-10 h-10 rounded-xl border border-stone-200 bg-white flex items-center justify-center text-stone-700 hover:bg-stone-50 hover:border-stone-300 transition-all shadow-sm"
+                  aria-label="Previous Page"
+                >
+                  <ChevronLeft size={18} />
+                </Link>
+              ) : (
+                <div className="w-10 h-10 rounded-xl border border-stone-100 bg-stone-50 flex items-center justify-center text-stone-300 cursor-not-allowed">
+                  <ChevronLeft size={18} />
+                </div>
+              )}
+
+              {/* Numbered Page Links */}
+              {visiblePages.map((p) => {
+                const isActive = p === currentPage;
+                return (
+                  <Link
+                    key={p}
+                    href={`/sold-homes?page=${p}`}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm transition-all ${
+                      isActive
+                        ? `${BRAND_CONFIG.theme.primaryBg} text-white shadow-md`
+                        : "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 hover:border-stone-300 shadow-sm"
+                    }`}
+                  >
+                    {p}
+                  </Link>
+                );
+              })}
+
+              {/* Next Page Button */}
+              {currentPage < totalPages ? (
+                <Link
+                  href={`/sold-homes?page=${currentPage + 1}`}
+                  className="w-10 h-10 rounded-xl border border-stone-200 bg-white flex items-center justify-center text-stone-700 hover:bg-stone-50 hover:border-stone-300 transition-all shadow-sm"
+                  aria-label="Next Page"
+                >
+                  <ChevronRight size={18} />
+                </Link>
+              ) : (
+                <div className="w-10 h-10 rounded-xl border border-stone-100 bg-stone-50 flex items-center justify-center text-stone-300 cursor-not-allowed">
+                  <ChevronRight size={18} />
+                </div>
+              )}
+
+            </div>
+          )}
 
         </div>
       </div>
