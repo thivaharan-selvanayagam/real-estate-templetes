@@ -14,13 +14,44 @@ import {
   Layers,
   Bed,
   Bath,
-  Maximize
+  Maximize,
+  Search,
+  MapPin,
+  RotateCcw,
+  SlidersHorizontal
 } from "lucide-react";
 import { BRAND_CONFIG } from "@/config/brand";
 import GetInTouch from "@/components/GetInTouch";
 
+// 🔑 ALLOWED GTA CITIES ONLY
+export const ALLOWED_CITIES = [
+  "Toronto",
+  // "Etobicoke",
+  // "North York",
+  // "Scarborough",
+  // "East York",
+  // "York",
+  "Mississauga",
+  "Brampton",
+  "Vaughan",
+  "Markham",
+  // "Whitchurch-Stouffville",
+  "Stouffville",
+  "Pickering",
+  "Ajax",
+  "Oshawa",
+];
+
 interface PageProps {
-  searchParams?: Promise<{ page?: string; [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ 
+    page?: string; 
+    city?: string; 
+    search?: string; 
+    beds?: string; 
+    minPrice?: string; 
+    maxPrice?: string; 
+    [key: string]: string | string[] | undefined 
+  }>;
 }
 
 export const metadata = {
@@ -79,8 +110,24 @@ const getFormattedSqft = (listing: any) => {
   return `${parsed.toLocaleString()} sqft`;
 };
 
-// DIRECT REPLIERS SOLD FETCH WITH STATUS=U & LASTSTATUS=SLD
-async function fetchSoldListings(page: number, pageSize: number = 16) {
+// 🔑 DIRECT REPLIERS SOLD FETCH WITH STATUS=U & LASTSTATUS=SLD
+async function fetchSoldListings({
+  page = 1,
+  pageSize = 16,
+  city,
+  search,
+  beds,
+  minPrice,
+  maxPrice,
+}: {
+  page?: number;
+  pageSize?: number;
+  city?: string;
+  search?: string;
+  beds?: string;
+  minPrice?: string;
+  maxPrice?: string;
+}) {
   const apiKey = process.env.REPLIERS_API_KEY;
   if (!apiKey || apiKey === "undefined" || apiKey === "") {
     console.error("❌ Repliers API key is missing from environment variables.");
@@ -88,9 +135,45 @@ async function fetchSoldListings(page: number, pageSize: number = 16) {
   }
 
   try {
-    const endpoint = `https://api.repliers.io/listings?status=U&lastStatus=Sld&type=sale&resultsPerPage=${pageSize}&page=${page}`;
+    const url = new URL("https://api.repliers.io/listings");
+    url.searchParams.set("status", "U");
+    url.searchParams.set("lastStatus", "Sld");
+    url.searchParams.set("type", "sale");
+    url.searchParams.set("resultsPerPage", String(pageSize));
+    
+    // 🔑 FIX: Repliers API requires `pageNum` for pagination offset
+    url.searchParams.set("pageNum", String(page));
+    url.searchParams.set("page", String(page));
 
-    const response = await fetch(endpoint, {
+    // Handle City Filtering
+    const normalizedCity = city?.trim().toLowerCase();
+    if (normalizedCity && normalizedCity !== "all" && normalizedCity !== "gta") {
+      const matchedCity = ALLOWED_CITIES.find(
+        (c) => c.toLowerCase() === normalizedCity
+      );
+      if (matchedCity) {
+        url.searchParams.append("city", matchedCity);
+      } else {
+        ALLOWED_CITIES.forEach((c) => url.searchParams.append("city", c));
+      }
+    } else {
+      ALLOWED_CITIES.forEach((c) => url.searchParams.append("city", c));
+    }
+
+    if (search && search.trim()) {
+      url.searchParams.set("search", search.trim());
+    }
+    if (minPrice && !isNaN(Number(minPrice)) && Number(minPrice) > 0) {
+      url.searchParams.set("minPrice", minPrice);
+    }
+    if (maxPrice && !isNaN(Number(maxPrice)) && Number(maxPrice) > 0) {
+      url.searchParams.set("maxPrice", maxPrice);
+    }
+    if (beds && !isNaN(Number(beds)) && Number(beds) > 0) {
+      url.searchParams.set("minBedrooms", beds);
+    }
+
+    const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
         "REPLIERS-API-KEY": apiKey,
@@ -105,10 +188,29 @@ async function fetchSoldListings(page: number, pageSize: number = 16) {
     }
 
     const data = await response.json();
+    const rawListings = Array.isArray(data.listings) ? data.listings : [];
+
+    // Boundary filter: Ensure all items match allowed GTA cities
+    const filteredListings = rawListings.filter((listing: any) => {
+      const listingCity = (listing.address?.city || "").trim().toLowerCase();
+      return ALLOWED_CITIES.some((allowed) => {
+        const allowedLower = allowed.toLowerCase();
+        return (
+          listingCity === allowedLower ||
+          listingCity.includes(allowedLower) ||
+          allowedLower.includes(listingCity)
+        );
+      });
+    });
+
+    const totalCount = Number(data.count || data.numResults || rawListings.length);
+    const calculatedPages = Math.max(1, Math.ceil(totalCount / pageSize));
+    const numPages = Number(data.numPages) || calculatedPages;
+
     return {
-      listings: Array.isArray(data.listings) ? data.listings : [],
-      totalCount: Number(data.numResults || data.count || (data.listings || []).length),
-      numPages: Number(data.numPages) || 1,
+      listings: filteredListings.length > 0 ? filteredListings : rawListings,
+      totalCount,
+      numPages,
     };
   } catch (error) {
     console.error("❌ Failed to fetch sold properties from Repliers:", error);
@@ -119,8 +221,12 @@ async function fetchSoldListings(page: number, pageSize: number = 16) {
 export default async function SoldHomesPage({ searchParams }: PageProps) {
   const resolvedParams = searchParams ? await searchParams : {};
   const currentPage = Math.max(1, parseInt(resolvedParams.page || "1", 10));
-  
-  // Set to 16 for four balanced rows of 4 cards
+  const currentCity = typeof resolvedParams.city === "string" ? resolvedParams.city : "";
+  const currentSearch = typeof resolvedParams.search === "string" ? resolvedParams.search : "";
+  const currentBeds = typeof resolvedParams.beds === "string" ? resolvedParams.beds : "";
+  const currentMinPrice = typeof resolvedParams.minPrice === "string" ? resolvedParams.minPrice : "";
+  const currentMaxPrice = typeof resolvedParams.maxPrice === "string" ? resolvedParams.maxPrice : "";
+
   const pageSize = 16;
 
   // 1. Session verification for VOW compliance
@@ -134,16 +240,60 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
 
   const isAuthenticated = Boolean(sessionToken);
 
-  // 2. Fetch sold listings directly
-  const { listings: soldListings, totalCount, numPages } = await fetchSoldListings(currentPage, pageSize);
+  // 2. Fetch sold listings with active page offset
+  const { listings: soldListings, totalCount, numPages } = await fetchSoldListings({
+    page: currentPage,
+    pageSize,
+    city: currentCity,
+    search: currentSearch,
+    beds: currentBeds,
+    minPrice: currentMinPrice,
+    maxPrice: currentMaxPrice,
+  });
 
+  const hasActiveFilters = Boolean(
+    (currentCity && currentCity !== "all" && currentCity !== "gta") ||
+    currentSearch ||
+    currentBeds ||
+    currentMinPrice ||
+    currentMaxPrice
+  );
+
+  // Helper to maintain query parameters across pagination links
+  const createPageUrl = (pageNumber: number) => {
+    const params = new URLSearchParams();
+    params.set("page", String(pageNumber));
+    if (currentCity && currentCity !== "all") params.set("city", currentCity);
+    if (currentSearch) params.set("search", currentSearch);
+    if (currentBeds) params.set("beds", currentBeds);
+    if (currentMinPrice) params.set("minPrice", currentMinPrice);
+    if (currentMaxPrice) params.set("maxPrice", currentMaxPrice);
+    return `/sold-homes?${params.toString()}`;
+  };
+
+  // Generate numbered page buttons
+  const getVisiblePages = () => {
+    const maxVisible = 5;
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(numPages, start + maxVisible - 1);
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
+  const visiblePages = getVisiblePages();
   const primaryText = BRAND_CONFIG.theme.primaryText || "text-slate-900";
 
   return (
     <div className="w-full bg-[#FAF9F6] min-h-screen pt-28 lg:pt-36 pb-0 flex flex-col justify-between">
       
       {/* HERO SECTION */}
-      <section className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 pt-6 pb-12 w-full text-left border-b border-stone-200/70">
+      <section className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 pt-6 pb-8 w-full text-left border-b border-stone-200/70">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-stone-200 text-xs font-bold text-[#2b4b46] bg-emerald-50/80 tracking-wide uppercase">
             <Sparkles size={12} />
@@ -151,27 +301,196 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
           </span>
         </div>
 
-        <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight ${primaryText} uppercase leading-tight max-w-4xl`}>
+        <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${primaryText} uppercase leading-tight max-w-4xl`}>
           Recently Closed Transactions & Sold Properties
         </h1>
 
-        <p className="text-stone-500 text-sm sm:text-base font-medium max-w-2xl mt-4 leading-relaxed">
+        <p className="text-stone-500 text-sm sm:text-base font-medium max-w-2xl mt-3 leading-relaxed">
           {isAuthenticated 
-            ? `Displaying verified final transaction values and pricing spreads across ${totalCount.toLocaleString()} closed properties in the Greater Toronto Area.`
+            ? `Displaying verified final transaction values across ${totalCount.toLocaleString()} closed properties in the Greater Toronto Area.`
             : "Under Toronto Regional Real Estate Board (TRREB) VOW compliance regulations, historical sales yields and closing values require a complimentary member sign-in."}
         </p>
       </section>
 
+      {/* DEDICATED SOLD SEARCH & FILTER SECTION */}
+      <section className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 pt-8 w-full">
+        <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-stone-200/80">
+          <form action="/sold-homes" method="GET" className="flex flex-col gap-4">
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3.5 items-end">
+              
+              {/* Keyword / Address Search */}
+              <div className="lg:col-span-4">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <Search size={12} className="text-[#2b4b46]" /> Search Address or MLS®
+                </label>
+                <input
+                  type="text"
+                  name="search"
+                  defaultValue={currentSearch}
+                  placeholder="Street name, address, or MLS#..."
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 placeholder:text-stone-400 focus:outline-none focus:border-[#2b4b46] focus:bg-white transition-all font-medium"
+                />
+              </div>
+
+              {/* City Selector */}
+              <div className="lg:col-span-3">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <MapPin size={12} className="text-[#2b4b46]" /> GTA Municipality
+                </label>
+                <select
+                  name="city"
+                  defaultValue={currentCity || "all"}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2b4b46] focus:bg-white transition-all font-semibold"
+                >
+                  <option value="all">All GTA Municipalities ({ALLOWED_CITIES.length})</option>
+                  {ALLOWED_CITIES.map((c) => (
+                    <option key={c} value={c.toLowerCase()}>{c}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Bedrooms */}
+              <div className="lg:col-span-2">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <Bed size={12} className="text-[#2b4b46]" /> Bedrooms
+                </label>
+                <select
+                  name="beds"
+                  defaultValue={currentBeds}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-3 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2b4b46] focus:bg-white transition-all font-semibold"
+                >
+                  <option value="">Any Beds</option>
+                  <option value="1">1+ Beds</option>
+                  <option value="2">2+ Beds</option>
+                  <option value="3">3+ Beds</option>
+                  <option value="4">4+ Beds</option>
+                  <option value="5">5+ Beds</option>
+                </select>
+              </div>
+
+              {/* Min Price */}
+              <div className="lg:col-span-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <DollarSign size={12} className="text-[#2b4b46]" /> Min
+                </label>
+                <select
+                  name="minPrice"
+                  defaultValue={currentMinPrice}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2b4b46] focus:bg-white transition-all font-semibold"
+                >
+                  <option value="">Min</option>
+                  <option value="500000">$500k</option>
+                  <option value="750000">$750k</option>
+                  <option value="1000000">$1.0M</option>
+                  <option value="1250000">$1.25M</option>
+                  <option value="1500000">$1.5M</option>
+                  <option value="2000000">$2.0M</option>
+                </select>
+              </div>
+
+              {/* Max Price */}
+              <div className="lg:col-span-1">
+                <label className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <DollarSign size={12} className="text-[#2b4b46]" /> Max
+                </label>
+                <select
+                  name="maxPrice"
+                  defaultValue={currentMaxPrice}
+                  className="w-full bg-stone-50 border border-stone-200 rounded-xl px-2 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#2b4b46] focus:bg-white transition-all font-semibold"
+                >
+                  <option value="">Max</option>
+                  <option value="750000">$750k</option>
+                  <option value="1000000">$1.0M</option>
+                  <option value="1250000">$1.25M</option>
+                  <option value="1500000">$1.5M</option>
+                  <option value="2000000">$2.0M</option>
+                  <option value="3000000">$3.0M+</option>
+                </select>
+              </div>
+
+              {/* Search Submit Button */}
+              <div className="lg:col-span-1 flex items-center gap-1.5">
+                <button
+                  type="submit"
+                  className="w-full bg-slate-900 hover:bg-[#2b4b46] text-white py-2.5 px-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-1.5"
+                >
+                  <Search size={14} /> Search
+                </button>
+              </div>
+
+            </div>
+
+            {/* Quick City Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pt-3 border-t border-stone-100 pb-1 scrollbar-none">
+              <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider whitespace-nowrap mr-1 flex items-center gap-1">
+                <SlidersHorizontal size={11} /> Quick Filter:
+              </span>
+              
+              <Link
+                href="/sold-homes"
+                prefetch={false}
+                className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap ${
+                  !currentCity || currentCity === "all" || currentCity === "gta"
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                }`}
+              >
+                All GTA
+              </Link>
+
+              {ALLOWED_CITIES.map((c) => {
+                const isSelected = currentCity.toLowerCase() === c.toLowerCase();
+                return (
+                  <Link
+                    key={c}
+                    href={`/sold-homes?city=${encodeURIComponent(c.toLowerCase())}`}
+                    prefetch={false}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap ${
+                      isSelected
+                        ? "bg-[#2b4b46] text-white shadow-sm"
+                        : "bg-stone-100 text-stone-600 hover:bg-stone-200 hover:text-slate-900"
+                    }`}
+                  >
+                    {c}
+                  </Link>
+                );
+              })}
+
+              {hasActiveFilters && (
+                <Link
+                  href="/sold-homes"
+                  prefetch={false}
+                  className="ml-auto px-3 py-1 text-[11px] font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 whitespace-nowrap"
+                >
+                  <RotateCcw size={11} /> Reset Filters
+                </Link>
+              )}
+            </div>
+
+          </form>
+        </div>
+      </section>
+
       {/* DATA GRID & INTERACTION AREA */}
-      <main className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 py-12 flex-1 w-full relative">
+      <main className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 py-10 flex-1 w-full relative">
         
         {soldListings.length === 0 ? (
-          <div className="w-full text-center py-24 bg-white border border-dashed border-stone-200 rounded-3xl p-8 max-w-xl mx-auto shadow-sm">
+          <div className="w-full text-center py-20 bg-white border border-dashed border-stone-200 rounded-3xl p-8 max-w-xl mx-auto shadow-sm">
             <Layers className="mx-auto w-12 h-12 text-stone-300 mb-4" strokeWidth={1.5} />
-            <h3 className={`text-lg font-bold ${primaryText} mb-1`}>No Sold Records Available</h3>
-            <p className="text-xs text-stone-400 font-medium max-w-xs mx-auto">
-              We couldn't retrieve archived properties matching your current criteria.
+            <h3 className={`text-lg font-bold ${primaryText} mb-1`}>No Sold Records Found</h3>
+            <p className="text-xs text-stone-400 font-medium max-w-xs mx-auto mb-4">
+              We couldn't retrieve archived properties matching your current criteria in the selected GTA cities.
             </p>
+            {hasActiveFilters && (
+              <Link
+                href="/sold-homes"
+                prefetch={false}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-100 text-slate-800 text-xs font-bold uppercase tracking-wider hover:bg-stone-200 transition-colors"
+              >
+                <RotateCcw size={12} /> Clear All Filters
+              </Link>
+            )}
           </div>
         ) : (
           <div className="relative">
@@ -221,14 +540,14 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
               </div>
             )}
 
-            {/* 🔑 4-COLUMN RESPONSIVE GRID (1 col mobile -> 2 col tablet -> 4 col desktop) */}
+            {/* 4-COLUMN RESPONSIVE GRID (Keyed by page to trigger immediate DOM updates) */}
             <div
+              key={`page-grid-${currentPage}`}
               className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-500 ${
                 !isAuthenticated ? "filter blur-[6px] select-none pointer-events-none opacity-60" : ""
               }`}
             >
               {soldListings.map((listing: any) => {
-                // 1. EXTRACT REAL SOLD PRICE
                 const rawSold =
                   listing.soldPrice ??
                   listing.soldData?.price ??
@@ -238,7 +557,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
 
                 const soldPrice = parsePrice(rawSold);
 
-                // 2. EXTRACT LIST PRICE & ORIGINAL PRICE
                 const rawList =
                   listing.listPrice ??
                   listing.details?.listPrice ??
@@ -254,7 +572,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                 const listPrice = parsePrice(rawList);
                 const originalPrice = parsePrice(rawOriginal);
 
-                // 3. RESOLVE DISTINCT ASKING PRICE
                 let displayListPrice = listPrice;
                 if ((displayListPrice === 0 || displayListPrice === soldPrice) && originalPrice > 0) {
                   displayListPrice = originalPrice;
@@ -265,7 +582,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
 
                 const displaySoldPrice = soldPrice > 0 ? soldPrice : null;
 
-                // 4. CALCULATE SPREAD
                 const hasBoth = displayListPrice > 0 && displaySoldPrice !== null && displaySoldPrice > 0;
                 const priceDiff = hasBoth ? (displaySoldPrice! - displayListPrice) : 0;
                 const percentDiff = hasBoth && displayListPrice > 0
@@ -291,7 +607,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
 
                 const cardContent = (
                   <>
-                    {/* PHOTO CONTAINER */}
                     <div className="relative aspect-[4/3] w-full bg-stone-100 overflow-hidden">
                       <img 
                         src={mainPhoto} 
@@ -300,7 +615,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                         loading="lazy"
                       />
                       
-                      {/* Top Badges */}
                       <div className="absolute top-3.5 left-3.5 bg-slate-900/90 backdrop-blur-md text-white font-extrabold text-[9px] tracking-widest px-3 py-1 rounded-full uppercase z-10 shadow-md">
                         Sold Portfolio
                       </div>
@@ -317,7 +631,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                       )}
                     </div>
 
-                    {/* CARD DETAILS BODY (Fitted for 4-column layout) */}
                     <div className="p-4 sm:p-5 flex flex-col flex-grow text-left">
                       <span className="text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-1">
                         MLS® #{listing.mlsNumber}
@@ -331,10 +644,7 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                         {cityArea}
                       </p>
 
-                      {/* TRANSACTION INTELLIGENCE MODULE */}
                       <div className="bg-stone-50/80 border border-stone-200/80 rounded-2xl p-3.5 space-y-2 mb-4 text-xs font-medium">
-                        
-                        {/* 1. Original / Listed Price */}
                         <div className="flex items-center justify-between text-stone-500">
                           <span className="flex items-center gap-1 text-[11px]">
                             <DollarSign size={12} className="text-stone-400" /> Original List:
@@ -344,7 +654,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                           </span>
                         </div>
 
-                        {/* 2. Final Sold Yield & Spread */}
                         <div className="flex items-center justify-between border-t border-stone-200/60 pt-2">
                           <span className="flex items-center gap-1 font-bold text-stone-800 text-[11px]">
                             <Home size={12} className="text-emerald-700" /> Final Sold:
@@ -366,7 +675,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                           </div>
                         </div>
 
-                        {/* 3. Settled Date */}
                         <div className="flex items-center justify-between text-[10px] font-medium text-stone-400 pt-0.5">
                           <span className="flex items-center gap-1">
                             <Calendar size={11} className="text-stone-400" /> Settled:
@@ -377,7 +685,6 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                         </div>
                       </div>
 
-                      {/* SPEC FOOTER */}
                       <div className="flex items-center justify-between text-stone-500 text-xs pt-3 border-t border-stone-100 font-bold mt-auto">
                         <span className="flex items-center gap-1">
                           <Bed size={13} className="text-stone-400" /> {beds} Beds
@@ -404,7 +711,7 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                   return (
                     <Link
                       key={listing.mlsNumber}
-                      href={`/sold-homes/${listing.mlsNumber}`} // 🔑 Points directly to dedicated sold detail page
+                      href={`/sold-homes/${listing.mlsNumber}`}
                       className="group bg-white rounded-3xl overflow-hidden border border-stone-200/70 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
                     >
                       {cardContent}
@@ -423,39 +730,62 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
               })}
             </div>
 
-            {/* DYNAMIC PAGINATION CONTROLS */}
+            {/* 🔑 DYNAMIC PAGINATION CONTROLS (With Numbered Buttons) */}
             {numPages > 1 && (
-              <div className={`flex items-center justify-center gap-4 mt-16 pt-8 border-t border-stone-200/60 ${!isAuthenticated ? "filter blur-sm pointer-events-none opacity-40" : ""}`}>
+              <div className={`flex flex-wrap items-center justify-center gap-2 mt-16 pt-8 border-t border-stone-200/60 ${!isAuthenticated ? "filter blur-sm pointer-events-none opacity-40" : ""}`}>
                 
+                {/* Previous Button */}
                 {currentPage > 1 ? (
                   <Link
-                    href={`/sold-homes?page=${currentPage - 1}`}
-                    className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-stone-200 text-xs font-bold uppercase tracking-wider ${primaryText} hover:bg-stone-50 transition-colors shadow-sm`}
+                    href={createPageUrl(currentPage - 1)}
+                    prefetch={false}
+                    className={`flex items-center gap-1 px-4 py-2 rounded-xl bg-white border border-stone-200 text-xs font-bold uppercase tracking-wider ${primaryText} hover:bg-stone-50 transition-colors shadow-sm`}
                   >
-                    <ChevronLeft size={16} /> Previous
+                    <ChevronLeft size={16} /> Prev
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-bold uppercase tracking-wider text-stone-400 cursor-not-allowed select-none">
-                    <ChevronLeft size={16} /> Previous
+                  <div className="flex items-center gap-1 px-4 py-2 rounded-xl bg-stone-100 border border-stone-200 text-xs font-bold uppercase tracking-wider text-stone-400 cursor-not-allowed select-none">
+                    <ChevronLeft size={16} /> Prev
                   </div>
                 )}
 
-                <span className="text-xs font-bold text-stone-600 bg-white border border-stone-200 px-5 py-2.5 rounded-full shadow-sm">
-                  Page {currentPage} of {numPages}
-                </span>
+                {/* Numbered Page Buttons */}
+                {visiblePages.map((p) => {
+                  const isActive = p === currentPage;
+                  return (
+                    <Link
+                      key={p}
+                      href={createPageUrl(p)}
+                      prefetch={false}
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs transition-all ${
+                        isActive
+                          ? "bg-slate-900 text-white shadow-md scale-105"
+                          : "border border-stone-200 bg-white text-stone-700 hover:bg-stone-50 hover:border-stone-300 shadow-sm"
+                      }`}
+                    >
+                      {p}
+                    </Link>
+                  );
+                })}
 
+                {/* Next Button */}
                 {currentPage < numPages ? (
                   <Link
-                    href={`/sold-homes?page=${currentPage + 1}`}
-                    className={`flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-white border border-stone-200 text-xs font-bold uppercase tracking-wider ${primaryText} hover:bg-stone-50 transition-colors shadow-sm`}
+                    href={createPageUrl(currentPage + 1)}
+                    prefetch={false}
+                    className={`flex items-center gap-1 px-4 py-2 rounded-xl bg-white border border-stone-200 text-xs font-bold uppercase tracking-wider ${primaryText} hover:bg-stone-50 transition-colors shadow-sm`}
                   >
                     Next <ChevronRight size={16} />
                   </Link>
                 ) : (
-                  <div className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-stone-100 border border-stone-200 text-xs font-bold uppercase tracking-wider text-stone-400 cursor-not-allowed select-none">
+                  <div className="flex items-center gap-1 px-4 py-2 rounded-xl bg-stone-100 border border-stone-200 text-xs font-bold uppercase tracking-wider text-stone-400 cursor-not-allowed select-none">
                     Next <ChevronRight size={16} />
                   </div>
                 )}
+
+                <span className="w-full text-center text-[11px] font-bold text-stone-400 mt-2 block">
+                  Page {currentPage} of {numPages} ({totalCount.toLocaleString()} listings)
+                </span>
               </div>
             )}
 
@@ -470,3 +800,4 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
 }
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
