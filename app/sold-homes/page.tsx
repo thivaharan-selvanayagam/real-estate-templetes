@@ -404,7 +404,7 @@ export default async function SoldHomesPage({ searchParams }: PageProps) {
                   return (
                     <Link
                       key={listing.mlsNumber}
-                      href={`/listings/${listing.mlsNumber}`}
+                      href={`/sold-homes/${listing.mlsNumber}`} // 🔑 Points directly to dedicated sold detail page
                       className="group bg-white rounded-3xl overflow-hidden border border-stone-200/70 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
                     >
                       {cardContent}
