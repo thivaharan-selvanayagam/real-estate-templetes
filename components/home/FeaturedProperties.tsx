@@ -73,9 +73,15 @@ export default function FeaturedProperties({ listings = [] }: FeaturedProperties
 
         {displayListings.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-            {/* 🔑 Displays top 6 residential properties */}
+            {/* 🔑 Displays top 6 residential properties as clickable cards */}
             {displayListings.slice(0, 6).map((l) => (
-              <PropertyCard key={l.mlsNumber || l.id} listing={l} />
+              <Link
+                key={l.mlsNumber || l.id}
+                href={`/listings/${l.mlsNumber}`}
+                className="block group transition-all duration-300 hover:-translate-y-1.5 focus:outline-none cursor-pointer"
+              >
+                <PropertyCard listing={l} />
+              </Link>
             ))}
           </div>
         ) : (
