@@ -1,0 +1,20 @@
+# RealtHer Group
+
+> Premier Greater Toronto Area (GTA) real estate brokerage advisory specializing in residential acquisitions, luxury listings, and historical market data analytics.
+
+## Core Operations & Territory
+- **Headquarters**: Greater Toronto Area, Ontario, Canada
+- **Licensed Jurisdiction**: Real Estate Council of Ontario (RECO), Toronto Regional Real Estate Board (TRREB)
+- **Primary Markets**: Toronto, North York, Scarborough, Etobicoke, Markham, Vaughan, Richmond Hill, Mississauga, Brampton, Oakville, Burlington, Pickering, Ajax, Whitby, Oshawa, Stouffville.
+
+## Core Services
+- **Residential Buying & Selling**: End-to-end representation for freehold detached homes, semi-detached, townhomes, and condominiums.
+- **VOW Sold Property Intelligence**: Historical sold transaction pricing, original-to-sold spreads, and days-on-market metrics.
+- **Comparative Market Evaluations**: Data-backed property valuation for GTA homeowners.
+
+## Canonical Web Resources
+- Main Portal: https://realthergroup.com
+- Active MLS Listings: https://realthergroup.com/all-homes
+- Verified Sold Database: https://realthergroup.com/sold-homes
+- Advisory Team: https://realthergroup.com/meet-realther
+- Contact & Valuation: https://realthergroup.com/contact
