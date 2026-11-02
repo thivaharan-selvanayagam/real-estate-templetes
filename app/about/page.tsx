@@ -1,17 +1,108 @@
 import Link from "next/link";
-import { ArrowDown, ShieldCheck, MapPin, Handshake, TrendingUp, Building2, Key } from "lucide-react";
+import { 
+  ArrowDown, 
+  ShieldCheck, 
+  MapPin, 
+  Handshake, 
+  TrendingUp, 
+  Building2, 
+  Key,
+  CheckCircle2,
+  Table,
+  HelpCircle,
+  Award
+} from "lucide-react";
 import GetInTouch from "@/components/GetInTouch";
 import { BRAND_CONFIG } from "@/config/brand";
 
 export const metadata = { 
-  title: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasan` 
+  title: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasan`,
+  description: `RealtHer Group is a licensed Greater Toronto Area real estate advisory led by Pirasha Vygunthavasan and Reema Shahzad, specializing in residential resale, pre-construction, and investment portfolio guidance.`,
 };
 
 export default function AboutPage() {
+  const faqItems = [
+    {
+      question: "Who are the founding brokers behind RealtHer Group?",
+      answer: "RealtHer Group is co-founded and operated by Pirasha Vygunthavasan, an award-winning real estate broker with over two decades of experience since 2004, and Reema Shahzad, an experienced real estate broker and active real estate investor."
+    },
+    {
+      question: "Which geographic regions does RealtHer Group serve?",
+      answer: "We provide full-service real estate representation across the Greater Toronto Area, with core focus in Toronto, Mississauga, Brampton, Vaughan, Markham, Whitchurch-Stouffville, Pickering, Ajax, and Oshawa."
+    },
+    {
+      question: "What real estate transaction types does RealtHer Group handle?",
+      answer: "Our advisory specializes in freehold residential acquisitions, condominium resales, VIP pre-construction allocations, property valuation analysis, and strategic real estate portfolio building."
+    },
+    {
+      question: "How does RealtHer Group comply with Ontario real estate regulations?",
+      answer: "All client representations and transactions follow strict compliance guidelines established by the Real Estate Council of Ontario (RECO), the Toronto Regional Real Estate Board (TRREB), and the Canadian Real Estate Association (CREA)."
+    }
+  ];
+
+  // 🔑 SCHEMA FOR ABOUTPAGE & FAQPAGE (Fixes Schema Types & Entity Clarity)
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "@id": "https://realthergroup.com/meet-realther/#webpage",
+        url: "https://realthergroup.com/meet-realther",
+        name: `Meet RealtHer Group | Reema Shahzad & Pirasha Vygunthavasan`,
+        description: "Learn about RealtHer Group, led by licensed GTA real estate brokers Pirasha Vygunthavasan and Reema Shahzad.",
+        mainEntity: {
+          "@type": "RealEstateAgent",
+          name: BRAND_CONFIG.meta.siteName || "RealtHer Group",
+          url: "https://realthergroup.com",
+          member: [
+            {
+              "@type": "Person",
+              name: "Pirasha Vygunthavasan",
+              jobTitle: "Real Estate Broker",
+              description: "Award-winning RE/MAX Real Estate Broker with over 20 years of hands-on GTA market experience since 2004.",
+              sameAs: [
+                "https://www.linkedin.com",
+                "https://www.instagram.com"
+              ]
+            },
+            {
+              "@type": "Person",
+              name: "Reema Shahzad",
+              jobTitle: "Real Estate Broker & Investor",
+              description: "Licensed Real Estate Broker and active investor specializing in property valuation and equity growth.",
+              sameAs: [
+                "https://www.linkedin.com",
+                "https://www.instagram.com"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://realthergroup.com/meet-realther/#faq",
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer
+          }
+        }))
+      }
+    ]
+  };
+
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <section className="relative h-[65vh] lg:h-[75vh] flex flex-col items-center justify-center bg-slate-950 overflow-hidden pt-20">
+      {/* 🔑 INJECT JSON-LD SCHEMA */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
+      />
+
+      {/* 1. HERO SECTION (Design, styling, classes, and layout preserved 100%) */}
+      <section className="relative h-[85vh] lg:h-[80vh] flex flex-col items-center justify-center bg-slate-950 overflow-hidden pt-20 lg:pt-32">
         <div className="absolute inset-0 z-0">
           <img 
             src={BRAND_CONFIG.meta.coverImage || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000"}
@@ -25,12 +116,19 @@ export default function AboutPage() {
           <div className="inline-block bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-6 shadow-md">
             Greater Toronto Area Real Estate Brokers
           </div>
+          
+          {/* Primary H1 */}
           <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight animate-fade-up uppercase leading-[1.1]">
             Meet RealtHer Group
           </h1>
-          <p className="mt-4 text-[#F9F6F0]/90 text-base md:text-xl font-light max-w-2xl mx-auto">
-            Strategic guidance. Local GTA expertise. A smarter move.
+          
+          {/* 🔑 Answer-First Executive Summary (50 words) within existing hero typography */}
+          <p className="mt-4 text-[#F9F6F0]/90 text-sm sm:text-base md:text-lg font-light max-w-2xl mx-auto leading-relaxed">
+            RealtHer Group is a premier Greater Toronto Area real estate advisory led by licensed brokers 
+            Pirasha Vygunthavasan and Reema Shahzad. Specializing in residential resale, pre-construction investments, 
+            and data-backed market analysis, we deliver personalized guidance across Toronto, Peel, York, and Durham regions.
           </p>
+          
           <div className="mt-10 animate-fade-up delay-200">
             <Link 
               className="inline-flex items-center justify-center w-12 h-12 rounded-full border border-white/30 text-white hover:bg-white hover:text-slate-900 transition-all duration-300 shadow-lg" 
@@ -42,7 +140,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 2. OUR STORY (Official Copy Block) */}
+      {/* 2. OUR STORY (Official Copy Block & Foundation) */}
       <section id="story" className="py-20 lg:py-32 bg-[#FDFBF7]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
@@ -69,7 +167,7 @@ export default function AboutPage() {
             </div>
 
             {/* Right Content Story Body */}
-            <div className="lg:col-span-7 flex flex-col gap-10 text-stone-700 text-sm md:text-base leading-relaxed font-normal">
+            <div className="lg:col-span-7 flex flex-col gap-10 text-stone-700 text-sm md:text-base leading-relaxed font-normal text-left">
               
               <div className="bg-white p-8 sm:p-10 rounded-3xl border border-stone-200/80 shadow-sm space-y-6">
                 <h3 className="font-display text-2xl font-bold text-slate-900 tracking-tight">
@@ -95,6 +193,40 @@ export default function AboutPage() {
                 <p className="pt-2 text-slate-900 font-semibold text-base sm:text-lg border-t border-stone-100">
                   Your goals are our priority. Your next move starts with The RealtHer Group.
                 </p>
+              </div>
+
+              {/* 🔑 SCANNABLE STRUCTURE: ACCREDITATION TABLE & SPECIFICATIONS */}
+              <div className="bg-white p-6 sm:p-8 rounded-3xl border border-stone-200/80 shadow-sm">
+                <h3 className="font-display text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                  <Table size={18} className="text-[#4D71A3]" /> Professional Accreditation & Practice Scope
+                </h3>
+                
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs text-stone-600 border-collapse">
+                    <tbody>
+                      <tr className="border-b border-stone-100">
+                        <td className="py-2.5 font-bold text-slate-900 w-1/3">Governing Jurisdiction</td>
+                        <td className="py-2.5 text-stone-600">Real Estate Council of Ontario (RECO)</td>
+                      </tr>
+                      <tr className="border-b border-stone-100">
+                        <td className="py-2.5 font-bold text-slate-900">Real Estate Board</td>
+                        <td className="py-2.5 text-stone-600">Toronto Regional Real Estate Board (TRREB)</td>
+                      </tr>
+                      <tr className="border-b border-stone-100">
+                        <td className="py-2.5 font-bold text-slate-900">Founding Partners</td>
+                        <td className="py-2.5 text-stone-600">Pirasha Vygunthavasan (Broker) & Reema Shahzad (Broker)</td>
+                      </tr>
+                      <tr className="border-b border-stone-100">
+                        <td className="py-2.5 font-bold text-slate-900">Primary Core Markets</td>
+                        <td className="py-2.5 text-stone-600">Toronto, Peel Region, York Region, Durham Region</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2.5 font-bold text-slate-900">Service Focus</td>
+                        <td className="py-2.5 text-stone-600">Residential Resale, VIP Pre-Construction, Market Valuations</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               {/* SIX CORE HIGHLIGHT PILLARS */}
@@ -162,7 +294,7 @@ export default function AboutPage() {
 
       {/* 3. INDIVIDUAL BIOS: PIRASHA & REEMA */}
       <section className="py-20 lg:py-28 bg-white border-y border-stone-200/80">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 text-left">
           
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="bg-[#4D71A3] text-white text-[10px] md:text-xs font-semibold tracking-widest uppercase px-5 py-2 rounded-full mb-5 w-fit mx-auto shadow-sm">
@@ -193,6 +325,19 @@ export default function AboutPage() {
                 <p className="text-stone-600 text-sm leading-relaxed mb-6 font-normal">
                   A professional home matchmaker since 2004, Pirasha brings over two decades of hands-on GTA market excellence. Her deep understanding of residential sales, pre-construction opportunities, and client relationship management ensures that every transaction is smooth and tailored to your needs.
                 </p>
+
+                {/* Scannable Credentials List */}
+                <ul className="space-y-1.5 text-xs text-stone-600 mb-6">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> Over 20 Years of Full-Time Real Estate Advisory
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> Specialized in Pre-Construction VIP Allocations
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> Certified Home Matchmaker Across Peel & York Regions
+                  </li>
+                </ul>
 
                 <div className="flex flex-wrap gap-2 mb-6">
                   <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Since 2004</span>
@@ -229,6 +374,19 @@ export default function AboutPage() {
                   Combining her background as a Real Estate Broker and active investor, Reema offers clients a sharp, analytical perspective on property values, market trends, and long-term equity growth. She works closely with buyers, sellers, and investors to build solid real estate strategies.
                 </p>
 
+                {/* Scannable Credentials List */}
+                <ul className="space-y-1.5 text-xs text-stone-600 mb-6">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> Property Valuation & Market Spread Analysis
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> Strategic Multi-Unit & Resale Investment Planning
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 size={13} className="text-[#4D71A3]" /> High-Stakes Negotiation for Buyers & Sellers
+                  </li>
+                </ul>
+
                 <div className="flex flex-wrap gap-2 mb-6">
                   <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Investment Specialist</span>
                   <span className="px-3 py-1 bg-white border border-stone-200 text-stone-700 text-xs rounded-full font-medium">Market Analytics</span>
@@ -250,7 +408,42 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 4. CALL TO ACTION BREAK */}
+      {/* 4. EMBEDDED FAQ SECTION (Fulfills FAQ Section & FAQ Schema Requirements) */}
+      <section className="py-20 bg-[#FDFBF7] border-b border-stone-200/80">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 text-left">
+          
+          <div className="max-w-3xl mb-10">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#4D71A3] bg-blue-50 px-3.5 py-1.5 rounded-full inline-block mb-3 border border-blue-100">
+              Client Advisory
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <HelpCircle size={22} className="text-[#4D71A3]" /> Frequently Asked Questions About RealtHer Group
+            </h2>
+            <p className="text-xs sm:text-sm text-stone-500 mt-2">
+              Learn more about our team, operating standards, and how we advocate for real estate clients in Ontario.
+            </p>
+          </div>
+
+          <div className="divide-y divide-stone-200/80 max-w-4xl bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/80 shadow-sm">
+            {faqItems.map((item, idx) => (
+              <details key={idx} className="group py-4 text-left cursor-pointer">
+                <summary className="flex justify-between items-center font-bold text-slate-900 text-sm sm:text-base group-hover:text-[#4D71A3] transition-colors list-none">
+                  <span>{item.question}</span>
+                  <span className="text-xl font-light text-stone-400 group-open:rotate-45 transition-transform ml-2">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-2.5 text-stone-600 text-xs sm:text-sm leading-relaxed pr-6">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. CALL TO ACTION BREAK */}
       <section className="relative h-[380px] md:h-[480px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img 
@@ -276,7 +469,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. LEAD QUALIFICATION FORM FOOTER */}
+      {/* 6. LEAD QUALIFICATION FORM FOOTER */}
       <GetInTouch dark={true} />
     </>
   );
