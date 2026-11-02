@@ -10,6 +10,9 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.cloudfront.net' },
     ],
   },
+  experimental: {
+    agentUpgrade: 'security',
+  },
 };
 
 module.exports = nextConfig;
