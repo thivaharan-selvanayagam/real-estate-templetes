@@ -71,7 +71,8 @@ export default function HeroVariant4() {
 
           {/* Subtitle Description */}
           <p className="text-[#F9F6F0]/90 text-base md:text-lg lg:text-xl font-light tracking-wide max-w-2xl mb-10 drop-shadow-sm">
-            Strategic guidance. Local expertise. A smarter move.
+            {/* Strategic guidance. Local expertise. A smarter move. */}
+            RealtHer Group is a licensed residential real estate advisory serving home buyers, sellers, and property investors across the Greater Toronto Area. Specializing in freehold properties, luxury condominiums, and pre-construction developments throughout Toronto, Peel, York, and Durham regions, our team provides data-backed valuation and strategic client representation.
           </p>
 
           {/* 4-BUTTON ACTION DECK */}

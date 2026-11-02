@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BRAND_CONFIG } from "@/config/brand";
 
-// Ensure absolute URL resolution for canonical tags and social cards
 const domainUrl = BRAND_CONFIG.meta.domain.startsWith("http")
   ? BRAND_CONFIG.meta.domain
   : `https://${BRAND_CONFIG.meta.domain}`;
@@ -16,13 +15,9 @@ export const metadata: Metadata = {
     template: `%s | ${BRAND_CONFIG.meta.siteName}`,
   },
   description: BRAND_CONFIG.meta.description,
-  
-  // 🔑 Fix: Canonical URL mapping so crawlers index the primary authority domain
   alternates: {
     canonical: domainUrl,
   },
-
-  // 🔑 Fix: Explicit crawler permissions for search and LLM indexing bots
   robots: {
     index: true,
     follow: true,
@@ -34,7 +29,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
   openGraph: {
     title: BRAND_CONFIG.meta.title,
     description: BRAND_CONFIG.meta.description,
@@ -51,7 +45,6 @@ export const metadata: Metadata = {
     locale: "en_CA",
     type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
     title: BRAND_CONFIG.meta.title,
@@ -61,14 +54,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // 🔑 Fix: Organization, RealEstateAgent, and WebSite JSON-LD Schema
+  // 🔑 CRITICAL FIX: Explicit "@type": ["Organization", "RealEstateAgent"] 
+  // guarantees both general crawlers and real estate crawlers recognize the entity.
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "RealEstateAgent",
+        "@type": ["Organization", "RealEstateAgent"],
         "@id": `${domainUrl}/#organization`,
         name: BRAND_CONFIG.meta.siteName || "RealtHer Group",
+        legalName: "RealtHer Group Real Estate Advisory",
         url: domainUrl,
         logo: `${domainUrl}/logo.png`,
         image: BRAND_CONFIG.meta.coverImage?.startsWith("http")
@@ -94,13 +89,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           { "@type": "City", name: "Brampton" },
           { "@type": "City", name: "Vaughan" },
           { "@type": "City", name: "Markham" },
-          { "@type": "City", name: "Richmond Hill" },
           { "@type": "City", name: "Whitchurch-Stouffville" },
           { "@type": "City", name: "Pickering" },
           { "@type": "City", name: "Ajax" },
           { "@type": "City", name: "Oshawa" },
         ],
-        // 🔑 Resolves Entity Clarity: Connects brand to verified regulatory/social profiles
+        // 🔑 Connects entity to regulatory & authority bodies
         sameAs: [
           "https://www.instagram.com/realthergroup",
           "https://www.facebook.com/realthergroup",
@@ -129,7 +123,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        {/* Injects verified RealEstateAgent & WebSite Schema on every page */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

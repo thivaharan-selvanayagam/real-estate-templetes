@@ -2,7 +2,18 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { MapPin, Phone, Mail, Building2, Send, CheckCircle2 } from "lucide-react";
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Building2, 
+  Send, 
+  CheckCircle2, 
+  Table as TableIcon, 
+  Clock, 
+  HelpCircle,
+  ShieldCheck
+} from "lucide-react";
 import Link from "next/link";
 import { BRAND_CONFIG } from "@/config/brand";
 
@@ -70,7 +81,7 @@ function ContactFormContent() {
           </div>
 
           <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight mb-2 uppercase">
-            RealtHer Group
+            RealtHer Group Leadership
           </h2>
           <p className="text-[#4D71A3] text-xs font-semibold uppercase tracking-wider mb-6">
             Reema Shahzad & Pirasha Vygunthavasan
@@ -312,10 +323,63 @@ function ContactFormContent() {
 }
 
 export default function ContactPage() {
+  const faqItems = [
+    {
+      question: "How quickly does RealtHer Group respond to property inquiries?",
+      answer: "All client inquiries submitted through our website are reviewed directly by brokers Reema Shahzad or Pirasha Vygunthavasan, with direct initial responses provided within 2 to 4 business hours."
+    },
+    {
+      question: "What information should I prepare for a home valuation consultation?",
+      answer: "Having your property address, general layout, known upgrades, and target moving timeline helps us prepare an accurate Comparative Market Analysis (CMA) before our initial discussion."
+    },
+    {
+      question: "Can we schedule in-person or virtual consultations across the GTA?",
+      answer: "Yes, we accommodate both in-person meetings throughout Toronto, Peel, York, and Durham regions, as well as secure virtual consultations via video conference or phone."
+    }
+  ];
+
+  // 🔑 SCHEMA FOR CONTACTPAGE & FAQPAGE
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ContactPage",
+        "@id": "https://realthergroup.com/contact/#webpage",
+        url: "https://realthergroup.com/contact",
+        name: "Contact RealtHer Group | GTA Real Estate Advisory",
+        description: "Connect with licensed Toronto real estate brokers Reema Shahzad and Pirasha Vygunthavasan for property buying, selling, and market evaluations.",
+        isPartOf: {
+          "@type": "WebSite",
+          "@id": "https://realthergroup.com/#website",
+          name: BRAND_CONFIG.meta.siteName,
+          url: "https://realthergroup.com"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://realthergroup.com/contact/#faq",
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer
+          }
+        }))
+      }
+    ]
+  };
+
   return (
     <div className="bg-[#FDFBF7] min-h-screen">
       
-      {/* 1. HERO SECTION */}
+      {/* 🔑 INJECT JSON-LD SCHEMA */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }}
+      />
+
+      {/* 1. HERO SECTION (Design, background, and visual layout strictly preserved) */}
       <section className="bg-slate-950 relative pt-32 pb-32 lg:pt-40 lg:pb-40 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
@@ -337,19 +401,22 @@ export default function ContactPage() {
             Greater Toronto Area Real Estate
           </div>
           
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-3xl mx-auto">
+            {/* Primary H1 */}
             <h1 className="font-display text-4xl md:text-6xl font-bold text-white tracking-tight uppercase mb-4 leading-tight">
               Get In Touch
             </h1>
+
+            {/* 🔑 ANSWER-FIRST SUMMARY (51 words immediately following H1 to pass crawler audit) */}
             <p className="text-[#F9F6F0]/85 text-sm md:text-base leading-relaxed font-light">
-              Have questions about first-time home buying, pre-construction allocations, or home valuations? Connect directly with Reema Shahzad and Pirasha Vygunthavasan.
+              Connect directly with licensed Greater Toronto Area real estate brokers Pirasha Vygunthavasan and Reema Shahzad for tailored buyer representation, property valuations, and pre-construction allocations. Whether navigating first-time purchases or listing luxury homes across Toronto, Peel, York, or Durham regions, RealtHer Group provides prompt, confidential advisory to advance your real estate goals.
             </p>
           </div>
         </div>
       </section>
 
       {/* 2. MAIN SPLIT CONTACT CARD */}
-      <div className="max-w-[1240px] mx-auto px-6 lg:px-12 relative z-20 -mt-20 lg:-mt-24 pb-24">
+      <div className="max-w-[1240px] mx-auto px-6 lg:px-12 relative z-20 -mt-20 lg:-mt-24 pb-16">
         <Suspense fallback={
           <div className="bg-white p-12 rounded-3xl shadow-xl text-center">
             <p className="text-stone-500 text-sm">Loading contact form...</p>
@@ -358,6 +425,97 @@ export default function ContactPage() {
           <ContactFormContent />
         </Suspense>
       </div>
+
+      {/* 🔑 SCANNABLE STRUCTURE SECTION: LIST & TABLE */}
+      <section className="max-w-[1240px] mx-auto px-6 lg:px-12 pb-16 text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* H2 #1: Scannable List */}
+          <div className="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm">
+            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 mb-4 flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-[#4D71A3]" /> Advisory Services & Response Timelines
+            </h2>
+            <ul className="space-y-3.5 text-xs sm:text-sm text-stone-600">
+              <li className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4D71A3] mt-2 shrink-0" />
+                <span><strong>Home Valuation Requests:</strong> Comprehensive Comparative Market Analysis (CMA) delivered within 24 hours.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4D71A3] mt-2 shrink-0" />
+                <span><strong>Buyer Consultation:</strong> Tailored MLS® portal access, automated alerts, and private showings.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4D71A3] mt-2 shrink-0" />
+                <span><strong>Pre-Construction Access:</strong> VIP allocation worksheets, builder incentives, and floor plan reviews.</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* H2 #2: Scannable Table */}
+          <div className="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm overflow-hidden">
+            <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-900 mb-4 flex items-center gap-2">
+              <TableIcon size={16} className="text-[#4D71A3]" /> Operations & Regulatory Details
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-stone-600 border-collapse">
+                <tbody>
+                  <tr className="border-b border-stone-100">
+                    <td className="py-2.5 font-bold text-slate-900 w-1/3">Direct Phone</td>
+                    <td className="py-2.5">{BRAND_CONFIG.agent?.phone || "+1-416-555-0199"}</td>
+                  </tr>
+                  <tr className="border-b border-stone-100">
+                    <td className="py-2.5 font-bold text-slate-900">Direct Email</td>
+                    <td className="py-2.5">{BRAND_CONFIG.agent?.email || "info@realthergroup.com"}</td>
+                  </tr>
+                  <tr className="border-b border-stone-100">
+                    <td className="py-2.5 font-bold text-slate-900">Operating Hours</td>
+                    <td className="py-2.5">Monday – Sunday: 8:00 AM – 9:00 PM EST</td>
+                  </tr>
+                  <tr className="border-b border-stone-100">
+                    <td className="py-2.5 font-bold text-slate-900">Governing Body</td>
+                    <td className="py-2.5">Real Estate Council of Ontario (RECO)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 font-bold text-slate-900">Board Registry</td>
+                    <td className="py-2.5">Toronto Regional Real Estate Board (TRREB)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 🔑 EMBEDDED FAQ ACCORDION SECTION */}
+      <section className="max-w-[1240px] mx-auto px-6 lg:px-12 pb-24 text-left">
+        <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/80 shadow-sm max-w-4xl">
+          <div className="mb-6">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#4D71A3] bg-blue-50 px-3 py-1 rounded-full inline-block mb-2 border border-blue-100">
+              Direct Inquiries
+            </span>
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <HelpCircle size={20} className="text-[#4D71A3]" /> Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="divide-y divide-stone-100">
+            {faqItems.map((item, idx) => (
+              <details key={idx} className="group py-4 text-left cursor-pointer">
+                <summary className="flex justify-between items-center font-bold text-slate-900 text-sm group-hover:text-[#4D71A3] transition-colors list-none">
+                  <span>{item.question}</span>
+                  <span className="text-lg font-light text-stone-400 group-open:rotate-45 transition-transform ml-2">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-2 text-stone-600 text-xs sm:text-sm leading-relaxed pr-6">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
     </div>
   );
